@@ -1,11 +1,10 @@
 /* --- ESTILOS GLOBAIS DE SCROLL --- */
 html {
-  /* Habilita o scroll suave para links (âncoras) */
-  scroll-behavior: smooth;
-
-  /* Para Firefox: define a barra de rolagem */
+  /* ❌ Removido scroll-behavior: smooth — o Lenis controla isso */
+  scroll-behavior: auto;
+  overflow-x: hidden;
   scrollbar-width: thin;
-  scrollbar-color: #333 #000; /* "thumb" e "track" */
+  scrollbar-color: #333 #000;
 }
 
 /* Para Chrome, Safari, Edge (browsers WebKit) */
@@ -63,7 +62,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
+  overflow: visible;
   background-color: #000000;
 }
 
@@ -113,7 +112,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
+  overflow: visible;
   border-top: none;
 }
 .about-background {
