@@ -1,3 +1,34 @@
+/* --- ESTILOS GLOBAIS DE SCROLL --- */
+html {
+  /* Habilita o scroll suave para links (âncoras) */
+  scroll-behavior: smooth;
+
+  /* Para Firefox: define a barra de rolagem */
+  scrollbar-width: thin;
+  scrollbar-color: #333 #000; /* "thumb" e "track" */
+}
+
+/* Para Chrome, Safari, Edge (browsers WebKit) */
+body::-webkit-scrollbar {
+  width: 8px; /* Largura da barra (bem fina) */
+}
+
+body::-webkit-scrollbar-track {
+  background: #000000; /* Fundo da barra (preto) */
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: #222; /* Cor do "polegar" (cinza escuro) */
+  border-radius: 4px; /* Bordas arredondadas */
+  border: 1px solid #000; /* Borda preta para dar profundidade */
+}
+
+body::-webkit-scrollbar-thumb:hover {
+  background-color: #444; /* Cor ao passar o mouse */
+}
+/* --- FIM DOS ESTILOS DE SCROLL --- */
+
+
 /* Reset básico e definição da fonte */
 :root {
   font-family: 'Poppins', sans-serif;
