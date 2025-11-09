@@ -1,7 +1,8 @@
 import React, { useRef, useEffect, useState } from 'react';
 import './GlitchImage.css';
 
-const GlitchImage = ({ src, alt, className = '', glitchChance = 0.8 }) => { // 1. Aumentar a chance padrão do glitch (80%)
+// 1. Aceitar 'srcBw' e 'srcColor'
+const GlitchImage = ({ srcBw, srcColor, alt, className = '', glitchChance = 0.8 }) => {
   const imgRef = useRef(null);
   const glitchContainerRef = useRef(null);
   const [isGlitching, setIsGlitching] = useState(false);
@@ -9,16 +10,17 @@ const GlitchImage = ({ src, alt, className = '', glitchChance = 0.8 }) => { // 1
 
   useEffect(() => {
     if (glitchContainerRef.current) {
-      glitchContainerRef.current.style.setProperty('--glitch-image-src', `url(${src})`);
+      // 2. Usar a IMAGEM COLORIDA para os artefatos (vermelho/azul)
+      glitchContainerRef.current.style.setProperty('--glitch-image-src', `url(${srcColor})`);
     }
-  }, [src]);
+  }, [srcColor]); // Depender da imagem colorida
 
   useEffect(() => {
     const startGlitch = () => {
       setIsGlitching(true);
       glitchTimeoutRef.current = setTimeout(() => {
         setIsGlitching(false);
-      }, 250); // 2. Aumentar a duração do glitch para 250ms (mais perceptível)
+      }, 250); 
     };
 
     const checkGlitch = () => {
@@ -27,7 +29,6 @@ const GlitchImage = ({ src, alt, className = '', glitchChance = 0.8 }) => { // 1
       }
     };
 
-    // 3. Diminuir o intervalo para verificar glitches (a cada 500ms)
     const glitchInterval = setInterval(checkGlitch, 500); 
 
     return () => {
@@ -40,14 +41,26 @@ const GlitchImage = ({ src, alt, className = '', glitchChance = 0.8 }) => { // 1
 
   return (
     <div ref={glitchContainerRef} className={`glitch-image-container ${className}`}>
+      
+      {/* 3. IMAGEM BASE (PRETA E BRANCA) */}
       <img
         ref={imgRef}
-        src={src}
+        src={srcBw}
         alt={alt}
-        className={isGlitching ? 'glitch-active' : ''}
       />
+      
+      {/* 4. QUANDO 'isGlitching' FOR TRUE, MOSTRAR TUDO ISSO: */}
       {isGlitching && (
         <>
+          {/* A. A IMAGEM COLORIDA PISCANDO */}
+          <img
+            src={srcColor}
+            alt=""
+            className="glitch-color-flash"
+            aria-hidden="true"
+          />
+
+          {/* B. OS ARTEFATOS (BASEADOS NA IMAGEM COLORIDA) */}
           <div className="glitch-effect glitch-red" aria-hidden="true"></div>
           <div className="glitch-effect glitch-blue" aria-hidden="true"></div>
         </>

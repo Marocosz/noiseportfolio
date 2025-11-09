@@ -1,12 +1,13 @@
-import React from 'react'; // 1. Removemos useRef e useEffect
+import React from 'react';
 import Squares from '../backgrounds/Squares';
-import profileImage from '../../assets/profile.png'; 
+// 1. IMPORTAR AMBAS AS IMAGENS
+import profileImageBw from '../../assets/profile.png'; // Imagem P&B
+import profileImageColor from '../../assets/profile-color.png'; // Imagem Colorida
 import BlurText from '../effects/BlurText';
 import DecryptedText from '../effects/DecryptedText';
-import GlitchImage from '../effects/GlitchImage';
+import GlitchImage from '../effects/GlitchImage'; 
 
 const AboutSection = () => {
-  // 2. Removemos o 'imageContainerRef' e o 'useEffect' daqui
 
   return (
     <section className="about-section">
@@ -34,12 +35,13 @@ const AboutSection = () => {
         
         <div className="about-main">
           
-          {/* 3. Removemos a 'ref' deste div */}
           <div className="about-image">
+            {/* 2. PASSAR AMBAS AS IMAGENS COMO PROPS */}
             <GlitchImage
-              src={profileImage}
+              srcBw={profileImageBw}
+              srcColor={profileImageColor}
               alt="Marcos Rodrigues - Desenvolvedor Full-Stack"
-              glitchChance={0.5} // 4. Chance aumentada para 50%
+              glitchChance={0.8} 
             />
           </div>
 
