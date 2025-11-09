@@ -1,0 +1,113 @@
+.glitch-image-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  /* Adiciona um leve zoom permanente para dar espaço ao glitch */
+  transform: scale(1.03);
+}
+
+.glitch-image-container img {
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: opacity 0.1s ease-out;
+}
+
+.glitch-effect {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+}
+
+.glitch-image-container img.glitch-active {
+  /* 1. ANIMAÇÃO DE 'SKEW' REMOVIDA */
+  /* Faz a imagem original piscar (opacidade) */
+  animation: glitch-opacity 0.1s infinite alternate;
+}
+
+.glitch-effect.glitch-red {
+  background-image: var(--glitch-image-src);
+  animation: glitch-anim-red 0.15s infinite alternate-reverse;
+  left: 0; /* Centralizado para focar no 'translate' */
+}
+
+.glitch-effect.glitch-blue {
+  background-image: var(--glitch-image-src);
+  animation: glitch-anim-blue 0.15s infinite alternate;
+  left: 0; /* Centralizado para focar no 'translate' */
+}
+
+/* 2. KEYFRAMES MUITO MAIS AGRESSIVOS */
+/* Focados em deslocamento e blocos, não em inclinação */
+
+@keyframes glitch-anim-red {
+  0% {
+    clip: rect(42px, 9999px, 92px, 0);
+    transform: translate(20px, -5px); /* Salto agressivo */
+  }
+  20% {
+    clip: rect(140px, 9999px, 198px, 0);
+    transform: translate(-25px, 5px);
+  }
+  40% {
+    clip: rect(20px, 9999px, 80px, 0);
+    transform: translate(15px, 0);
+  }
+  60% {
+    clip: rect(180px, 9999px, 130px, 0);
+    transform: translate(-10px, -3px);
+  }
+  80% {
+    clip: rect(10px, 9999px, 100px, 0);
+    transform: translate(30px, 2px);
+  }
+  100% {
+    clip: rect(150px, 9999px, 70px, 0);
+    transform: translate(-20px, 0);
+  }
+}
+
+@keyframes glitch-anim-blue {
+  0% {
+    clip: rect(20px, 9999px, 115px, 0);
+    transform: translate(-22px, 3px);
+  }
+  20% {
+    clip: rect(180px, 9999px, 40px, 0);
+    transform: translate(18px, -5px);
+  }
+  40% {
+    clip: rect(100px, 9999px, 150px, 0);
+    transform: translate(-15px, 0);
+  }
+  60% {
+    clip: rect(10px, 9999px, 80px, 0);
+    transform: translate(10px, 4px);
+  }
+  80% {
+    clip: rect(170px, 9999px, 100px, 0);
+    transform: translate(-30px, -1px);
+  }
+  100% {
+    clip: rect(90px, 9999px, 140px, 0);
+    transform: translate(25px, 0);
+  }
+}
+
+/* 3. NOVA ANIMAÇÃO (SUBSTITUI O SKEW) */
+/* Faz a imagem original piscar durante o glitch */
+@keyframes glitch-opacity {
+  0% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 1;
+  }
+}
