@@ -27,12 +27,15 @@ const HomePage = () => {
         />
       </div>
 
-      {/* 2. HERO SECTION (Cobre o Silk)
-          Fundo PRETO SÓLIDO e z-index alto. */}
+      {/* 2. HERO SECTION COM FADE
+          Alterado de backgroundColor sólido para linear-gradient.
+          Isso faz o preto sumir gradualmente no final. */}
       <div style={{ 
         position: 'relative', 
         zIndex: 10, 
-        backgroundColor: '#000000' // Importante ser sólido!
+        // O fundo começa Preto (0%), continua Preto até 50%, e termina Transparente (100%)
+        background: 'linear-gradient(to bottom, #000000 0%, #000000 50%, transparent 100%)',
+        paddingBottom: '50px' // Espaço extra para o fade respirar
       }}>
         <Hero />
       </div>
@@ -42,7 +45,7 @@ const HomePage = () => {
       <div style={{ 
         position: 'relative', 
         zIndex: 5,
-        // Sem backgroundColor aqui, ou 'transparent'
+        marginTop: '-50px' // Puxa o perfil levemente pra cima do gradiente para integrar melhor
       }}>
         <Profile />
         

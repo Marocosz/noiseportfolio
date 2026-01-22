@@ -1,162 +1,193 @@
 /* src/components/sections/Profile.css */
 
 .profile-section {
-  /* Fundo transparente para deixar o Silk (background fixo) aparecer */
-  background-color: transparent;
-  min-height: 90vh;
+  position: relative;
+  /* Garante que a seção ocupe espaço vertical suficiente */
+  min-height: 80vh; 
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden; /* Importante para a faixa não gerar scroll horizontal na página */
+  padding: 4rem 0; /* Padding apenas vertical */
+}
+
+/* --- 1. A FAIXA DE VIDRO (GLASS STRIP) --- */
+.glass-strip {
+  width: 100%;
+  position: relative;
+  
+  /* Efeito de Vidro Fosco */
+  background: rgba(20, 20, 20, 0.3); /* Escuro mas transparente */
+  backdrop-filter: blur(12px); /* O desfoque do que está atrás (Silk) */
+  -webkit-backdrop-filter: blur(12px);
+  
+  /* Bordas sutis simulando a espessura do vidro */
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 4rem 2rem;
-  color: #fff;
+  
+  /* Altura mínima da faixa */
+  min-height: 400px; 
+}
+
+/* Container interno para limitar a largura do conteúdo (não colar nas bordas de telas gigantes) */
+.glass-content {
+  width: 100%;
+  max-width: 1400px; /* Largura máxima do conteúdo */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
   position: relative;
 }
 
-.profile-container {
-  max-width: 1200px;
-  width: 100%;
-  display: grid;
-  grid-template-columns: 1.2fr 1fr; /* Texto um pouco maior */
-  gap: 4rem;
-  align-items: center;
+/* --- 2. CONTEÚDO DE TEXTO (ESQUERDA) --- */
+.profile-text-area {
+  flex: 1;
+  max-width: 600px;
+  z-index: 2; /* Fica acima da imagem se sobrepor */
+  padding: 2rem 0;
 }
 
-/* --- TIPOGRAFIA --- */
-.profile-title {
+.terminal-header {
   font-family: 'Courier New', monospace;
-  font-size: 2rem;
-  color: #888;
-  margin-bottom: 0.5rem;
-  opacity: 0.8;
-}
-
-.terminal-prompt {
+  font-size: 1.2rem;
   color: #a855f7; /* Roxo Neon */
-  margin-right: 10px;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-.profile-role {
-  font-size: 1.1rem;
-  color: #ccc;
-  margin-bottom: 2rem;
-  font-weight: 400;
-  letter-spacing: 0.05em;
-  border-left: 2px solid #a855f7;
-  padding-left: 1rem;
+.terminal-line {
+  height: 1px;
+  width: 50px;
+  background: #a855f7;
+  opacity: 0.5;
 }
 
 .bio-highlight {
-  font-size: 1.5rem;
-  line-height: 1.4;
+  font-size: 1.8rem;
+  line-height: 1.3;
   margin-bottom: 1.5rem;
-  font-weight: 600;
+  font-weight: 700;
   color: #fff;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.5);
 }
 
 .bio-body {
-  font-size: 1.1rem;
+  font-size: 1rem;
   line-height: 1.6;
-  color: #aaa;
-  max-width: 90%;
-}
-
-/* --- TAGS --- */
-.profile-tags {
-  margin-top: 2rem;
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.tech-tag {
-  font-size: 0.9rem;
-  padding: 0.5rem 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
-  background: rgba(0, 0, 0, 0.3);
   color: #ccc;
-  transition: all 0.3s ease;
-  cursor: default;
+  border-left: 2px solid rgba(255,255,255,0.1);
+  padding-left: 1.5rem;
 }
 
-.tech-tag:hover {
-  border-color: #a855f7;
-  color: #fff;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(168, 85, 247, 0.2);
-}
-
-/* --- IMAGEM ZEN --- */
-.profile-image-wrapper {
+/* --- 3. IMAGEM HORIZONTAL (DIREITA) --- */
+.profile-img-container {
+  flex: 1.2; /* Ocupa um pouco mais de espaço */
+  height: 400px; /* Mesma altura da faixa mínima */
   position: relative;
   display: flex;
-  justify-content: center;
-  /* Garante que o glow não vaze o layout */
-  z-index: 1; 
+  align-items: center;
+  justify-content: flex-end;
+  /* overflow: hidden; Opcional: manter se quiser cortar */
 }
 
-.zen-profile-img {
-  width: 100%;
-  max-width: 450px;
-  /* Começa Preto e Branco e com alto contraste */
-  filter: grayscale(100%) contrast(1.1);
-  transition: filter 0.8s ease-in-out, transform 0.8s ease;
+.horizontal-profile-img {
+  height: 100%;
+  width: auto;
+  object-fit: cover;
   
-  /* MÁSCARA DE GRADIENTE: Faz a parte de baixo sumir no preto */
-  -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
-  mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+  /* --- A MÁGICA DA INTEGRAÇÃO --- */
+  /* Cria um fade nas bordas: Esquerda (para fundir com o texto) e Top/Bottom (para fundir com o vidro) */
+  -webkit-mask-image: linear-gradient(to left, black 60%, transparent 100%), 
+                      linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+  mask-image: linear-gradient(to left, black 60%, transparent 100%),
+              linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+  
+  /* Composite para juntar as máscaras se necessário, mas o linear-gradient complexo acima resolve a maioria */
+  mask-composite: intersect; 
+  
+  filter: grayscale(100%) contrast(1.1); /* P&B Inicial */
+  transition: filter 0.5s ease;
+  opacity: 0.9;
 }
 
-/* Hover: Fica colorido e dá um leve zoom */
-.profile-image-wrapper:hover .zen-profile-img {
-  filter: grayscale(0%) contrast(1);
-  transform: scale(1.02);
+.glass-strip:hover .horizontal-profile-img {
+  filter: grayscale(0%) contrast(1); /* Fica colorido ao passar o mouse na faixa inteira */
 }
 
-/* Glow atrás da imagem */
-.profile-glow {
-  position: absolute;
-  width: 80%;
-  height: 80%;
-  background: radial-gradient(circle, rgba(168, 85, 247, 0.2) 0%, transparent 70%);
-  top: 10%;
-  left: 10%;
-  z-index: -1;
-  opacity: 0; /* Começa invisível */
-  transition: opacity 0.8s ease;
+/* --- 4. INFINITE SCROLL (MARQUEE) --- */
+.infinite-scroll-wrapper {
+  margin-top: 1.5rem; /* Espaço abaixo da faixa de vidro */
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  /* Máscara nas laterais para o texto sumir suavemente */
+  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
 }
 
-.profile-image-wrapper:hover .profile-glow {
-  opacity: 1;
+.infinite-track {
+  display: flex;
+  width: max-content; /* Largura se adapta ao conteúdo */
+  gap: 4rem; /* Espaço entre os itens */
+  animation: scrollLoop 20s linear infinite;
+}
+
+.scroll-item {
+  font-family: 'Inter', sans-serif; /* Ou sua fonte padrão */
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.3); /* Texto apagado */
+  white-space: nowrap;
+  transition: color 0.3s;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.scroll-item:hover {
+  color: #a855f7; /* Acende ao passar o mouse */
+  text-shadow: 0 0 15px rgba(168, 85, 247, 0.5);
+}
+
+@keyframes scrollLoop {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); } /* Move metade (já que duplicamos a lista) */
 }
 
 /* --- RESPONSIVIDADE --- */
 @media (max-width: 900px) {
-  .profile-container {
-    grid-template-columns: 1fr;
+  .glass-content {
+    flex-direction: column-reverse; /* Imagem em cima, texto em baixo */
     text-align: center;
-    gap: 3rem;
+    padding: 2rem;
   }
-
-  .profile-role {
-    border-left: none;
-    padding-left: 0;
-    margin-bottom: 1.5rem;
-  }
-
-  .bio-body {
-    margin: 0 auto;
-  }
-
-  .profile-tags {
+  
+  .glass-strip { height: auto; }
+  
+  .profile-text-area { padding-top: 0; }
+  .bio-body { border-left: none; padding-left: 0; }
+  
+  .profile-img-container {
+    width: 100%;
+    height: 300px;
     justify-content: center;
+    margin-bottom: 2rem;
   }
   
-  .profile-image-wrapper {
-    order: -1; /* Joga a imagem para cima no mobile */
+  .horizontal-profile-img {
+    width: 100%;
+    height: 100%;
+    /* No mobile, o fade é embaixo */
+    -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+    mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
   }
   
-  .zen-profile-img {
-    max-width: 300px;
-  }
+  .terminal-header { justify-content: center; }
+  .terminal-line { display: none; }
 }

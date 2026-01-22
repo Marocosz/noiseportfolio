@@ -2,32 +2,36 @@ import React from 'react';
 import { motion } from 'motion/react';
 import DecryptedText from '../effects/DecryptedText';
 import { profileData } from '../../data/content';
-import './Profile.css'; // <--- IMPORTANTE: Importando o CSS aqui
+import './Profile.css';
 
-// Importe sua foto
-import profileImg from '../../assets/profile.png'; 
+// IMPORTANTE: Mude o nome do arquivo aqui para sua nova imagem horizontal
+import profileImgHorizontal from '../../assets/profile-horizontal.png'; 
 
 const Profile = () => {
+  // Duplicamos a lista de skills para garantir que o scroll infinito não tenha buracos
+  const scrollingSkills = [...profileData.skills_highlight, ...profileData.skills_highlight, ...profileData.skills_highlight];
+
   return (
     <section className="profile-section">
-      <div className="profile-container">
-        
-        {/* --- COLUNA ESQUERDA: TEXTO --- */}
-        <motion.div 
-          className="profile-content"
-          initial={{ opacity: 0, x: -30 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.8 }}
-        >
-          <h2 className="profile-title">
-            <span className="terminal-prompt">$</span> {profileData.title}
-          </h2>
+      
+      {/* --- FAIXA DE VIDRO --- */}
+      <div className="glass-strip">
+        <div className="glass-content">
+          
+          {/* LADO ESQUERDO: TEXTO */}
+          <motion.div 
+            className="profile-text-area"
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
+            <div className="terminal-header">
+              <span className="terminal-line"></span>
+              <span>{profileData.title}</span>
+            </div>
 
-          <h3 className="profile-role">{profileData.role}</h3>
-
-          <div className="profile-bio">
-            <p className="bio-highlight">
+            <div className="bio-highlight">
               <DecryptedText 
                 text={profileData.bio_highlight}
                 speed={40}
@@ -35,37 +39,42 @@ const Profile = () => {
                 revealDirection="start"
                 useOriginalCharsOnly={true}
               />
-            </p>
-            
+            </div>
+
             <p className="bio-body">
               {profileData.bio_full}
             </p>
-          </div>
+          </motion.div>
 
-          <div className="profile-tags">
-            {profileData.skills_highlight.map((skill, index) => (
-              <span key={index} className="tech-tag">{skill}</span>
-            ))}
-          </div>
-        </motion.div>
+          {/* LADO DIREITO: IMAGEM HORIZONTAL INTEGRADA */}
+          <motion.div 
+            className="profile-img-container"
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+          >
+            <img 
+              src={profileImgHorizontal} 
+              alt="Profile" 
+              className="horizontal-profile-img" 
+            />
+          </motion.div>
 
-        {/* --- COLUNA DIREITA: FOTO ZEN --- */}
-        <motion.div 
-          className="profile-image-wrapper"
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1, delay: 0.2 }}
-        >
-          <img 
-            src={profileImg} 
-            alt="Marcos Rodrigues Profile" 
-            className="zen-profile-img"
-          />
-          <div className="profile-glow"></div>
-        </motion.div>
-
+        </div>
       </div>
+
+      {/* --- FAIXA INFERIOR: INFINITE SCROLL --- */}
+      <div className="infinite-scroll-wrapper">
+        <div className="infinite-track">
+          {scrollingSkills.map((skill, index) => (
+            <span key={index} className="scroll-item">
+              {skill} •
+            </span>
+          ))}
+        </div>
+      </div>
+
     </section>
   );
 };
