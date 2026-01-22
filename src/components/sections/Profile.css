@@ -3,7 +3,7 @@
 .profile-section {
   position: relative;
   /* Garante que a seção ocupe espaço vertical suficiente */
-  min-height: 80vh; 
+  min-height: 50vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -15,22 +15,22 @@
 .glass-strip {
   width: 100%;
   position: relative;
-  
+
   /* Efeito de Vidro Fosco */
   background: rgba(20, 20, 20, 0.3); /* Escuro mas transparente */
   backdrop-filter: blur(12px); /* O desfoque do que está atrás (Silk) */
   -webkit-backdrop-filter: blur(12px);
-  
+
   /* Bordas sutis simulando a espessura do vidro */
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  
+
   display: flex;
   align-items: center;
   justify-content: center;
-  
+
   /* Altura mínima da faixa */
-  min-height: 400px; 
+  min-height: 250px;
 }
 
 /* Container interno para limitar a largura do conteúdo (não colar nas bordas de telas gigantes) */
@@ -46,20 +46,24 @@
 
 /* --- 2. CONTEÚDO DE TEXTO (ESQUERDA) --- */
 .profile-text-area {
-  flex: 1;
-  max-width: 600px;
+  flex: 7;
+  /* max-width: 600px; removed to allow 70% width */
   z-index: 2; /* Fica acima da imagem se sobrepor */
   padding: 2rem 0;
 }
 
 .terminal-header {
-  font-family: 'Courier New', monospace;
-  font-size: 1.2rem;
+  font-family: 'Inter', sans-serif;
+  font-size: 2rem;
+  font-weight: 800;
   color: #a855f7; /* Roxo Neon */
-  margin-bottom: 1rem;
+  text-shadow: 0 0 10px rgba(168, 85, 247, 0.4);
+  margin-bottom: 1.5rem;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 15px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
 }
 
 .terminal-line {
@@ -75,21 +79,21 @@
   margin-bottom: 1.5rem;
   font-weight: 700;
   color: #fff;
-  text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 }
 
 .bio-body {
   font-size: 1rem;
   line-height: 1.6;
   color: #ccc;
-  border-left: 2px solid rgba(255,255,255,0.1);
+  border-left: 2px solid rgba(255, 255, 255, 0.1);
   padding-left: 1.5rem;
 }
 
 /* --- 3. IMAGEM HORIZONTAL (DIREITA) --- */
 .profile-img-container {
-  flex: 1.2; /* Ocupa um pouco mais de espaço */
-  height: 400px; /* Mesma altura da faixa mínima */
+  flex: 3; /* Ocupa ~30% do espaço */
+  height: 250px; /* Mesma altura da faixa mínima */
   position: relative;
   display: flex;
   align-items: center;
@@ -101,17 +105,31 @@
   height: 100%;
   width: auto;
   object-fit: cover;
-  
+
   /* --- A MÁGICA DA INTEGRAÇÃO --- */
   /* Cria um fade nas bordas: Esquerda (para fundir com o texto) e Top/Bottom (para fundir com o vidro) */
-  -webkit-mask-image: linear-gradient(to left, black 60%, transparent 100%), 
-                      linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
-  mask-image: linear-gradient(to left, black 60%, transparent 100%),
-              linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
-  
+  -webkit-mask-image:
+    linear-gradient(to left, black 60%, transparent 100%),
+    linear-gradient(
+      to bottom,
+      transparent 0%,
+      black 15%,
+      black 85%,
+      transparent 100%
+    );
+  mask-image:
+    linear-gradient(to left, black 60%, transparent 100%),
+    linear-gradient(
+      to bottom,
+      transparent 0%,
+      black 15%,
+      black 85%,
+      transparent 100%
+    );
+
   /* Composite para juntar as máscaras se necessário, mas o linear-gradient complexo acima resolve a maioria */
-  mask-composite: intersect; 
-  
+  mask-composite: intersect;
+
   filter: grayscale(100%) contrast(1.1); /* P&B Inicial */
   transition: filter 0.5s ease;
   opacity: 0.9;
@@ -128,8 +146,20 @@
   overflow: hidden;
   position: relative;
   /* Máscara nas laterais para o texto sumir suavemente */
-  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
-  -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 10%,
+    black 90%,
+    transparent
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 10%,
+    black 90%,
+    transparent
+  );
 }
 
 .infinite-track {
@@ -140,12 +170,20 @@
 }
 
 .scroll-item {
-  font-family: 'Inter', sans-serif; /* Ou sua fonte padrão */
-  font-size: 1.5rem;
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.3); /* Texto apagado */
+  color: rgba(255, 255, 255, 0.8);
+
+  /* Glass Effect */
+  background: rgba(20, 20, 20, 0.3);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+
+  padding: 0.5rem 1rem;
   white-space: nowrap;
-  transition: color 0.3s;
+  transition: all 0.3s ease;
   text-transform: uppercase;
   letter-spacing: 0.1em;
 }
@@ -156,8 +194,12 @@
 }
 
 @keyframes scrollLoop {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); } /* Move metade (já que duplicamos a lista) */
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  } /* Move metade (já que duplicamos a lista) */
 }
 
 /* --- RESPONSIVIDADE --- */
@@ -167,19 +209,26 @@
     text-align: center;
     padding: 2rem;
   }
-  
-  .glass-strip { height: auto; }
-  
-  .profile-text-area { padding-top: 0; }
-  .bio-body { border-left: none; padding-left: 0; }
-  
+
+  .glass-strip {
+    height: auto;
+  }
+
+  .profile-text-area {
+    padding-top: 0;
+  }
+  .bio-body {
+    border-left: none;
+    padding-left: 0;
+  }
+
   .profile-img-container {
     width: 100%;
     height: 300px;
     justify-content: center;
     margin-bottom: 2rem;
   }
-  
+
   .horizontal-profile-img {
     width: 100%;
     height: 100%;
@@ -187,7 +236,11 @@
     -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
     mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
   }
-  
-  .terminal-header { justify-content: center; }
-  .terminal-line { display: none; }
+
+  .terminal-header {
+    justify-content: center;
+  }
+  .terminal-line {
+    display: none;
+  }
 }

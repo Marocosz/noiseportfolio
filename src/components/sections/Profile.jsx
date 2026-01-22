@@ -1,25 +1,27 @@
-import React from 'react';
-import { motion } from 'motion/react';
-import DecryptedText from '../effects/DecryptedText';
-import { profileData } from '../../data/content';
-import './Profile.css';
+import React from "react";
+import { motion } from "motion/react";
+import DecryptedText from "../effects/DecryptedText";
+import { profileData } from "../../data/content";
+import "./Profile.css";
 
 // IMPORTANTE: Mude o nome do arquivo aqui para sua nova imagem horizontal
-import profileImgHorizontal from '../../assets/profile-horizontal.png'; 
+import profileImgHorizontal from "../../assets/profile-horizontal.png";
 
 const Profile = () => {
   // Duplicamos a lista de skills para garantir que o scroll infinito não tenha buracos
-  const scrollingSkills = [...profileData.skills_highlight, ...profileData.skills_highlight, ...profileData.skills_highlight];
+  const scrollingSkills = [
+    ...profileData.skills_highlight,
+    ...profileData.skills_highlight,
+    ...profileData.skills_highlight,
+  ];
 
   return (
     <section className="profile-section">
-      
       {/* --- FAIXA DE VIDRO --- */}
       <div className="glass-strip">
         <div className="glass-content">
-          
           {/* LADO ESQUERDO: TEXTO */}
-          <motion.div 
+          <motion.div
             className="profile-text-area"
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -32,7 +34,7 @@ const Profile = () => {
             </div>
 
             <div className="bio-highlight">
-              <DecryptedText 
+              <DecryptedText
                 text={profileData.bio_highlight}
                 speed={40}
                 animateOn="view"
@@ -41,26 +43,23 @@ const Profile = () => {
               />
             </div>
 
-            <p className="bio-body">
-              {profileData.bio_full}
-            </p>
+            <p className="bio-body">{profileData.bio_full}</p>
           </motion.div>
 
           {/* LADO DIREITO: IMAGEM HORIZONTAL INTEGRADA */}
-          <motion.div 
+          <motion.div
             className="profile-img-container"
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            <img 
-              src={profileImgHorizontal} 
-              alt="Profile" 
-              className="horizontal-profile-img" 
+            <img
+              src={profileImgHorizontal}
+              alt="Profile"
+              className="horizontal-profile-img"
             />
           </motion.div>
-
         </div>
       </div>
 
@@ -69,12 +68,11 @@ const Profile = () => {
         <div className="infinite-track">
           {scrollingSkills.map((skill, index) => (
             <span key={index} className="scroll-item">
-              {skill} •
+              {skill}
             </span>
           ))}
         </div>
       </div>
-
     </section>
   );
 };
