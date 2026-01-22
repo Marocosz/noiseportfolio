@@ -32,24 +32,20 @@ const HomePage = () => {
         />
       </div>
 
-      {/* 2. HERO SECTION COM FADE */}
+      {/* 2. HERO SECTION */}
       <div style={{ 
         position: 'relative', 
-        zIndex: 10, 
-        // Ajustei o gradiente para ser mais suave ainda na transição
-        background: 'linear-gradient(to bottom, #000000 0%, #000000 60%, transparent 100%)',
-        paddingBottom: '100px' // Mais espaço para o fade
+        zIndex: 10,
+        // Gradiente removido para deixar o Silk permanente
+        // background: 'linear-gradient(...)',
       }}>
         <Hero />
       </div>
 
-      {/* 3. PERFIL & OUTRAS SEÇÕES
-          Ajustei a margem negativa para compensar o paddingBottom da Hero
-      */}
+      {/* 3. PERFIL & OUTRAS SEÇÕES */}
       <div style={{ 
         position: 'relative', 
-        zIndex: 5,
-        marginTop: '-100px' 
+        zIndex: 5
       }}>
         <Profile />
         <Projects />
