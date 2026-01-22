@@ -1,5 +1,5 @@
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { forwardRef, useRef, useMemo, useLayoutEffect } from 'react';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { forwardRef, useRef, useMemo } from 'react';
 import { Color } from 'three';
 
 const hexToNormalizedRGB = hex => {
@@ -13,19 +13,15 @@ const hexToNormalizedRGB = hex => {
 
 const vertexShader = `
 varying vec2 vUv;
-varying vec3 vPosition;
-
 void main() {
-  vPosition = position;
   vUv = uv;
-  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+  // Truque: Ignora a câmera e desenha um quadrado que cobre 100% da tela (Clip Space)
+  gl_Position = vec4(position, 1.0);
 }
 `;
 
 const fragmentShader = `
 varying vec2 vUv;
-varying vec3 vPosition;
-
 uniform float uTime;
 uniform vec3  uColor;
 uniform float uSpeed;
@@ -49,6 +45,7 @@ vec2 rotateUvs(vec2 uv, float angle) {
 }
 
 void main() {
+  // Usa gl_FragCoord para noise consistente independente do tamanho da geometria
   float rnd        = noise(gl_FragCoord.xy);
   vec2  uv         = rotateUvs(vUv * uScale, uRotation);
   vec2  tex        = uv * uScale;
@@ -69,30 +66,29 @@ void main() {
 `;
 
 const SilkPlane = forwardRef(function SilkPlane({ uniforms }, ref) {
-  const { viewport } = useThree();
-
-  useLayoutEffect(() => {
-    if (ref.current) {
-      ref.current.scale.set(viewport.width, viewport.height, 1);
-    }
-  }, [ref, viewport]);
-
   useFrame((_, delta) => {
-    ref.current.material.uniforms.uTime.value += 0.1 * delta;
+    if (ref.current?.material?.uniforms) {
+       ref.current.material.uniforms.uTime.value += 0.1 * delta;
+    }
   });
 
   return (
     <mesh ref={ref}>
-      <planeGeometry args={[1, 1, 1, 1]} />
-      <shaderMaterial uniforms={uniforms} vertexShader={vertexShader} fragmentShader={fragmentShader} />
+      {/* PlaneGeometry 2x2 cobre o clip space de -1 a 1 */}
+      <planeGeometry args={[2, 2]} />
+      <shaderMaterial 
+        uniforms={uniforms} 
+        vertexShader={vertexShader} 
+        fragmentShader={fragmentShader} 
+        depthWrite={false}
+        depthTest={false}
+      />
     </mesh>
   );
 });
-SilkPlane.displayName = 'SilkPlane';
 
 const Silk = ({ speed = 1, scale = 2, color = '#121212', noiseIntensity = 0.5, rotation = 0 }) => {
   const meshRef = useRef();
-
   const uniforms = useMemo(
     () => ({
       uSpeed: { value: speed },
@@ -107,9 +103,24 @@ const Silk = ({ speed = 1, scale = 2, color = '#121212', noiseIntensity = 0.5, r
 
   return (
     <div style={{ width: '100%', height: '100%' }}>
-        <Canvas dpr={[1, 2]} frameloop="always" gl={{ alpha: true }}>
+      <Canvas 
+        /* PERFORMANCE FIX: 
+           dpr={0.6} renderiza o shader com 60% da resolução e estica.
+           Reduz drasticamente o uso de GPU em monitores High-Refresh (166Hz) e Full HD/4K.
+           Como o efeito é de "fumaça", a perda de nitidez é imperceptível e até desejável.
+        */
+        dpr={0.6} 
+        resize={{ scroll: false }} 
+        gl={{ 
+          alpha: true, 
+          antialias: false, 
+          powerPreference: "high-performance",
+          stencil: false,
+          depth: false
+        }} 
+      >
         <SilkPlane ref={meshRef} uniforms={uniforms} />
-        </Canvas>
+      </Canvas>
     </div>
   );
 };

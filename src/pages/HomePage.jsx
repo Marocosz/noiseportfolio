@@ -1,22 +1,27 @@
 import React from 'react';
-import Hero from '../components/sections/Hero'; // Confirme o caminho
-import Profile from '../components/sections/Profile'; // Importe o NOVO Profile
+import Hero from '../components/sections/Hero'; 
+import Profile from '../components/sections/Profile'; 
 import Silk from '../components/backgrounds/Silk';
+import Projects from '../components/sections/Projects';
 
 const HomePage = () => {
   return (
-    <main style={{ position: 'relative', width: '100%' }}>
+    <main style={{ position: 'relative', width: '100%', overflowX: 'hidden' }}>
       
-      {/* 1. BACKGROUND FIXO (Silk)
-          Fica preso no fundo (z-index: 0). */}
+      {/* 1. BACKGROUND FIXO BLINDADO
+          - Usamos 'dvh' e 'dvw' para lidar melhor com o zoom e mobile.
+          - Transform: 'translateZ(0)' força a GPU a renderizar em camada separada, 
+            o que muitas vezes corrige glitches visuais.
+      */}
       <div style={{
         position: 'fixed',
         top: 0, 
         left: 0,
-        width: '100vw',
-        height: '100vh',
+        width: '100dvw', // Moderno
+        height: '100dvh', // Moderno
         zIndex: 0,
-        pointerEvents: 'none'
+        pointerEvents: 'none',
+        transform: 'translateZ(0)' // Truque de performance/renderização
       }}>
         <Silk 
           color="#661ea8" 
@@ -27,30 +32,30 @@ const HomePage = () => {
         />
       </div>
 
-      {/* 2. HERO SECTION COM FADE
-          Alterado de backgroundColor sólido para linear-gradient.
-          Isso faz o preto sumir gradualmente no final. */}
+      {/* 2. HERO SECTION COM FADE */}
       <div style={{ 
         position: 'relative', 
         zIndex: 10, 
-        // O fundo começa Preto (0%), continua Preto até 50%, e termina Transparente (100%)
-        background: 'linear-gradient(to bottom, #000000 0%, #000000 50%, transparent 100%)',
-        paddingBottom: '50px' // Espaço extra para o fade respirar
+        // Ajustei o gradiente para ser mais suave ainda na transição
+        background: 'linear-gradient(to bottom, #000000 0%, #000000 60%, transparent 100%)',
+        paddingBottom: '100px' // Mais espaço para o fade
       }}>
         <Hero />
       </div>
 
-      {/* 3. PERFIL & OUTRAS SEÇÕES (Mostram o Silk)
-          Fundo TRANSPARENTE e rolam por cima do fundo fixo. */}
+      {/* 3. PERFIL & OUTRAS SEÇÕES
+          Ajustei a margem negativa para compensar o paddingBottom da Hero
+      */}
       <div style={{ 
         position: 'relative', 
         zIndex: 5,
-        marginTop: '-50px' // Puxa o perfil levemente pra cima do gradiente para integrar melhor
+        marginTop: '-100px' 
       }}>
         <Profile />
+        <Projects />
         
-        {/* Futuramente: <Projects /> */}
-        {/* Futuramente: <Journey /> */}
+        {/* Espaço extra no final para garantir que o scroll vá até o fim sem cortes */}
+        <div style={{ height: '100px', pointerEvents: 'none' }}></div>
       </div>
 
     </main>

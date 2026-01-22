@@ -1,0 +1,197 @@
+/* src/components/sections/Projects.css */
+
+.projects-section {
+  position: relative;
+  width: 100%;
+  padding: 6rem 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden; /* Esconde o carrossel que vaza nas laterais */
+}
+
+.projects-header {
+  padding: 0 2rem;
+  margin-bottom: 3rem;
+  max-width: 1200px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.section-label {
+  font-family: 'Courier New', monospace;
+  color: #a855f7;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.section-title-large {
+  font-size: 3.5rem;
+  font-weight: 800;
+  color: #fff;
+  margin: 0;
+  line-height: 1.1;
+}
+
+/* --- CARROSSEL --- */
+.carousel-container {
+  width: 100%;
+  padding-left: 2rem; /* Espaço inicial à esquerda */
+  cursor: grab; /* Mãozinha para indicar que pode arrastar */
+}
+
+.carousel-container:active {
+  cursor: grabbing;
+}
+
+.carousel-track {
+  display: flex;
+  gap: 2rem; /* Espaço entre os cards */
+  width: max-content; /* Largura baseada no conteúdo */
+  padding-right: 4rem; /* Espaço extra no final */
+}
+
+/* --- CARD DO PROJETO --- */
+.project-card {
+  width: 400px; /* Largura fixa do card */
+  height: 500px;
+  border-radius: 16px;
+  position: relative;
+  overflow: hidden;
+  background: rgba(20, 20, 20, 0.4); /* Fundo escuro semi-transparente */
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: border-color 0.3s ease;
+  
+  display: flex;
+  flex-direction: column;
+}
+
+.project-card:hover {
+  border-color: rgba(168, 85, 247, 0.5); /* Borda roxa no hover */
+}
+
+/* Imagem */
+.card-image-wrapper {
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
+  position: relative;
+}
+
+.card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+  filter: grayscale(100%);
+}
+
+.project-card:hover .card-image {
+  transform: scale(1.1);
+  filter: grayscale(0%);
+}
+
+/* Conteúdo do Card */
+.card-content {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  justify-content: space-between;
+}
+
+.project-category {
+  font-size: 0.8rem;
+  color: #a855f7;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 0.5rem;
+}
+
+.project-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 1rem 0;
+}
+
+.project-description {
+  font-size: 0.95rem;
+  color: #aaa;
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* Limita a 3 linhas */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Tags */
+.card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: auto; /* Empurra para o final se sobrar espaço */
+}
+
+.tag {
+  font-size: 0.75rem;
+  padding: 0.3rem 0.8rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 100px;
+  color: #ccc;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Overlay de Links (Aparece no hover da imagem) */
+.card-links-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.card-image-wrapper:hover .card-links-overlay {
+  opacity: 1;
+}
+
+.project-btn {
+  padding: 0.6rem 1.2rem;
+  background: #fff;
+  color: #000;
+  border-radius: 4px;
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transform: translateY(20px);
+  transition: transform 0.3s ease;
+}
+
+.card-image-wrapper:hover .project-btn {
+  transform: translateY(0);
+}
+
+.project-btn.outline {
+  background: transparent;
+  color: #fff;
+  border: 1px solid #fff;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .section-title-large { font-size: 2.5rem; }
+  .project-card { width: 300px; height: 450px; }
+  .carousel-track { padding-right: 2rem; gap: 1rem; }
+}
