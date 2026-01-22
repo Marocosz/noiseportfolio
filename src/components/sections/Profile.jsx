@@ -55,10 +55,21 @@ const Profile = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-             <div style={{ width: '100%', height: '100%', position: 'relative' }}>
+             {/* 
+                Técnica de Zoom: Aumentamos o container para 150% e centralizamos com margens negativas.
+                Como o Spline renderiza baseado no tamanho do container, isso aumenta a resolução real (nítido),
+                ao contrário de usar 'transform: scale' que apenas estica os pixels (borrado).
+             */}
+             <div style={{ 
+               width: '160%', 
+               height: '160%', 
+               position: 'absolute',
+               right: '-30%',
+               bottom: '-15.5%'
+             }}>
                 <SplineScene 
                   scene="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode"
-                  className="spline-canvas"
+                  className="spline-profile-clean"
                 />
              </div>
           </motion.div>

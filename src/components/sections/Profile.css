@@ -227,6 +227,7 @@
     height: 300px;
     justify-content: center;
     margin-bottom: 2rem;
+    overflow: hidden; /* Garante que o zoom não vaze */
   }
 
   .horizontal-profile-img {

@@ -290,7 +290,7 @@ body {
   height: 100% !important;
 
   /* 3. MUDANÇA: Aumentamos o robô em 30% e empurramos 100px para a direita */
-  transform: scale(1.3) translateX(100px);
+
 }
 
 .spline-loading {
