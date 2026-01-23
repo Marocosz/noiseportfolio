@@ -48,7 +48,7 @@ export const journeyData = [
     id: "step-05",
     date: "FUTURE",
     hash: "q3r4s5t",
-    type: "wip", // Work In Progress
+    type: "init", // Work In Progress
     title: "Next Level: AI Engineer",
     org: "Roadmap 2026+",
     description:

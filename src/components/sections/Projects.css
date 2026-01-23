@@ -486,3 +486,7 @@
      border-bottom-color: rgba(0, 0, 0, 0.1);
   }
 }
+
+.theme-light .project-category {
+  color: #9333ea; /* Darker Purple for contrast on white */
+}

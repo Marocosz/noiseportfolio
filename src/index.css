@@ -51,9 +51,7 @@
   color: var(--text-primary);
 }
 
-.theme-light .section-label,
-.theme-light .card-year,
-.theme-light .card-date {
+.theme-light .section-label {
   color: var(--accent-color) !important; /* Mantém o roxo de destaque */
 }
 

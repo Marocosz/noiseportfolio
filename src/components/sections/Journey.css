@@ -135,7 +135,6 @@
 }
 
 /* Container que se move horizontalmente */
-/* Container que se move horizontalmente */
 .cards-container {
   display: flex;
   gap: 8rem; /* Reduzido de 12rem para aproximar os cards */
@@ -197,8 +196,6 @@
   align-items: center;
   justify-content: center;
   overflow: visible;
-  /* Centraliza a conexão entre os cards */
-
 }
 
 .connection-svg {
@@ -233,11 +230,8 @@
   min-height: 450px;
   flex-shrink: 0;
   z-index: 5;
-  /* Centraliza o card na linha verticalmente */
   margin-top: 0; 
 }
-
-
 
 /* Card Inner (Conteúdo) */
 .card-inner {
@@ -286,6 +280,39 @@
 }
 
 /* ========================================
+   GIT COMMIT STYLING
+   ======================================== */
+.git-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.8rem;
+  font-family: 'Courier New', monospace;
+}
+
+.commit-hash {
+  color: #888;
+  font-size: 0.9rem;
+}
+
+.git-prefix {
+  color: #a855f7;
+  font-weight: bold;
+}
+
+.commit-type {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.type-init { color: #22c55e; }     /* Green */
+.type-merge { color: #a855f7; }    /* Purple */
+.type-release { color: #3b82f6; }  /* Blue */
+.type-wip { color: #eab308; }      /* Yellow */
+
+/* ========================================
    CARD CONTENT
    ======================================== */
 
@@ -293,17 +320,17 @@
   font-family: 'Courier New', monospace;
   font-size: 0.85rem;
   font-weight: 700;
-  color: #a855f7;
+  color: #bbb; /* Cor mais suave pois data não é o destaque do git header */
   text-transform: uppercase;
   letter-spacing: 2px;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 
 .card-title {
   font-size: 1.8rem;
   font-weight: 700;
   color: #fff;
-  margin: 0 0 0.8rem 0;
+  margin: 0 0 0.5rem 0;
   line-height: 1.2;
   letter-spacing: -0.5px;
 }
@@ -311,14 +338,15 @@
 .card-company {
   font-size: 1.05rem;
   color: #aaa;
-  font-style: italic;
   margin: 0;
+  font-family: 'Courier New', monospace;
 }
 
+/* DIVIDER AUMENTADO */
 .card-divider {
-  width: 60px;
-  height: 2px;
-  background: linear-gradient(90deg, #a855f7, transparent);
+  width: 100%; /* Largura total */
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(168, 85, 247, 0.5), transparent);
   margin: 1.5rem 0;
 }
 
@@ -353,8 +381,6 @@
   background: rgba(168, 85, 247, 0.1);
   transform: translateY(-2px);
 }
-
-
 
 /* ========================================
    RESPONSIVE - MOBILE (Desliga o efeito sticky)
@@ -397,7 +423,6 @@
   .connection-container {
     display: none;
   }
-
 }
 
 /* RESPONSIVIDADE PARA TELAS BAIXAS (Laptops pequenos ou Zoom alto) */
@@ -427,8 +452,6 @@
     font-size: 0.85rem;
     margin-bottom: 1rem;
   }
-  
-
 }
 
 /* ========================================
@@ -476,22 +499,36 @@
 }
 
 
-
 .theme-light .timeline-progress-track {
   background: rgba(0, 0, 0, 0.05);
   border: 1px solid rgba(0, 0, 0, 0.1);
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
-
-
-
-
 .theme-light .journey-card:hover .card-inner {
   border-color: rgba(168, 85, 247, 0.4);
   background: rgba(255, 255, 255, 0.8);
   box-shadow: 0 20px 40px rgba(0,0,0,0.1);
 }
+
+/* GIT Elements Light Theme */
+.theme-light .git-header {
+  color: #333;
+}
+
+.theme-light .commit-hash {
+  color: #666;
+}
+
+.theme-light .git-prefix {
+  color: #9333ea; /* Darker purple for contrast */
+}
+
+/* Maintain colors but ensure contrast if needed, or leave as is if they are already accessible */
+.theme-light .type-init { color: #16a34a; }     /* Darker Green */
+.theme-light .type-merge { color: #9333ea; }    /* Darker Purple */
+.theme-light .type-release { color: #2563eb; }  /* Darker Blue */
+.theme-light .type-wip { color: #ca8a04; }      /* Darker Yellow */
 
 /* ========================================
    MOBILE VERSION: Vertical Timeline
@@ -547,7 +584,7 @@
   content: '';
   position: absolute;
   left: -3.5rem;
-  top: 1.5rem;
+  top: 2rem; /* Adjusted for larger header */
   width: 12px;
   height: 12px;
   background: #a855f7;
@@ -563,14 +600,33 @@
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
 }
 
+/* GIT HEADER MOBILE */
+.git-header-mobile {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  font-family: 'Courier New', monospace;
+  font-size: 0.8rem;
+}
+
+.commit-hash-mobile {
+  color: #888;
+}
+
+.commit-type-mobile {
+  color: #a855f7;
+  font-weight: bold;
+}
+
 .card-year-mobile {
   font-family: 'Courier New', monospace;
   font-size: 0.75rem;
   font-weight: 700;
-  color: #a855f7;
+  color: #bbb;
   text-transform: uppercase;
   letter-spacing: 2px;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
   display: block;
 }
 
@@ -585,14 +641,14 @@
 .card-company-mobile {
   font-size: 0.95rem;
   color: #aaa;
-  font-style: italic;
   margin: 0 0 1rem 0;
+  font-family: 'Courier New', monospace;
 }
 
 .card-divider-mobile {
-  width: 50px;
-  height: 2px;
-  background: linear-gradient(90deg, #a855f7, transparent);
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(168, 85, 247, 0.5), transparent);
   margin: 1rem 0;
 }
 
@@ -661,5 +717,22 @@
 .theme-light .card-tag-mobile {
   background: rgba(0, 0, 0, 0.05);
   border-color: rgba(0, 0, 0, 0.1);
+  color: #555;
+}
+
+.theme-light .git-header-mobile {
+  color: #333;
+}
+
+.theme-light .commit-hash-mobile {
+  color: #666;
+}
+
+.theme-light .commit-type-mobile {
+  color: #9333ea;
+}
+
+.theme-light .card-year,
+.theme-light .card-year-mobile {
   color: #555;
 }

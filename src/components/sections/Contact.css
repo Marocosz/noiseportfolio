@@ -470,3 +470,11 @@
   border-color: rgba(168, 85, 247, 0.3);
   color: #a855f7;
 }
+
+.theme-light .prompt-user {
+  color: #9333ea; /* Darker Purple */
+}
+
+.theme-light .prompt-symbol {
+  color: #333;
+}

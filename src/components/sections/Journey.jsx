@@ -41,12 +41,22 @@ const Journey = () => {
         </div>
 
         <div className="journey-list-mobile">
-          {journeyData.map((item, index) => (
+          {journeyData.map((item) => (
             <div key={item.id} className="journey-card-mobile">
-              <div className="card-year-mobile">{item.date}</div>
+              
+              <div className="git-header-mobile">
+                <span className="commit-hash-mobile">
+                   {item.hash}
+                </span>
+                <span className="commit-type-mobile">[{item.type}]</span>
+              </div>
+
+              <div className="card-year-mobile">Date: {item.date}</div>
               <h3 className="card-title-mobile">{item.title}</h3>
-              <p className="card-company-mobile">{item.org}</p>
+              <p className="card-company-mobile">Author: {item.org}</p>
+              
               <div className="card-divider-mobile" />
+              
               <p className="card-description-mobile">{item.description}</p>
               <div className="card-tags-mobile">
                 {item.tags.map((tag, i) => (
@@ -134,10 +144,24 @@ const Journey = () => {
               <div key={item.id} className="journey-card">
                 
                 <div className="card-inner">
-                  <div className="card-year">{item.date}</div>
+                  
+                  {/* GIT HEADER: Hash & Type */}
+                  <div className="git-header">
+                    <span className="commit-hash">
+                      <span className="git-prefix">commit</span> {item.hash}
+                    </span>
+                    <span className={`commit-type type-${item.type}`}>
+                      [{item.type}]
+                    </span>
+                  </div>
+
+                  <div className="card-year">Date: {item.date}</div>
+                  
                   <h3 className="card-title">{item.title}</h3>
-                  <p className="card-company">{item.org}</p>
+                  <p className="card-company">Author: {item.org}</p>
+                  
                   <div className="card-divider" />
+                  
                   <p className="card-description">{item.description}</p>
                   <div className="card-tags">
                     {item.tags.map((tag, i) => (
