@@ -6,15 +6,13 @@ import Projects from '../components/sections/Projects';
 import Journey from '../components/sections/Journey';
 import TechStack from '../components/sections/TechStack';
 import Contact from '../components/sections/Contact';
+import Navbar from '../components/ui/Navbar';
 
 const HomePage = () => {
   return (
     <main style={{ position: 'relative', width: '100%' }}>
       
-      {/* 1. BACKGROUND FIXO BLINDADO
-          - Usamos 'dvh' e 'dvw' para lidar melhor com o zoom e mobile.
-          - Transform: 'translateZ(0)' força a GPU a renderizar em camada separada.
-      */}
+      {/* 1. BACKGROUND FIXO BLINDADO */}
       <div style={{
         position: 'fixed',
         top: 0, 
@@ -35,30 +33,37 @@ const HomePage = () => {
       </div>
 
       {/* 2. HERO SECTION */}
-      <div style={{ 
-        position: 'relative', 
-        zIndex: 10,
-      }}>
+      <div id="hero" style={{ position: 'relative', zIndex: 10 }}>
         <Hero />
       </div>
 
-      {/* 3. PERFIL & CONTEÚDO PRINCIPAL */}
-      <div style={{ 
-        position: 'relative', 
-        zIndex: 5
-      }}>
-        <Profile />
+      {/* 3. CONTEÚDO PRINCIPAL */}
+      <div style={{ position: 'relative', zIndex: 5 }}>
         
-        <Projects />
+        <div id="profile">
+          <Profile />
+        </div>
         
-        {/* --- SPACER DE SEGURANÇA --- */}
+        <div id="projects">
+          <Projects />
+        </div>
+        
+        {/* --- SPACER DE SEGURANÇA --- 
+            Evita que a Journey comece antes da hora por causa do sticky
+        */}
         <div style={{ height: '150px', width: '100%' }}></div>
 
-        <Journey />
+        <div id="journey">
+          <Journey />
+        </div>
         
-        <TechStack />
+        <div id="tech">
+          <TechStack />
+        </div>
         
-        <Contact />
+        <div id="contact">
+          <Contact />
+        </div>
         
         {/* --- FOOTER --- */}
         <div style={{ 
@@ -76,6 +81,9 @@ const HomePage = () => {
         </div>
 
       </div>
+      
+      {/* 4. BARRA DE NAVEGAÇÃO FLUTUANTE */}
+      <Navbar />
 
     </main>
   );
