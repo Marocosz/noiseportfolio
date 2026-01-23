@@ -15,7 +15,6 @@
   margin-bottom: 3rem;
   width: 100%;
   text-align: center;
-
 }
 
 .section-label {
@@ -56,17 +55,15 @@
   perspective: 1000px;
 }
 
-/* A trilha que se move */
 .carousel-track {
   display: flex;
   align-items: center;
   gap: 4rem; 
   position: absolute;
   left: 50%; 
-  /* O movimento é feito via Framer Motion no JSX */
 }
 
-/* --- O CARD HORIZONTAL (ULTRA WIDE) --- */
+/* --- O CARD HORIZONTAL --- */
 .project-card {
   width: 800px;  
   height: 500px; 
@@ -89,7 +86,6 @@
 }
 
 /* --- ESTADOS DO CARD --- */
-
 .project-card.inactive {
   opacity: 0.5;
   filter: blur(4px) grayscale(100%);
@@ -101,28 +97,19 @@
   opacity: 1;
   filter: blur(0px) grayscale(0%);
   transform: scale(1);
-
   border-color: rgba(168, 85, 247, 0.4);
   box-shadow: 0 0 40px rgba(168, 85, 247, 0.1), 0 30px 60px rgba(0,0,0,0.8);
 }
 
-/* --- CONTEÚDO DO CARD --- */
-
-/* 1. Header (Topo do Card) - Glassmorphism FOSCO */
+/* --- HEADER DO CARD --- */
 .card-header-glass {
   width: 100%;
   padding: 1.5rem 2rem;
-  
-  /* Visual Fosco (High Blur + High Opacity) para compensar a imagem de fundo */
   background: rgba(20, 20, 20, 0.6);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  
-  /* Bordas idênticas ao Profile (0.08) para consistência visual */
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: none;
-  
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -158,7 +145,7 @@
   letter-spacing: -0.5px;
 }
 
-/* 2. Corpo Dividido (50% / 50%) - Sólido */
+/* 2. Corpo Sólido - Coluna Única */
 .card-body-split {
   flex: 1; 
   display: flex;
@@ -168,14 +155,15 @@
 }
 
 .card-col {
-  flex: 1; 
-  padding: 2rem; 
+  flex: 1;
+  padding: 3rem; 
   display: flex;
   flex-direction: column;
 }
 
-.left-col {
-  border-right: 1px solid rgba(255, 255, 255, 0.08); 
+.single-col {
+  width: 100%;
+  border: none;
 }
 
 .body-label {
@@ -189,34 +177,14 @@
 }
 
 .project-description {
-  font-size: 1rem;
+  font-size: 0.95rem;
   color: #ccc;
-  line-height: 1.6;
+  line-height: 1.7;
   margin-bottom: auto; 
+  text-align: left;
 }
 
-.tech-grid {
-  display: flex;
-  flex-wrap: wrap;
-  align-content: flex-start;
-  gap: 0.75rem;
-}
 
-.tech-tag {
-  font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.8);
-  padding: 0.5rem 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 8px; 
-  transition: all 0.3s ease;
-}
-
-.project-card.active .tech-tag:hover {
-  border-color: #a855f7;
-  background: rgba(168, 85, 247, 0.1);
-  color: #fff;
-  transform: translateY(-2px);
-}
 
 .github-btn {
   display: inline-flex;
@@ -239,9 +207,7 @@
   box-shadow: 0 5px 15px rgba(255, 255, 255, 0.15);
 }
 
-
-
-/* --- BOTÕES DE NAVEGAÇÃO --- */
+/* --- NAVEGAÇÃO --- */
 .nav-btn-floating {
   position: absolute;
   top: 50%;
@@ -270,120 +236,57 @@
 .nav-btn-floating.prev { left: 4%; }
 .nav-btn-floating.next { right: 4%; }
 
-/* RESPONSIVIDADE */
+/* --- RESPONSIVIDADE --- */
 @media (max-width: 1024px) {
-  .project-card { width: 600px; height: 550px; }
+  .project-card { width: 600px; height: auto; min-height: 500px; }
   .carousel-track { gap: 2rem; }
   
   .card-body-split {
     flex-direction: column; 
-    overflow-y: auto; 
   }
-  
-  .left-col {
-    border-right: none;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+  .card-col {
+    padding: 2rem;
   }
 }
 
 @media (max-width: 768px) {
-  .carousel-viewport { height: 600px; }
-  .project-card { width: 85vw; height: auto; min-height: 500px; } 
-  .carousel-track { gap: 1rem; }
-  
+  .project-card { width: 85vw; } 
   .nav-btn-floating { width: 40px; height: 40px; }
   .nav-btn-floating.prev { left: 1%; }
   .nav-btn-floating.next { right: 1%; }
-  
   .section-title-large { font-size: 2.2rem; }
-  
   .card-header-glass { padding: 1rem; }
   .project-title { font-size: 1.5rem; }
-  
   .card-col { padding: 1.5rem; }
 }
 
-/* ========================================
-   THEME LIGHT OVERRIDES
-   ======================================== */
-
+/* --- THEME LIGHT --- */
 .theme-light .project-card {
   border-color: rgba(0, 0, 0, 0.1);
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
 }
-
 .theme-light .project-card.active {
   box-shadow: 0 0 40px rgba(168, 85, 247, 0.15), 0 30px 60px rgba(0,0,0,0.1);
 }
-
 .theme-light .card-header-glass {
   background: rgba(255, 255, 255, 0.8);
   border-color: rgba(0, 0, 0, 0.1);
 }
-
-.theme-light .project-title {
-  color: #111;
-}
-
-.theme-light .project-year {
-  color: #555;
-  font-weight: 700;
-}
-
-.theme-light .card-body-split {
-  background: #ffffff;
-}
-
-.theme-light .left-col {
-  border-right: 1px solid rgba(0, 0, 0, 0.08);
-}
-
-.theme-light .project-description {
-  color: #444;
-}
-
-.theme-light .body-label {
-  color: #777;
-}
-
-.theme-light .tech-tag {
-  color: #555;
-  border-color: rgba(0, 0, 0, 0.15);
-  background: rgba(0, 0, 0, 0.03);
-}
-
-.theme-light .project-card.active .tech-tag:hover {
-  border-color: #a855f7;
-  background: rgba(168, 85, 247, 0.1);
-  color: #000;
-}
-
-.theme-light .github-btn {
-  background: #111;
-  color: #fff;
-}
-
-.theme-light .github-btn:hover {
-  background: #333;
-  color: #fff;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-}
-
+.theme-light .project-title { color: #111; }
+.theme-light .project-year { color: #555; font-weight: 700; }
+.theme-light .card-body-split { background: #ffffff; }
+.theme-light .project-description { color: #444; }
+.theme-light .body-label { color: #777; }
+.theme-light .github-btn { background: #111; color: #fff; }
+.theme-light .github-btn:hover { background: #333; color: #fff; }
 .theme-light .nav-btn-floating {
   background: rgba(0, 0, 0, 0.05);
   border: 1px solid rgba(0, 0, 0, 0.1);
   color: #333;
 }
+.theme-light .nav-btn-floating:hover { background: #111; color: #fff; }
 
-.theme-light .nav-btn-floating:hover {
-  background: #111;
-  color: #fff;
-}
-
-/* Ajuste específico para mobile no light mode */
 @media (max-width: 1024px) {
-  .theme-light .left-col {
-    border-right: none;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-  }
+  /* ... overrides if needed ... */
 }
