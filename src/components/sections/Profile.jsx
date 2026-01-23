@@ -66,8 +66,44 @@ const Profile = () => {
           ))}
         </div>
       </div>
+
+      {/* Stats Section moved from Journey */}
+      <div className="profile-stats-container">
+          <StatsCard 
+              number="8+" 
+              label="Freelance Services" 
+              sublabel="Delivered with Excellence"
+          />
+          <StatsCard 
+              number="3+" 
+              label="Years Experience" 
+              sublabel="Continuous Learning"
+          />
+          <StatsCard 
+              number="12+" 
+              label="Total Projects" 
+              sublabel="Innovative Solutions"
+          />
+      </div>
+
     </section>
   );
 };
+
+const StatsCard = ({ number, label, sublabel }) => (
+  <motion.div 
+      className="stat-card"
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, delay: 0.2 }}
+  >
+      <div className="stat-card-inner">
+          <h3 className="stat-number">{number}</h3>
+          <p className="stat-label">{label}</p>
+          <span className="stat-sublabel">{sublabel}</span>
+      </div>
+  </motion.div>
+);
 
 export default Profile;

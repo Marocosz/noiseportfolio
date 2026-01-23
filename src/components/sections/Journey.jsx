@@ -123,6 +123,7 @@ const Journey = () => {
             ))}
           </motion.div>
         </div>
+
       </div>
     </section>
   );
