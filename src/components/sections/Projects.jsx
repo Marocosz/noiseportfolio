@@ -65,8 +65,8 @@ const Projects = () => {
                 {/* 2. Corpo Sólido */}
                 <div className="card-body-split">
                     
-                    {/* Conteúdo Principal: Proposta + Botão */}
-                    <div className="card-col single-col">
+                    {/* Conteúdo Principal: IDEA (Maior) */}
+                    <div className="card-col main-col">
                         <span className="body-label">IDEA</span>
                         <p className="project-description">{project.description}</p>
                         
@@ -76,6 +76,16 @@ const Projects = () => {
                                 View on GitHub
                             </a>
                         )}
+                    </div>
+
+                    {/* Coluna Techs (Menor - ~30%) */}
+                    <div className="card-col tech-col">
+                        <span className="body-label">TECHS</span>
+                        <ul className="tech-list">
+                            {project.techs && project.techs.map((tech, idx) => (
+                                <li key={idx} className="tech-item-project">{tech}</li>
+                            ))}
+                        </ul>
                     </div>
 
                 </div>
