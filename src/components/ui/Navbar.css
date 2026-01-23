@@ -137,7 +137,12 @@
 
 .tray-icon-hover {
   color: #fff;
-  padding: 4px;
+  width: 28px; /* Fixed width for better click target */
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
 }
 
 /* Relógio */

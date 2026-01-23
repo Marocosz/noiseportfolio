@@ -1,0 +1,90 @@
+/* src/components/sections/Hero.css */
+
+.hero-section-label {
+  font-family: 'Courier New', monospace;
+  color: #a855f7;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  display: block;
+  font-weight: 600;
+  text-align: center;
+  letter-spacing: 2px;
+}
+
+.hero-contact-link {
+  display: inline-block;
+  margin-top: 1.5rem;
+  padding: 0.5rem 1.5rem;
+  color: var(--text-primary);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 9999px; /* Rounded border */
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  font-weight: 500;
+}
+
+.hero-contact-link:hover {
+  background: rgba(168, 85, 247, 0.1);
+  border-color: #a855f7;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(168, 85, 247, 0.2);
+}
+
+.hero-scroll-indicator {
+  position: absolute;
+  bottom: 5rem;
+  left: 2rem; /* Left corner */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-secondary);
+  opacity: 0.7;
+  animation: bounce 2s infinite;
+  z-index: 10;
+  cursor: pointer;
+}
+
+.hero-scroll-text {
+  font-size: 0.75rem;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+/* Light Theme Overrides */
+.theme-light .hero-section-label {
+  color: #a855f7;
+}
+
+.theme-light .hero-contact-link {
+  color: #333;
+  border-color: rgba(0, 0, 0, 0.1);
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.theme-light .hero-contact-link:hover {
+  background: rgba(168, 85, 247, 0.1);
+  border-color: #a855f7;
+}
+
+.theme-light .hero-scroll-indicator {
+  color: #555;
+}

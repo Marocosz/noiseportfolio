@@ -101,7 +101,7 @@ const HomePage = () => {
           alignItems: 'center', 
           justifyContent: 'center',
           // Cor do texto do footer ajustável via CSS da classe theme
-          color: isDarkMode ? '#444' : '#666',
+          color: 'var(--text-secondary)',
           fontSize: '0.8rem',
           marginTop: '4rem',
           paddingBottom: '2rem'

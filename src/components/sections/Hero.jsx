@@ -1,34 +1,60 @@
 import React from 'react';
-import DecryptedText from '../effects/DecryptedText'; // 1. IMPORTAR
+import DecryptedText from '../effects/DecryptedText'; 
+import { ArrowDown } from 'lucide-react';
+import './Hero.css';
 
 const Hero = () => {
-    return (
-        // O container principal da Hero Section
-        <section className="hero-section">
+    const scrollToContact = () => {
+        const contactSection = document.getElementById('contact');
+        if (contactSection) {
+            contactSection.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
 
-            {/* O background animado fica aqui (Vazio pois DarkVeil foi removido) */}
+    const scrollDown = () => {
+        // Scroll to the next section (Profile usually)
+        const profileSection = document.getElementById('profile');
+        if (profileSection) {
+            profileSection.scrollIntoView({ behavior: 'smooth' });
+        } else {
+             window.scrollBy({ top: window.innerHeight, behavior: 'smooth' });
+        }
+    };
+
+    return (
+        <section className="hero-section" id="hero">
+
             <div className="hero-background"></div>
 
-            {/* O conteúdo (texto) fica aqui, por cima */}
             <div className="hero-content">
+                <span className="hero-section-label">01. / PORTFOLIO</span>
                 <h1>
                     Marcos<br />Rodrigues
                 </h1>
 
-                {/* 2. SUBSTITUIR O <p> PELO DecryptedText */}
                 <DecryptedText
-                    // Usamos 'parentClassName' para aplicar o estilo do CSS
                     parentClassName="hero-subtitle"
                     text="AI Developer & Full-Stack Engineer"
-                    animateOn="view" // Anima assim que a página carregar
-                    sequential={true}  // Letra por letra
-                    speed={40}         // Velocidade (pode ajustar)
+                    animateOn="view" 
+                    sequential={true} 
+                    speed={40}         
                     useOriginalCharsOnly={true}
                 />
+
+                <div>
+                    <button onClick={scrollToContact} className="hero-contact-link">
+                        Let's Talk
+                    </button>
+                </div>
             </div>
             
             <div className="hero-f11-hint">
                 Press F11 for best experience
+            </div>
+
+            <div className="hero-scroll-indicator" onClick={scrollDown}>
+                <span className="hero-scroll-text">Scroll</span>
+                <ArrowDown size={24} />
             </div>
 
         </section>
