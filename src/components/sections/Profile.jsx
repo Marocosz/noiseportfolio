@@ -31,7 +31,7 @@ const Profile = () => {
             transition={{ duration: 0.8 }}
           >
             <div className="terminal-header">
-              <span>{profileData.title}</span>
+              <span className="section-label">02. / WHOAMI</span>
             </div>
 
             <div className="bio-highlight">
@@ -61,11 +61,13 @@ const Profile = () => {
                 ao contrário de usar 'transform: scale' que apenas estica os pixels (borrado).
              */}
              <div style={{ 
-               width: '160%', 
-               height: '160%', 
+               // OTIMIZAÇÃO: Reduzi de 160% para 130% para diminuir o LAG em telas 4K/144hz.
+               // Mantém um bom tamanho sem matar a GPU.
+               width: '130%', 
+               height: '130%', 
                position: 'absolute',
-               right: '-30%',
-               bottom: '-15.5%'
+               right: '-15%',
+               bottom: '-10%'
              }}>
                 <SplineScene 
                   scene="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode"
