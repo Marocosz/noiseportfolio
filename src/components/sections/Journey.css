@@ -24,11 +24,11 @@
   overflow: hidden; /* Esconde o que sai para a direita */
   
   display: flex;
+  display: flex;
   flex-direction: column;
   justify-content: center; /* Centraliza verticalmente */
   
-  /* PADDING AJUSTADO: Removi o padding-top excessivo */
-  padding: 0 0 2rem 0; 
+  padding: 0;
   
   /* Gradiente suave para destacar a seção */
   background: radial-gradient(circle at center, rgba(168, 85, 247, 0.05), transparent 70%);
@@ -42,9 +42,10 @@
   width: 100%;
   max-width: 1400px;
   padding: 0 4rem;
-  /* Margem superior para afastar do topo da tela, mas dentro do viewport */
-  margin: 4rem auto 3rem auto; 
+  /* Margens dinâmicas baseadas na altura da tela para evitar cortes */
+  margin: 2vh auto 4vh auto; 
   text-align: center;
+  flex-shrink: 0; /* Impede o header de esmagar */
 }
 
 .section-label {
@@ -348,6 +349,39 @@
   }
   .scroll-indicator {
     display: none;
+  }
+}
+
+/* RESPONSIVIDADE PARA TELAS BAIXAS (Laptops pequenos ou Zoom alto) */
+@media (max-height: 800px) and (min-width: 1024px) {
+  .journey-header {
+    margin: 2vh auto 2vh auto;
+  }
+  
+  .section-title-large {
+    font-size: 2.5rem;
+  }
+  
+  .journey-card {
+    width: 450px;
+    height: 380px;
+  }
+  
+  .card-inner {
+    padding: 1.5rem;
+  }
+  
+  .card-title {
+    font-size: 1.4rem;
+  }
+  
+  .card-description {
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+  }
+  
+  .scroll-indicator {
+    bottom: 2vh;
   }
 }
 
