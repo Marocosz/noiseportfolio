@@ -6,55 +6,53 @@ export const techData = [
     id: "ai",
     title: "AI & Data Science",
     icon: Cpu,
-    description: "Core da minha especialização acadêmica e profissional.",
+    description: "Stack principal. Foco em LLMs, RAG e análise de dados complexos.",
     items: [
       { name: "Python", level: "Expert", color: "#3776AB", tooltip: "Linguagem versátil para Backend e AI." },
-      { name: "OpenAI API", level: "Advanced", color: "#10A37F", tooltip: "Integração com LLMs avançados." },
-      { name: "LangChain", level: "Advanced", color: "#F0C814", tooltip: "Framework para orquestração de LLMs." },
-      { name: "Pandas", level: "Advanced", color: "#150458", tooltip: "Manipulação e análise de dados." },
-      { name: "Scikit-learn", level: "Intermediate", color: "#F7931E", tooltip: "Machine Learning clássico e stats." },
-      { name: "TensorFlow", level: "Basic", color: "#FF6F00", tooltip: "Deep Learning e Redes Neurais." }
+      { name: "LangChain", level: "Advanced", color: "#F0C814", tooltip: "Orquestração de LLMs e Chains." },
+      { name: "RAG", level: "Advanced", color: "#10A37F", tooltip: "Retrieval-Augmented Generation." },
+      { name: "Pandas", level: "Advanced", color: "#150458", tooltip: "Análise e manipulação de dados." },
+      { name: "Scipy", level: "Intermediate", color: "#8CAAE6", tooltip: "Computação científica e técnica." },
+      { name: "OpenAI API", level: "Advanced", color: "#10A37F", tooltip: "Integração com modelos GPT." }
     ]
   },
   {
     id: "backend",
     title: "Backend Engineering",
     icon: Server,
-    description: "Arquiteturas escaláveis e APIs de alta performance.",
+    description: "APIs robustas e arquiteturas de dados eficientes.",
     items: [
-      { name: "FastAPI", level: "Expert", color: "#009688", tooltip: "APIs Python assíncronas ultra-rápidas." },
-      { name: "Node.js", level: "Advanced", color: "#339933", tooltip: "Runtime JS para servidores escaláveis." },
-      { name: "PostgreSQL", level: "Advanced", color: "#336791", tooltip: "Banco Relacional robusto e confiável." },
-      { name: "MongoDB", level: "Intermediate", color: "#47A248", tooltip: "Banco NoSQL flexível baseado em documentos." },
-      { name: "Redis", level: "Intermediate", color: "#DC382D", tooltip: "Cache em memória de alta performance." },
-      { name: "MQTT", level: "Advanced", color: "#660066", tooltip: "Protocolo leve para comunicação IoT." }
+      { name: "FastAPI", level: "Expert", color: "#009688", tooltip: "APIs assíncronas de alta performance." },
+      { name: "Flask", level: "Advanced", color: "#000000", tooltip: "Micro-framework para aplicações ágeis." },
+      { name: "SQLModel", level: "Advanced", color: "#E10098", tooltip: "ORM moderno para FastAPI." },
+      { name: "Beanie ODM", level: "Intermediate", color: "#FFD700", tooltip: "ODM assíncrono para MongoDB." },
+      { name: "PostgreSQL", level: "Advanced", color: "#336791", tooltip: "Banco Relacional sólido." },
+      { name: "MongoDB", level: "Intermediate", color: "#47A248", tooltip: "Banco NoSQL (Documentos)." }
     ]
   },
   {
     id: "frontend",
-    title: "Frontend & UI",
+    title: "Frontend & Interfaces",
     icon: Layout,
-    description: "Interfaces reativas e dashboards complexos.",
+    description: "Criação de interfaces para demonstração e uso de ferramentas.",
     items: [
-      { name: "Vue.js", level: "Advanced", color: "#4FC08D", tooltip: "Framework JS progressivo e reativo." },
-      { name: "Nuxt", level: "Advanced", color: "#00C58E", tooltip: "Framework Full-stack baseado em Vue." },
-      { name: "React", level: "Intermediate", color: "#61DAFB", tooltip: "Biblioteca popular para interfaces UI." },
-      { name: "Tailwind CSS", level: "Expert", color: "#06B6D4", tooltip: "Estilização utility-first moderna." },
-      { name: "Framer Motion", level: "Intermediate", color: "#0055FF", tooltip: "Animações fluidas e gestos para React." }
+      { name: "Streamlit", level: "Advanced", color: "#FF4B4B", tooltip: "Data Apps rápidos em Python." },
+      { name: "React", level: "Intermediate", color: "#61DAFB", tooltip: "Interfaces dinâmicas modernas." },
+      { name: "Tailwind CSS", level: "Expert", color: "#06B6D4", tooltip: "Estilização eficiente." },
+      { name: "HTML/CSS/JS", level: "Advanced", color: "#E34F26", tooltip: "Fundamentos da Web." },
+      { name: "Framer Motion", level: "Intermediate", color: "#0055FF", tooltip: "Animações e interações." }
     ]
   },
   {
     id: "devops",
     title: "DevOps & Tools",
     icon: Terminal,
-    description: "Infraestrutura, automação e ambiente Linux.",
+    description: "Infraestrutura e ambiente de desenvolvimento.",
     items: [
-      { name: "Docker", level: "Advanced", color: "#2496ED", tooltip: "Containerização de aplicações." },
-      { name: "Linux (Zorin)", level: "Expert", color: "#FCC624", tooltip: "Ambiente de desenvolvimento principal." },
-      { name: "Git", level: "Advanced", color: "#F05032", tooltip: "Controle de versão essencial." },
-      { name: "Coolify", level: "Intermediate", color: "#6B21A8", tooltip: "PaaS self-hosted simplificado." },
-      { name: "Nginx", level: "Intermediate", color: "#009639", tooltip: "Servidor web e proxy reverso." },
-      { name: "Excel/VBA", level: "Expert", color: "#217346", tooltip: "Automação de planilhas complexas." }
+      { name: "Docker", level: "Advanced", color: "#2496ED", tooltip: "Containerização essencial." },
+      { name: "Linux", level: "Expert", color: "#FCC624", tooltip: "Ambiente principal de dev." },
+      { name: "Git", level: "Advanced", color: "#F05032", tooltip: "Controle de versão." },
+      { name: "SQL", level: "Expert", color: "#003B57", tooltip: "Linguagem de consulta estruturada." }
     ]
   }
 ];

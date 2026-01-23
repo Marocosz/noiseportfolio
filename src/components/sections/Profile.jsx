@@ -70,17 +70,17 @@ const Profile = () => {
       {/* Stats Section moved from Journey */}
       <div className="profile-stats-container">
           <StatsCard 
-              number="8+" 
+              number="4+" 
               label="Freelance Services" 
               sublabel="Delivered with Excellence"
           />
           <StatsCard 
-              number="3+" 
+              number="4+" 
               label="Years Experience" 
               sublabel="Continuous Learning"
           />
           <StatsCard 
-              number="12+" 
+              number="20+" 
               label="Total Projects" 
               sublabel="Innovative Solutions"
           />

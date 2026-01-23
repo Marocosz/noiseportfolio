@@ -16,21 +16,21 @@ const CrystalMesh = () => {
     });
 
     return (
-        <mesh ref={meshRef}>
+        <mesh ref={meshRef} scale={[0.7, 1.8, 0.7]}>
             {/* Icosaedro oferece várias faces orgânicas (quartzo/bruto) */}
             {/* Scale ajustado para ser fino (y=1.8) mas nem tanto (x/z=0.8) */}
             <icosahedronGeometry args={[1, 0]} /> 
             <meshPhysicalMaterial 
-                color="#6b24b7" // Roxo pálido (lavanda)
-                emissive="#090909" // Brilho roxo suave
+                color="#6b24b7" 
+                emissive="#090909"
                 emissiveIntensity={0.2}
-                roughness={0.15} // Fosco acetinado para parecer orgânico
+                roughness={0.15} 
                 metalness={0.1}
-                transmission={1.0} // Transparente (Vidro)
+                transmission={1.0}
                 thickness={2.0}
-                ior={1.4} 
+                ior={1.5} 
                 clearcoat={1}
-                chromaticAberration={0.04}
+                chromaticAberration={0.06}
             />
         </mesh>
     );
@@ -38,10 +38,19 @@ const CrystalMesh = () => {
 
 const CrystalScene = () => {
   return (
-    <div style={{ width: '100%', height: '100%', minHeight: '100%', position: 'relative', zIndex: 10 }}>
+    <div style={{ 
+      width: '700px', 
+      height: '700px', 
+      position: 'absolute', 
+      top: '40%', 
+      left: '50%', 
+      transform: 'translate(-50%, -50%)', 
+      zIndex: 10,
+      pointerEvents: 'none' // Permite clicar ao redor/atrás
+    }}>
       {/* Canvas isolado */}
       <Canvas 
-        camera={{ position: [0, 0, 4], fov: 45 }} 
+        camera={{ position: [0, 0, 7], fov: 45 }} 
         gl={{ alpha: true, antialias: true }}
       >
         <Environment preset="city" />
@@ -54,7 +63,7 @@ const CrystalScene = () => {
         <Float 
             speed={2} 
             rotationIntensity={0} 
-            floatIntensity={1.2} 
+            floatIntensity={1} 
         >
             <CrystalMesh />
         </Float>

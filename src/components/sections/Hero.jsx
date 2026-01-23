@@ -19,7 +19,7 @@ const Hero = () => {
                 <DecryptedText
                     // Usamos 'parentClassName' para aplicar o estilo do CSS
                     parentClassName="hero-subtitle"
-                    text="Desenvolvedor - IA, Automação & FullStack"
+                    text="AI Developer & Full-Stack Engineer"
                     animateOn="view" // Anima assim que a página carregar
                     sequential={true}  // Letra por letra
                     speed={40}         // Velocidade (pode ajustar)
