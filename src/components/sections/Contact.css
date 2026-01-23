@@ -1,0 +1,201 @@
+/* src/components/sections/Contact.css */
+
+.contact-section {
+  position: relative;
+  width: 100%;
+  padding: 8rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 10; /* Fica acima de tudo no final */
+}
+
+/* Header da Seção */
+.contact-header-section {
+  text-align: center;
+  margin-bottom: 4rem;
+  padding: 0 2rem;
+}
+
+.section-label {
+  font-family: 'Courier New', monospace;
+  color: #a855f7;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.section-title-large {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 800;
+  color: #fff;
+  margin: 0;
+  line-height: 1.1;
+  letter-spacing: -2px;
+}
+
+.contact-desc {
+  color: #999;
+  margin-top: 1rem;
+  font-size: 1rem;
+  max-width: 500px;
+  line-height: 1.6;
+}
+
+/* --- TERMINAL WINDOW --- */
+.terminal-window {
+  width: 100%;
+  max-width: 900px;
+  background: rgba(10, 10, 10, 0.95); /* Quase preto sólido para contraste */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+  margin: 0 2rem;
+  position: relative;
+}
+
+/* Barra do Terminal (Bolinhas) */
+.terminal-header-bar {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.8rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+.dot.red { background: #ff5f56; }
+.dot.yellow { background: #ffbd2e; }
+.dot.green { background: #27c93f; }
+
+.terminal-title {
+  margin-left: 1rem;
+  font-family: 'Courier New', monospace;
+  font-size: 0.8rem;
+  color: #666;
+}
+
+/* Corpo do Terminal */
+.terminal-body {
+  padding: 2rem;
+  font-family: 'Courier New', monospace;
+  color: #ddd;
+}
+
+/* Linha de Comando */
+.cmd-line {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+}
+
+.prompt-user { color: #a855f7; font-weight: 700; }
+.prompt-symbol { color: #fff; }
+.cmd-text { color: #fff; }
+.cursor {
+  display: inline-block;
+  width: 10px;
+  height: 1.2rem;
+  background: #a855f7;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Output de Resposta */
+.cmd-response {
+  margin-bottom: 2rem;
+  color: #888;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* --- GRID DE CONTATOS (OUTPUT) --- */
+.contact-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.contact-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.contact-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(168, 85, 247, 0.3);
+  transform: translateX(5px);
+}
+
+.icon-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: rgba(0,0,0,0.3);
+}
+
+.contact-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-label {
+  font-size: 0.75rem;
+  color: #666;
+  font-weight: 700;
+  margin-bottom: 0.2rem;
+}
+
+.contact-value {
+  font-size: 0.95rem;
+  color: #fff;
+  font-weight: 500;
+}
+
+/* --- RESPONSIVIDADE --- */
+@media (max-width: 768px) {
+  .terminal-window {
+    margin: 0 1rem;
+    width: 95%;
+  }
+
+  .cmd-line {
+    font-size: 0.9rem;
+  }
+  
+  .contact-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .section-title-large {
+    font-size: 2.5rem;
+  }
+}

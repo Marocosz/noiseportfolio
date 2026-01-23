@@ -44,7 +44,7 @@ body {
   padding: 0;
   min-width: 320px;
   background-color: #000000;
-  /* Fundo preto base */
+  overflow-x: hidden;
 }
 
 * {

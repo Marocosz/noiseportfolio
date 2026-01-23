@@ -1,92 +1,100 @@
 import React, { useRef } from 'react';
-import { motion, useScroll, useSpring } from 'motion/react';
+import { motion, useScroll, useTransform } from 'motion/react';
 import { journeyData } from '../../data/journey';
 import './Journey.css';
 
 const Journey = () => {
   const containerRef = useRef(null);
 
+  // Monitora o scroll da seção inteira (400vh)
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    // O offset define quando a barra começa e termina de encher
-    offset: ["start center", "end center"] 
   });
 
-  const scaleY = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
-    restDelta: 0.001
-  });
+  // Cálculo Dinâmico para o scroll horizontal
+  // Queremos mover os cards para a esquerda o suficiente para ver o último card
+  // Ajuste o valor final (-85%) dependendo de quantos cards você tem. 
+  // Para 4 cards largos, -75% a -85% costuma funcionar bem.
+  const x = useTransform(scrollYProgress, [0, 1], ["0%", "-85%"]);
 
   return (
     <section className="journey-section" ref={containerRef}>
       
-      <div className="journey-header">
-        <span className="section-label">04. / COMMIT HISTORY</span>
-        <h2 className="section-title-large">My Journey</h2>
-      </div>
-
-      <div className="timeline-container">
+      {/* Container Sticky que trava na tela */}
+      <div className="journey-sticky-container">
         
-        {/* Trilho Fixo */}
-        <div className="timeline-rail"></div>
-        
-        {/* Trilho Animado */}
-        <motion.div 
-          className="timeline-fill" 
-          style={{ scaleY }} 
-        ></motion.div>
+        {/* Header */}
+        <div className="journey-header">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
+            <span className="section-label">04. / PROFESSIONAL JOURNEY</span>
+            <h2 className="section-title-large">Experience Timeline</h2>
+            <p className="section-subtitle">
+              A chronological path through my professional growth and key milestones
+            </p>
+          </motion.div>
+        </div>
 
-        {/* Commits */}
-        {journeyData.map((item, index) => {
-          const isEven = index % 2 === 0; 
+        {/* Viewport dos Cards */}
+        <div className="cards-viewport">
+          
+          {/* Container que se move horizontalmente */}
+          {/* A div extra 'motion.div' aplica a transformação X baseada no scroll Y */}
+          <motion.div 
+            className="cards-container"
+            style={{ x }} // Aplica o movimento horizontal
+          >
+            {/* Linha Conectora (Fundo) */}
+            <div className="timeline-line" />
 
-          return (
-            <div 
-              key={item.id} 
-              className={`commit-row ${isEven ? 'left' : 'right'}`}
-            >
-              
-              {/* Nó */}
-              <motion.div 
-                className="commit-node"
-                initial={{ backgroundColor: "#000", borderColor: "#333" }}
-                whileInView={{ backgroundColor: "#a855f7", borderColor: "#a855f7", scale: 1.2 }}
-                viewport={{ once: true, margin: "-50% 0px -50% 0px" }}
-                transition={{ duration: 0.4 }}
-              />
+            {/* Renderiza Cards */}
+            {journeyData.map((item) => (
+              <div key={item.id} className="journey-card">
+                
+                {/* Node da Timeline (Bolinha na esquerda) */}
+                <div className="timeline-node">
+                  <div className="node-inner" />
+                </div>
 
-              {/* Card */}
-              <motion.div 
-                className="journey-card"
-                initial={{ opacity: 0, x: isEven ? -50 : 50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, margin: "-20% 0px -20% 0px" }}
-                transition={{ duration: 0.6, delay: 0.1 }}
-              >
-                <div className="commit-header">
-                  <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
-                    <span className="commit-date">{item.date}</span>
-                    <span className="commit-hash">commit {item.hash}</span>
+                {/* Conteúdo do Card */}
+                <div className="card-inner">
+                  
+                  <div className="card-year">{item.date}</div>
+                  
+                  <h3 className="card-title">{item.title}</h3>
+                  <p className="card-company">{item.org}</p>
+                  
+                  <div className="card-divider" />
+                  
+                  <p className="card-description">{item.description}</p>
+                  
+                  <div className="card-tags">
+                    {item.tags.map((tag, i) => (
+                      <span key={i} className="card-tag">{tag}</span>
+                    ))}
                   </div>
-                  <h3 className="commit-title">{item.title}</h3>
-                  <span className="commit-org">{item.org}</span>
                 </div>
 
-                <p className="commit-description">{item.description}</p>
+              </div>
+            ))}
+          </motion.div>
 
-                <div className="commit-tags">
-                  {item.tags.map((tag, i) => (
-                    <span key={i} className="tag-sm">{tag}</span>
-                  ))}
-                </div>
-              </motion.div>
+        </div>
 
-            </div>
-          );
-        })}
+        {/* Progress Indicator (Barra inferior) */}
+        <div className="scroll-indicator">
+          <motion.div 
+            className="indicator-fill"
+            style={{ scaleX: scrollYProgress }}
+          />
+        </div>
 
       </div>
+
     </section>
   );
 };

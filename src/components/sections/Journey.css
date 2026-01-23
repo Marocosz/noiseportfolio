@@ -1,252 +1,352 @@
 /* src/components/sections/Journey.css */
 
+/* ========================================
+   JOURNEY SECTION - HORIZONTAL SCROLL
+   ======================================== */
+
+/* Container Fantasma - Cria o "tempo" de scroll */
 .journey-section {
   position: relative;
   width: 100%;
-  /* Padding generoso em cima e embaixo */
-  padding: 8rem 0 10rem 0; 
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  
-  /* --- CORREÇÃO DO SCROLL/CORTE --- */
-  /* NUNCA use overflow hidden aqui, senão corta o conteúdo longo */
-  overflow: visible; 
-  height: auto; 
-  min-height: 100vh; /* Garante tamanho mínimo, mas deixa crescer */
+  height: 100vh; /* Mantemos a altura para o scroll */
+  background: transparent;
+  /* Removed padding here to prevent double spacing */
+  padding: 0; 
+  margin-top: 0; /* Remove top margin if present */
 }
 
-/* --- HEADER DA SEÇÃO --- */
+/* Container Sticky - Trava o conteúdo na tela */
+.journey-sticky-container {
+  position: sticky;
+  top: 0;
+  height: 100vh; /* Ocupa a tela toda */
+  width: 100%;
+  overflow: hidden; /* Esconde o que sai para a direita */
+  
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Centraliza verticalmente */
+  
+  /* PADDING AJUSTADO: Removi o padding-top excessivo */
+  padding: 0 0 2rem 0; 
+  
+  /* Gradiente suave para destacar a seção */
+  background: radial-gradient(circle at center, rgba(168, 85, 247, 0.05), transparent 70%);
+}
+
+/* ========================================
+   HEADER
+   ======================================== */
+
 .journey-header {
-  text-align: center;
-  margin-bottom: 6rem;
-  z-index: 2;
-  position: relative; /* Importante para z-index funcionar */
-}
-
-/* Mantenha o resto das classes igual... */
-.section-label {
-  font-family: 'Courier New', monospace;
-  color: #a855f7;
-  font-size: 0.9rem;
-  margin-bottom: 0.5rem;
-  display: block;
-  letter-spacing: 2px;
-  font-weight: 600;
-}
-
-.section-title-large {
-  font-size: 3rem;
-  font-weight: 800;
-  color: #fff;
-  margin: 0;
-  line-height: 1.1;
-  letter-spacing: -1px;
-}
-
-/* --- TIMELINE CONTAINER --- */
-.timeline-container {
-  position: relative;
   width: 100%;
-  max-width: 1000px;
-  padding: 0 2rem;
-  display: flex;
-  flex-direction: column;
-  /* Garante que nada corte as sombras brilhantes */
-  overflow: visible; 
-}
-
-/* A LINHA (TRILHO) */
-.timeline-rail {
-  position: absolute;
-  left: 50%;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  background: rgba(255, 255, 255, 0.1); 
-  transform: translateX(-50%);
-  z-index: 1;
-}
-
-/* A LINHA (PROGRESSO) */
-.timeline-fill {
-  position: absolute;
-  left: 50%;
-  top: 0;
-  width: 2px;
-  background: #a855f7; 
-  box-shadow: 0 0 15px #a855f7;
-  transform: translateX(-50%);
-  transform-origin: top; 
-  z-index: 2;
-}
-
-/* --- COMMIT ROW (Item da lista) --- */
-.commit-row {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  margin-bottom: 8rem; /* Aumentei o espaço para não encavalar */
-  width: 100%;
-}
-
-/* NÓ (A bolinha do commit) */
-.commit-node {
-  position: absolute;
-  left: 50%;
-  width: 16px;
-  height: 16px;
-  background: #000;
-  border: 2px solid #333;
-  border-radius: 50%;
-  transform: translate(-50%, 0);
-  z-index: 10;
-  transition: all 0.4s ease;
-}
-
-.commit-node.active {
-  border-color: #a855f7;
-  background: #a855f7;
-  box-shadow: 0 0 20px rgba(168, 85, 247, 0.6);
-  transform: translate(-50%, 0) scale(1.2);
-}
-
-/* --- O CARD DE EXPERIÊNCIA (Glass) --- */
-.journey-card {
-  width: 45%; 
-  position: relative;
-  z-index: 5;
-  
-  background: rgba(20, 20, 20, 0.4);
-  backdrop-filter: blur(16px) brightness(0.3);
-  -webkit-backdrop-filter: blur(16px) brightness(0.3);
-  
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
-  padding: 1.5rem;
-  
-  transition: all 0.3s ease;
-}
-
-.journey-card:hover {
-  border-color: rgba(168, 85, 247, 0.3);
-  background: rgba(25, 25, 25, 0.5);
-  transform: translateY(-2px);
-}
-
-.commit-row.left .journey-card {
-  margin-right: auto; 
-  text-align: right;
-}
-
-.commit-row.right .journey-card {
-  margin-left: auto; 
+  max-width: 1400px;
+  padding: 0 4rem;
+  /* Margem superior para afastar do topo da tela, mas dentro do viewport */
+  margin: 4rem auto 3rem auto; 
   text-align: left;
 }
 
-/* CONTEÚDO DO CARD */
-.commit-header {
+.section-label {
+  font-family: 'Courier New', monospace;
+  color: #a855f7;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.section-title-large {
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  font-weight: 800;
+  color: #fff;
+  margin: 0 0 1rem 0;
+  line-height: 1.1;
+  letter-spacing: -2px;
+}
+
+.section-subtitle {
+  font-size: 1rem;
+  color: #999;
+  line-height: 1.6;
+  margin: 0;
+  font-weight: 300;
+  max-width: 600px;
+}
+
+/* ========================================
+   VIEWPORT DOS CARDS
+   ======================================== */
+
+.cards-viewport {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  /* Espaço para os cards não cortarem sombras */
+  padding: 2rem 0;
+  flex: 1; /* Ocupa o espaço restante */
+}
+
+/* Container que se move horizontalmente */
+.cards-container {
+  display: flex;
+  gap: 60px;
+  padding-left: 4rem; 
+  will-change: transform;
+  align-items: center; /* Centraliza cards verticalmente na linha */
+}
+
+/* ========================================
+   LINHA CONECTORA (TIMELINE)
+   ======================================== */
+
+.timeline-line {
+  position: absolute;
+  top: 50%;
+  left: 4rem;
+  width: 3000px; 
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    rgba(168, 85, 247, 0.3) 0%,
+    rgba(168, 85, 247, 0.6) 20%,
+    rgba(168, 85, 247, 0.6) 80%,
+    transparent 100%
+  );
+  transform: translateY(-50%);
+  z-index: 1;
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
+}
+
+/* ========================================
+   JOURNEY CARDS
+   ======================================== */
+
+.journey-card {
+  position: relative;
+  width: 500px; 
+  min-width: 500px;
+  height: 450px;
+  flex-shrink: 0;
+  z-index: 5;
+  /* Centraliza o card na linha verticalmente */
+  margin-top: 0; 
+}
+
+/* Timeline Node (Bolinha) */
+.timeline-node {
+  position: absolute;
+  top: 50%; 
+  left: -38px; 
+  transform: translateY(-50%);
+  z-index: 10;
+}
+
+.node-inner {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #a855f7;
+  border: 3px solid rgba(0, 0, 0, 0.8);
+  box-shadow: 
+    0 0 0 4px rgba(168, 85, 247, 0.2),
+    0 0 20px rgba(168, 85, 247, 0.6);
+  transition: all 0.3s ease;
+}
+
+.journey-card:hover .node-inner {
+  transform: scale(1.3);
+  box-shadow: 
+    0 0 0 6px rgba(168, 85, 247, 0.3),
+    0 0 30px rgba(168, 85, 247, 0.8);
+}
+
+/* Card Inner (Conteúdo) */
+.card-inner {
+  width: 100%;
+  height: 100%;
+  background: rgba(10, 10, 10, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 2.5rem;
   display: flex;
   flex-direction: column;
-  gap: 0.2rem;
-  margin-bottom: 1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  padding-bottom: 0.8rem;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
 }
 
-.commit-row.left .commit-header {
-  align-items: flex-end;
+/* Efeito de brilho no hover */
+.card-inner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(168, 85, 247, 0.1),
+    transparent
+  );
+  transition: left 0.6s;
 }
 
-.commit-hash {
+.journey-card:hover .card-inner::before {
+  left: 100%;
+}
+
+.journey-card:hover .card-inner {
+  border-color: rgba(168, 85, 247, 0.3);
+  transform: translateY(-8px);
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(168, 85, 247, 0.2);
+}
+
+/* ========================================
+   CARD CONTENT
+   ======================================== */
+
+.card-year {
   font-family: 'Courier New', monospace;
-  font-size: 0.75rem;
-  color: #666;
-  background: rgba(255,255,255,0.05);
-  padding: 2px 6px;
-  border-radius: 4px;
-  width: fit-content;
-}
-
-.commit-date {
-  font-size: 0.8rem;
+  font-size: 0.85rem;
+  font-weight: 700;
   color: #a855f7;
-  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 2px;
+  margin-bottom: 1.5rem;
 }
 
-.commit-title {
-  font-size: 1.25rem;
+.card-title {
+  font-size: 1.8rem;
   font-weight: 700;
   color: #fff;
-  margin: 0.2rem 0;
+  margin: 0 0 0.8rem 0;
+  line-height: 1.2;
+  letter-spacing: -0.5px;
 }
 
-.commit-org {
-  font-size: 0.9rem;
-  color: #ccc;
+.card-company {
+  font-size: 1.05rem;
+  color: #aaa;
   font-style: italic;
+  margin: 0;
 }
 
-.commit-description {
+.card-divider {
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(90deg, #a855f7, transparent);
+  margin: 1.5rem 0;
+}
+
+.card-description {
   font-size: 0.95rem;
   color: #bbb;
-  line-height: 1.6;
-  margin-bottom: 1rem;
+  line-height: 1.7;
+  margin: 0 0 2rem 0;
+  flex: 1;
 }
 
-/* Tags */
-.commit-tags {
+.card-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 0.6rem;
 }
 
-.commit-row.left .commit-tags {
-  justify-content: flex-end;
+.card-tag {
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  color: #999;
+  transition: all 0.3s ease;
 }
 
-.tag-sm {
-  font-size: 0.7rem;
-  padding: 0.2rem 0.6rem;
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 100px;
-  color: #888;
+.card-tag:hover {
+  color: #fff;
+  border-color: rgba(168, 85, 247, 0.5);
+  background: rgba(168, 85, 247, 0.1);
+  transform: translateY(-2px);
 }
 
-/* --- RESPONSIVIDADE --- */
-@media (max-width: 768px) {
-  .timeline-container {
-    padding-left: 3rem; 
-    padding-right: 1rem;
+/* ========================================
+   SCROLL INDICATOR
+   ======================================== */
+
+.scroll-indicator {
+  position: absolute;
+  bottom: 3rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.indicator-fill {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, #a855f7, #ec4899);
+  transform-origin: left;
+  box-shadow: 0 0 10px rgba(168, 85, 247, 0.6);
+}
+
+/* ========================================
+   RESPONSIVE - MOBILE (Desliga o efeito sticky)
+   ======================================== */
+
+@media (max-width: 1024px) {
+  .journey-section {
+    height: auto; 
+    min-height: auto;
+    padding: 6rem 0;
   }
 
-  .timeline-rail, .timeline-fill {
-    left: 1.5rem; 
-    transform: none;
+  .journey-sticky-container {
+    position: relative; 
+    height: auto;
+    overflow: visible;
+    padding: 0;
   }
 
-  .commit-node {
-    left: 1.5rem;
-    transform: translate(-50%, 0);
+  .cards-viewport {
+    display: block;
+    padding: 0;
   }
-  
-  .commit-row {
-    justify-content: flex-start; 
-    margin-bottom: 4rem;
+
+  .cards-container {
+    padding: 2rem 2rem;
+    gap: 2rem;
+    overflow-x: auto; 
+    width: 100%;
   }
 
   .journey-card {
-    width: 100%;
-    text-align: left !important;
-    margin-left: 1rem !important; 
-    margin-right: 0 !important;
+    width: 300px;
+    min-width: 300px;
+    height: auto;
+    min-height: 450px;
   }
 
-  .commit-header, .commit-tags {
-    align-items: flex-start !important;
-    justify-content: flex-start !important;
+  .timeline-line {
+    display: none;
+  }
+  .timeline-node {
+    display: none;
+  }
+  .scroll-indicator {
+    display: none;
   }
 }
