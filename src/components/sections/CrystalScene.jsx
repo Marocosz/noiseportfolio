@@ -38,7 +38,7 @@ const CrystalMesh = () => {
 
 const CrystalScene = () => {
   return (
-    <div style={{ width: '100%', height: '100%', minHeight: '300px', position: 'relative', zIndex: 10 }}>
+    <div style={{ width: '100%', height: '100%', minHeight: '100%', position: 'relative', zIndex: 10 }}>
       {/* Canvas isolado */}
       <Canvas 
         camera={{ position: [0, 0, 4], fov: 45 }} 

@@ -46,7 +46,7 @@
 
 /* --- 2. CONTEÚDO DE TEXTO (ESQUERDA) --- */
 .profile-text-area {
-  flex: 7;
+  flex: 4;
   /* max-width: 600px; removed to allow 70% width */
   z-index: 2; /* Fica acima da imagem se sobrepor */
   padding: 2rem 0;
@@ -93,13 +93,14 @@
 
 /* --- 3. IMAGEM HORIZONTAL (DIREITA) --- */
 .profile-img-container {
-  flex: 3; /* Ocupa ~30% do espaço */
+  flex: 0 0 420px; /* Testando 420px: valor maior = texto menor */
   height: 250px; /* Mesma altura da faixa mínima */
   position: relative;
   display: flex;
   align-items: center;
   justify-content: flex-end;
   /* overflow: hidden; Opcional: manter se quiser cortar */
+  overflow: hidden;
 }
 
 .horizontal-profile-img {

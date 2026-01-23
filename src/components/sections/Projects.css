@@ -1,4 +1,5 @@
 /* src/components/sections/Projects.css */
+
 .projects-section {
   position: relative;
   width: 100%;
@@ -11,110 +12,100 @@
 
 .projects-header {
   padding: 0 4rem;
-  margin-bottom: 2rem;
+  margin-bottom: 3rem;
   width: 100%;
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  /* Espaço para os botões */
+  text-align: center; /* Centralizado para combinar com o carrossel */
+  z-index: 20;
 }
 
 .section-label {
   font-family: 'Courier New', monospace;
   color: #a855f7;
-  font-size: 1rem;
+  font-size: 0.9rem;
   margin-bottom: 0.5rem;
   display: block;
+  letter-spacing: 2px;
 }
 
 .section-title-large {
-  font-size: 3.5rem;
+  font-size: 3rem;
   font-weight: 800;
   color: #fff;
   margin: 0;
   line-height: 1.1;
+  letter-spacing: -1px;
 }
 
-/* --- NAVEGAÇÃO / BOTÕES --- */
-.carousel-nav {
-  display: flex;
-  gap: 1rem;
-}
-
-.nav-btn {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #fff;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
+/* --- ÁREA DO CARROSSEL --- */
+.carousel-viewport {
+  width: 100%;
+  height: 600px; /* Altura suficiente para os cards verticais */
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
+  perspective: 1000px; /* Para dar profundidade 3D se necessário */
 }
 
-.nav-btn:hover {
-  background: #a855f7;
-  border-color: #a855f7;
-  color: #fff;
-}
-
-/* --- CARROSSEL (SCROLL NATIVO) --- */
-.carousel-container {
-  width: 100%;
-  overflow-x: auto;
-  scroll-behavior: smooth;
-  scroll-snap-type: x mandatory;
-  padding: 2rem 0 4rem 2rem; /* Espaço para sombra e padding left */
-  
-  /* Esconder Scrollbar */
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none;  /* IE/Edge */
-}
-
-.carousel-container::-webkit-scrollbar {
-  display: none; /* Chrome/Safari */
-}
-
+/* A trilha que se move */
 .carousel-track {
   display: flex;
-  gap: 3rem; /* Espaço maior entre os cards */
-  width: max-content;
+  align-items: center;
+  gap: 4rem; /* Espaço generoso entre os cards */
+  position: absolute;
+  left: 50%; /* Começa do meio da tela */
+  /* O transform será controlado via Inline Style no React */
+  transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+  will-change: transform;
 }
 
-/* --- CARD NOVO (HORIZONTAL) --- */
+/* --- O CARD VERTICAL --- */
 .project-card {
-  /* Tamanho: 65% da viewport width para mostrar "1 e meio" na tela */
-  min-width: 65vw; 
-  height: 480px;
-
-  border-radius: 24px;
+  /* Tamanho Fixo Vertical - Estilo "Poster" */
+  width: 320px; 
+  height: 500px;
+  flex-shrink: 0; /* Impede de esmagar */
+  
+  border-radius: 20px;
   position: relative;
   overflow: hidden;
   
-  /* Vidro Escuro */
-  background: rgba(10, 10, 10, 0.6);
+  /* Vidro Premium */
+  background: rgba(15, 15, 15, 0.6);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
   
-  display: flex; /* Layout Horizontal */
-  flex-direction: row;
+  display: flex;
+  flex-direction: column;
 
-  scroll-snap-align: center; /* Centraliza ao parar o scroll */
-  transition: transform 0.3s ease;
+  /* Transições suaves de estado (Foco vs Blur) */
+  transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-.project-card:hover {
-  border-color: rgba(168, 85, 247, 0.4);
+/* --- ESTADOS DO CARD (Manipulados via Classe no JS) --- */
+
+/* Card Inativo (Laterais) */
+.project-card.inactive {
+  opacity: 0.4;
+  filter: blur(4px) grayscale(80%);
+  transform: scale(0.9);
+  pointer-events: none; /* Não clicável se não for o central */
 }
 
-/* Imagem (Lado Esquerdo - 55%) */
+/* Card Ativo (Central) */
+.project-card.active {
+  opacity: 1;
+  filter: blur(0px) grayscale(0%);
+  transform: scale(1.05); /* Leve zoom para destaque */
+  z-index: 10;
+  border-color: rgba(168, 85, 247, 0.3);
+  box-shadow: 0 0 30px rgba(168, 85, 247, 0.15), 0 20px 50px rgba(0,0,0,0.5);
+}
+
+/* --- CONTEÚDO INTERNO DO CARD --- */
 .card-image-wrapper {
-  flex: 1.2; /* Ocupa um pouco mais que a metade */
-  height: 100%;
+  width: 100%;
+  height: 65%; /* Imagem ocupa a maior parte */
   position: relative;
   overflow: hidden;
 }
@@ -123,164 +114,101 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.7s ease;
-  filter: grayscale(100%) contrast(1.1);
+  transition: transform 0.8s ease;
 }
 
-.project-card:hover .card-image {
-  transform: scale(1.05);
-  filter: grayscale(0%) contrast(1);
+/* Hover só funciona no card ativo */
+.project-card.active:hover .card-image {
+  transform: scale(1.1);
 }
 
 .card-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to right, transparent 0%, rgba(10,10,10,0.8) 100%);
-  opacity: 0.5;
+  background: linear-gradient(to top, rgba(10,10,10,1) 0%, transparent 60%);
 }
 
-/* Conteúdo (Lado Direito - 45%) */
 .card-content {
-  flex: 1;
-  padding: 3rem;
+  height: 35%;
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  border-left: 1px solid rgba(255, 255, 255, 0.05);
+  justify-content: flex-start;
+  position: relative;
+  background: linear-gradient(to bottom, rgba(10,10,10,0.8), rgba(5,5,5,1));
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.project-meta {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 1rem;
-  font-size: 0.85rem;
+.project-category {
+  font-size: 0.7rem;
   color: #a855f7;
-  font-weight: 600;
-  letter-spacing: 1px;
   text-transform: uppercase;
-}
-
-.project-year {
-  color: #666;
-  font-weight: 400;
+  letter-spacing: 1.5px;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
 }
 
 .project-title {
-  font-size: 2.5rem;
+  font-size: 1.5rem;
   font-weight: 700;
   color: #fff;
-  margin: 0 0 1rem 0;
-  line-height: 1.1;
+  margin: 0 0 0.5rem 0;
+  line-height: 1.2;
 }
 
 .project-description {
-  font-size: 1rem;
-  color: #ccc;
-  line-height: 1.6;
-  max-width: 90%;
+  font-size: 0.85rem;
+  color: #888;
+  line-height: 1.5;
+  
+  /* Limita a 2 linhas com reticências */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
-/* Tags */
-.card-tags {
+/* --- BOTÕES DE NAVEGAÇÃO FLUTUANTES --- */
+.nav-btn-floating {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  
+  background: rgba(20, 20, 20, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  color: #fff;
+  
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.6rem;
-  margin-bottom: 2rem;
-}
-
-.tag {
-  font-size: 0.75rem;
-  padding: 0.3rem 0.8rem;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 100px;
-  color: #aaa;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-/* Links / Botões */
-.project-links {
-  display: flex;
-  gap: 1rem;
-}
-
-.link-btn {
-  padding: 0.8rem 1.5rem;
-  border-radius: 8px;
-  font-weight: 600;
-  text-decoration: none;
-  font-size: 0.9rem;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 50;
   transition: all 0.3s ease;
-  text-align: center;
 }
 
-.link-btn.fill {
+.nav-btn-floating:hover {
   background: #a855f7;
-  color: #fff;
-  border: 1px solid #a855f7;
+  border-color: #a855f7;
+  transform: translateY(-50%) scale(1.1);
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
 }
 
-.link-btn.fill:hover {
-  background: #9333ea;
-  border-color: #9333ea;
-}
+.nav-btn-floating.prev { left: 5%; }
+.nav-btn-floating.next { right: 5%; }
 
-.link-btn.outline {
-  background: transparent;
-  color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.link-btn.outline:hover {
-  border-color: #fff;
-  background: rgba(255, 255, 255, 0.05);
-}
-
-/* RESPONSIVIDADE */
-@media (max-width: 1024px) {
-  .project-card {
-    min-width: 85vw; /* Em tablets, ocupa quase tudo */
-  }
-}
-
+/* Mobile */
 @media (max-width: 768px) {
-  .projects-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
-    padding: 0 2rem;
-  }
+  .carousel-viewport { height: 500px; }
+  .project-card { width: 260px; height: 400px; }
+  .carousel-track { gap: 1.5rem; }
+  .nav-btn-floating { width: 45px; height: 45px; }
+  .nav-btn-floating.prev { left: 2%; }
+  .nav-btn-floating.next { right: 2%; }
   
-  .carousel-nav {
-    display: none; /* Esconde botões no mobile (scroll nativo é intuitivo) */
-  }
-
-  .carousel-container {
-    padding-left: 1rem;
-  }
-
-  .carousel-track {
-    gap: 1rem;
-  }
-
-  .project-card {
-    min-width: 85vw;
-    height: auto;
-    flex-direction: column; /* Volta para vertical no mobile */
-  }
-
-  .card-image-wrapper {
-    height: 250px;
-    flex: none;
-  }
-  
-  .card-content {
-    padding: 1.5rem;
-    border-left: none;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-  }
-
-  .project-title {
-    font-size: 1.8rem;
-  }
+  .section-title-large { font-size: 2.2rem; }
 }
