@@ -172,6 +172,27 @@ body {
   display: inline-block;
 }
 
+.hero-f11-hint {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  opacity: 0.7;
+  letter-spacing: 1px;
+  animation: pulse 3s infinite ease-in-out;
+  pointer-events: none;
+  font-weight: 300;
+  text-transform: uppercase;
+  z-index: 10;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
+
 /* --- ESTILOS DA SEÇÃO SOBRE MIM --- */
 .about-section {
   position: relative;

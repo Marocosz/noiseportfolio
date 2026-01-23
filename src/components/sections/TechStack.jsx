@@ -1,9 +1,11 @@
-import React from 'react';
-import { motion } from 'motion/react';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { techData } from '../../data/tech';
 import './TechStack.css';
 
 const TechStack = () => {
+  const [hoveredTech, setHoveredTech] = useState(null);
+
   const containerVars = {
     hidden: { opacity: 0 },
     show: {
@@ -68,12 +70,34 @@ const TechStack = () => {
               {/* Grid de Tecnologias (Chips) */}
               <div className="items-grid">
                 {category.items.map((tech, index) => (
-                  <div key={index} className="tech-item">
+                  <div 
+                    key={index} 
+                    className="tech-item"
+                    onMouseEnter={() => setHoveredTech(tech.name)}
+                    onMouseLeave={() => setHoveredTech(null)}
+                    style={{ position: 'relative' }}
+                  >
                     <span 
                       className="tech-dot" 
                       style={{ backgroundColor: tech.color, color: tech.color }}
                     />
                     <span className="tech-name">{tech.name}</span>
+
+                    {/* Tooltip */}
+                    <AnimatePresence>
+                      {hoveredTech === tech.name && (
+                        <motion.div
+                          className="tech-tooltip-bubble"
+                          initial={{ opacity: 0, y: 10, scale: 0.9 }}
+                          animate={{ opacity: 1, y: 0, scale: 1 }}
+                          exit={{ opacity: 0, y: 5, scale: 0.95 }}
+                          transition={{ duration: 0.15 }}
+                        >
+                          {tech.tooltip}
+
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
                 ))}
               </div>
@@ -81,7 +105,6 @@ const TechStack = () => {
           );
         })}
       </motion.div>
-
     </section>
   );
 };

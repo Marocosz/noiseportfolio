@@ -26,6 +26,10 @@ const Hero = () => {
                     useOriginalCharsOnly={true}
                 />
             </div>
+            
+            <div className="hero-f11-hint">
+                Pressione F11 para melhor experiência
+            </div>
 
         </section>
     );
