@@ -6,16 +6,61 @@ import './Journey.css';
 const Journey = () => {
   const carouselRef = useRef(null);
   const [width, setWidth] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
   const x = useMotionValue(0);
   const progress = useTransform(x, [0, -width], ["0%", "100%"]);
 
+  // Detecta mobile
   useEffect(() => {
-    // Calcula o limite do drag baseado na largura total dos cards
-    if (carouselRef.current) {
-      setWidth(carouselRef.current.scrollWidth - carouselRef.current.offsetWidth);
-    }
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  useEffect(() => {
+    // Calcula o limite do drag baseado na largura total dos cards
+    if (carouselRef.current && !isMobile) {
+      setWidth(carouselRef.current.scrollWidth - carouselRef.current.offsetWidth);
+    }
+  }, [isMobile]);
+
+  // VERSÃO MOBILE: Lista vertical simples
+  if (isMobile) {
+    return (
+      <section className="journey-section journey-mobile">
+        <div className="journey-header">
+          <span className="section-label">04. / PROFESSIONAL JOURNEY</span>
+          <h2 className="section-title-large">Experience Timeline</h2>
+          <p className="section-subtitle">
+            Uma trajetória cronológica através do meu crescimento profissional e marcos importantes.
+          </p>
+        </div>
+
+        <div className="journey-list-mobile">
+          {journeyData.map((item, index) => (
+            <div key={item.id} className="journey-card-mobile">
+              <div className="card-year-mobile">{item.date}</div>
+              <h3 className="card-title-mobile">{item.title}</h3>
+              <p className="card-company-mobile">{item.org}</p>
+              <div className="card-divider-mobile" />
+              <p className="card-description-mobile">{item.description}</p>
+              <div className="card-tags-mobile">
+                {item.tags.map((tag, i) => (
+                  <span key={i} className="card-tag-mobile">{tag}</span>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    );
+  }
+
+  // VERSÃO DESKTOP: Carousel com drag
   return (
     <section className="journey-section">
       

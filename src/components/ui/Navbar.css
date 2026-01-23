@@ -184,6 +184,41 @@
 }
 
 /* --- RESPONSIVIDADE --- */
+
+/* Tablet (600px - 1024px) */
+@media (max-width: 1024px) and (min-width: 601px) {
+  .taskbar-center {
+    gap: 4px; /* Reduz espaçamento entre ícones */
+  }
+
+  .taskbar-btn {
+    width: 38px;
+    height: 38px;
+  }
+
+  .taskbar-icon-wrapper {
+    width: 38px;
+    height: 38px;
+  }
+
+  .tray-clock {
+    padding: 0 6px;
+  }
+
+  .time, .date {
+    font-size: 0.7rem;
+  }
+
+  .theme-toggle-btn {
+    padding: 5px;
+  }
+
+  .tray-divider {
+    margin: 0 6px;
+  }
+}
+
+/* Mobile (< 600px) */
 @media (max-width: 600px) {
   /* No mobile, escondemos a data e deixamos só a hora ou escondemos a tray inteira se faltar espaço */
   .date {
@@ -193,14 +228,52 @@
   .tray-icons {
     display: none;
   }
+
+  .tray-divider {
+    display: none;
+  }
+
+  /* Esconde o botão de animação no mobile (já usa gradiente estático) */
+  .theme-toggle-btn:nth-of-type(2) {
+    display: none;
+  }
   
   .taskbar-center {
     width: 100%;
     justify-content: space-evenly;
+    gap: 2px;
+  }
+
+  .taskbar-btn {
+    width: 36px;
+    height: 36px;
+  }
+
+  .taskbar-icon-wrapper {
+    width: 36px;
+    height: 36px;
   }
   
   .taskbar-right {
-    display: none; /* Simplifica no mobile, focando na navegação */
+    position: static;
+    padding-right: 8px;
+    min-width: auto;
+  }
+
+  .tray-clock {
+    padding: 0 4px;
+  }
+
+  .time {
+    font-size: 0.7rem;
+  }
+
+  .theme-toggle-btn {
+    padding: 4px;
+  }
+
+  .show-desktop-line {
+    display: none; /* Remove linha no mobile */
   }
 }
 

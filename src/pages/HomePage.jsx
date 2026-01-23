@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Hero from '../components/sections/Hero'; 
 import Profile from '../components/sections/Profile'; 
 import Silk from '../components/backgrounds/Silk';
-import Iridescence from '../components/backgrounds/Iridescence'; // IMPORTAR
+import Iridescence from '../components/backgrounds/Iridescence'; 
 import Projects from '../components/sections/Projects';
 import Journey from '../components/sections/Journey';
 import TechStack from '../components/sections/TechStack';
@@ -12,6 +12,18 @@ import Navbar from '../components/ui/Navbar';
 const HomePage = () => {
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [isAnimationEnabled, setIsAnimationEnabled] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detecta se é mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const toggleTheme = () => {
     setIsDarkMode(!isDarkMode);
@@ -38,9 +50,16 @@ const HomePage = () => {
         zIndex: 0,
         pointerEvents: 'none',
         transform: 'translateZ(0)',
-        transition: 'opacity 0.5s ease'
+        transition: 'opacity 0.5s ease',
+        // Mobile: gradient estático | Desktop: shaders animados
+        background: isMobile 
+          ? (isDarkMode 
+              ? 'linear-gradient(135deg, #1a0033 0%, #330066 50%, #1a0033 100%)'
+              : 'linear-gradient(135deg, #f0f0f5 0%, #e8e8f0 50%, #f0f0f5 100%)'
+            )
+          : 'transparent'
       }}>
-        {isDarkMode ? (
+        {!isMobile && (isDarkMode ? (
           <Silk 
             color="#661ea8" 
             speed={20} 
@@ -57,7 +76,7 @@ const HomePage = () => {
             speed={1}
             isAnimated={isAnimationEnabled}
           />
-        )}
+        ))}
       </div>
 
       {/* 2. CONTEÚDO */}

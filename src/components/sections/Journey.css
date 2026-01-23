@@ -493,3 +493,173 @@
   box-shadow: 0 20px 40px rgba(0,0,0,0.1);
 }
 
+/* ========================================
+   MOBILE VERSION: Vertical Timeline
+   ======================================== */
+
+.journey-mobile {
+  padding: 4rem 0;
+}
+
+.journey-mobile .journey-header {
+  padding: 0 1.5rem;
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+.journey-list-mobile {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  padding: 0 1.5rem 4rem;
+  max-width: 600px;
+  margin: 0 auto;
+  position: relative;
+}
+
+/* Linha vertical da timeline */
+.journey-list-mobile::before {
+  content: '';
+  position: absolute;
+  left: 2.5rem;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, transparent, #a855f7 10%, #a855f7 90%, transparent);
+  opacity: 0.3;
+}
+
+.journey-card-mobile {
+  background: rgba(10, 10, 10, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  position: relative;
+  margin-left: 3rem;
+  transition: all 0.3s ease;
+}
+
+/* Bolinha na timeline */
+.journey-card-mobile::before {
+  content: '';
+  position: absolute;
+  left: -3.5rem;
+  top: 1.5rem;
+  width: 12px;
+  height: 12px;
+  background: #a855f7;
+  border-radius: 50%;
+  border: 3px solid rgba(10, 10, 10, 0.9);
+  box-shadow: 0 0 0 4px rgba(168, 85, 247, 0.2);
+  z-index: 2;
+}
+
+.journey-card-mobile:hover {
+  transform: translateX(8px);
+  border-color: rgba(168, 85, 247, 0.3);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+}
+
+.card-year-mobile {
+  font-family: 'Courier New', monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #a855f7;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 0.75rem;
+  display: block;
+}
+
+.card-title-mobile {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 0.5rem 0;
+  line-height: 1.2;
+}
+
+.card-company-mobile {
+  font-size: 0.95rem;
+  color: #aaa;
+  font-style: italic;
+  margin: 0 0 1rem 0;
+}
+
+.card-divider-mobile {
+  width: 50px;
+  height: 2px;
+  background: linear-gradient(90deg, #a855f7, transparent);
+  margin: 1rem 0;
+}
+
+.card-description-mobile {
+  font-size: 0.9rem;
+  color: #bbb;
+  line-height: 1.6;
+  margin: 0 0 1.25rem 0;
+}
+
+.card-tags-mobile {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.card-tag-mobile {
+  font-size: 0.7rem;
+  font-weight: 500;
+  padding: 0.4rem 0.8rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  color: #999;
+  transition: all 0.2s ease;
+}
+
+.card-tag-mobile:active {
+  transform: scale(0.95);
+}
+
+/* Mobile Light Theme */
+.theme-light .journey-list-mobile::before {
+  background: linear-gradient(180deg, transparent, #a855f7 10%, #a855f7 90%, transparent);
+  opacity: 0.2;
+}
+
+.theme-light .journey-card-mobile {
+  background: rgba(255, 255, 255, 0.8);
+  border-color: rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.theme-light .journey-card-mobile::before {
+  background: #a855f7;
+  border-color: rgba(255, 255, 255, 0.9);
+}
+
+.theme-light .journey-card-mobile:hover {
+  border-color: rgba(168, 85, 247, 0.4);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+}
+
+.theme-light .card-title-mobile {
+  color: #111;
+}
+
+.theme-light .card-company-mobile {
+  color: #555;
+}
+
+.theme-light .card-description-mobile {
+  color: #444;
+}
+
+.theme-light .card-tag-mobile {
+  background: rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.1);
+  color: #555;
+}

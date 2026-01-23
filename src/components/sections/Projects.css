@@ -300,6 +300,144 @@
   .card-col { padding: 1.5rem; }
 }
 
+/* --- MOBILE VERSION: Vertical List --- */
+.projects-mobile .projects-header {
+  padding: 0 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.projects-list-mobile {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 0 1.5rem 4rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.project-card-mobile {
+  background: rgba(10, 10, 10, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.card-header-mobile {
+  padding: 1.25rem;
+  background: rgba(0, 0, 0, 0.5);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.header-top-row-mobile {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.project-title-mobile {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.card-body-mobile {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.mobile-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.project-description-mobile {
+  font-size: 0.9rem;
+  color: #ccc;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.tech-tags-mobile {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tech-tag-mobile {
+  font-size: 0.75rem;
+  color: #999;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+.github-btn-mobile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  background: #fff;
+  color: #000;
+  font-weight: 600;
+  font-size: 0.9rem;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  margin-top: 0.5rem;
+}
+
+.github-btn-mobile:hover {
+  background: #e0e0e0;
+  transform: translateY(-2px);
+}
+
+/* Mobile Light Theme */
+.theme-light .project-card-mobile {
+  background: rgba(255, 255, 255, 0.8);
+  border-color: rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.theme-light .card-header-mobile {
+  background: rgba(0, 0, 0, 0.03);
+  border-bottom-color: rgba(0, 0, 0, 0.1);
+}
+
+.theme-light .project-title-mobile {
+  color: #111;
+}
+
+.theme-light .project-description-mobile {
+  color: #444;
+}
+
+.theme-light .tech-tag-mobile {
+  color: #555;
+  background: rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+.theme-light .github-btn-mobile {
+  background: #111;
+  color: #fff;
+}
+
+.theme-light .github-btn-mobile:hover {
+  background: #333;
+}
+
 /* --- THEME LIGHT --- */
 .theme-light .project-card {
   border-color: rgba(0, 0, 0, 0.1);

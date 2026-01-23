@@ -389,3 +389,163 @@ body {
   background: rgba(125, 125, 125, 0.3);
   margin: 0 8px;
 }
+
+/* ========================================
+   RESPONSIVIDADE MOBILE E TABLET
+   ======================================== */
+
+/* --- TABLET (768px - 1024px) --- */
+@media (max-width: 1024px) {
+  .hero-content h1 {
+    font-size: 4rem;
+  }
+
+  .hero-content .hero-subtitle {
+    font-size: 1.1rem;
+  }
+
+  .about-section {
+    min-height: auto;
+    padding: 4rem 2rem;
+  }
+
+  .about-main {
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .about-image {
+    flex-basis: 100%;
+    padding-right: 0;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  .about-text {
+    flex-basis: 100%;
+  }
+
+  .about-text p {
+    font-size: 1rem;
+    text-align: left;
+  }
+}
+
+/* --- MOBILE (< 768px) --- */
+@media (max-width: 768px) {
+  
+  /* Desabilita efeito de luz do mouse em mobile (performance) */
+  .mouse-light-overlay {
+    display: none;
+  }
+
+  /* Hero Section */
+  .hero-section {
+    height: 100svh; /* safe viewport height para mobile */
+    padding: 1rem;
+  }
+
+  .hero-content h1 {
+    font-size: 2.5rem;
+    letter-spacing: 1px;
+  }
+
+  .hero-content .hero-subtitle {
+    font-size: 1rem;
+    margin-top: 0.75rem;
+  }
+
+  .hero-f11-hint {
+    font-size: 0.7rem;
+    bottom: 1rem;
+  }
+
+  /* About Section */
+  .about-section {
+    padding: 3rem 1.5rem;
+  }
+
+  .about-content .section-title {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .about-text p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  /* Journey Section */
+  .journey-section {
+    padding: 3rem 0;
+  }
+
+  .journey-title {
+    font-size: 2.5rem;
+  }
+
+  .journey-description {
+    font-size: 1rem;
+  }
+
+  /* Espaçamento geral das seções */
+  body {
+    font-size: 0.95rem;
+  }
+
+  /* Headers de seções */
+  .section-label {
+    font-size: 0.75rem;
+    letter-spacing: 1.5px;
+  }
+
+  .section-title-large {
+    font-size: 2rem !important;
+    letter-spacing: -0.5px;
+  }
+
+  .section-subtitle {
+    font-size: 0.9rem;
+    max-width: 100%;
+  }
+}
+
+/* --- SMALL MOBILE (< 480px) --- */
+@media (max-width: 480px) {
+  .hero-content h1 {
+    font-size: 2rem;
+  }
+
+  .hero-content .hero-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .about-content .section-title {
+    font-size: 1.75rem;
+  }
+
+  .section-title-large {
+    font-size: 1.75rem !important;
+  }
+
+  .journey-title {
+    font-size: 2rem;
+  }
+}
+
+/* --- LANDSCAPE MOBILE --- */
+@media (max-height: 500px) and (orientation: landscape) {
+  .hero-section {
+    height: auto;
+    min-height: 100svh;
+    padding: 2rem 1rem;
+  }
+
+  .hero-content h1 {
+    font-size: 2rem;
+  }
+
+  .hero-f11-hint {
+    display: none;
+  }
+}

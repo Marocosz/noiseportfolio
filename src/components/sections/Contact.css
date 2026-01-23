@@ -181,9 +181,25 @@
 
 /* --- RESPONSIVIDADE --- */
 @media (max-width: 768px) {
+  .contact-section {
+    padding: 0;
+    overflow-x: hidden; /* Previne scroll horizontal */
+  }
+
+  .contact-header-section {
+    padding: 0 1.5rem;
+    margin-bottom: 3rem;
+  }
+
   .terminal-window {
     margin: 0 1rem;
-    width: 95%;
+    width: calc(100vw - 2rem); /* Largura exata da viewport menos margens */
+    max-width: 900px;
+  }
+
+  .terminal-body {
+    padding: 1.5rem 1rem;
+    overflow-x: hidden;
   }
 
   .cmd-line {
@@ -192,10 +208,58 @@
   
   .contact-grid {
     grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .contact-card {
+    padding: 1rem;
+    margin: 0; /* Remove qualquer margem que possa causar overflow */
+  }
+
+  .contact-value {
+    font-size: 0.9rem;
+    word-break: break-word; /* Quebra URLs/emails longos */
+    overflow-wrap: break-word;
   }
   
   .section-title-large {
     font-size: 2.5rem;
+  }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+  .terminal-window {
+    margin: 0 0.5rem;
+    width: calc(100vw - 1rem);
+  }
+
+  .terminal-body {
+    padding: 1rem 0.75rem;
+  }
+
+  .cmd-line {
+    font-size: 0.85rem;
+    flex-wrap: wrap;
+  }
+
+  .contact-card {
+    padding: 0.875rem;
+    gap: 0.75rem;
+  }
+
+  .icon-box {
+    width: 36px;
+    height: 36px;
+    min-width: 36px; /* Evita que encolha */
+  }
+
+  .contact-value {
+    font-size: 0.85rem;
+  }
+
+  .contact-label {
+    font-size: 0.7rem;
   }
 }
 

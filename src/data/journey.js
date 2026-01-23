@@ -52,7 +52,7 @@ export const journeyData = [
     title: "Next Level: AI Engineer",
     org: "Roadmap 2026+",
     description:
-      "Aprofundamento contínuo em Fine-Tuning de modelos, MLOps e arquitetura de sistemas distribuídos escaláveis para soluções de IA robustas.",
-    tags: ["PyTorch", "Kubernetes", "MLOps", "Fine-Tuning"],
+      "Aprofundamento contínuo em aplicações de software com o melhor da IA, Agents, Multi-Agents e Orchestrators. Aprender mais sobre RAG e Fine Tuning de modelos, MLOps e arquitetura de sistemas distribuídos escaláveis para soluções de IA robustas.",
+    tags: ["IA", "Kubernetes", "MLOps", "Fine-Tuning"],
   },
 ];
