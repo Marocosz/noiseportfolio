@@ -3,8 +3,8 @@ import { motion } from "motion/react";
 import DecryptedText from "../effects/DecryptedText";
 import { profileData } from "../../data/content";
 import "./Profile.css";
-// import Avatar3D from './Avatar3D';
-import { SplineScene } from '../ui/SplineScene';
+import CrystalScene from './CrystalScene';
+// import { SplineScene } from '../ui/SplineScene';
 
 // IMPORTANTE: Mude o nome do arquivo aqui para sua nova imagem horizontal
 // import profileImgHorizontal from "../../assets/profile-horizontal.png";
@@ -47,7 +47,7 @@ const Profile = () => {
             <p className="bio-body">{profileData.bio_full}</p>
           </motion.div>
 
-          {/* LADO DIREITO: SPLINE 3D SCENE */}
+          {/* LADO DIREITO: CRYSTAL SCENE */}
           <motion.div
             className="profile-img-container"
             initial={{ opacity: 0, x: 50 }}
@@ -55,25 +55,7 @@ const Profile = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-             {/* 
-                Técnica de Zoom: Aumentamos o container para 150% e centralizamos com margens negativas.
-                Como o Spline renderiza baseado no tamanho do container, isso aumenta a resolução real (nítido),
-                ao contrário de usar 'transform: scale' que apenas estica os pixels (borrado).
-             */}
-             <div style={{ 
-               // OTIMIZAÇÃO: Reduzi de 160% para 130% para diminuir o LAG em telas 4K/144hz.
-               // Mantém um bom tamanho sem matar a GPU.
-               width: '130%', 
-               height: '130%', 
-               position: 'absolute',
-               right: '-15%',
-               bottom: '-10%'
-             }}>
-                <SplineScene 
-                  scene="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode"
-                  className="spline-profile-clean"
-                />
-             </div>
+            <CrystalScene />
           </motion.div>
         </div>
       </div>
