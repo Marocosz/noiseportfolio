@@ -82,7 +82,15 @@
   display: flex;
   flex-direction: column;
 
-  transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+  /* Split transition: Fast for interactions/layout, Slow for Theme Colors */
+  transition: 
+    transform 0.6s cubic-bezier(0.25, 1, 0.5, 1),
+    filter 0.6s cubic-bezier(0.25, 1, 0.5, 1),
+    opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1),
+    box-shadow 0.6s cubic-bezier(0.25, 1, 0.5, 1),
+    background-color 1.5s ease,
+    border-color 1.5s ease,
+    color 1.5s ease;
   will-change: transform, filter, opacity;
 }
 

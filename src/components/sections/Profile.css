@@ -31,6 +31,9 @@
 
   /* Altura mínima da faixa */
   min-height: 250px;
+
+  /* Sync Theme Transition */
+  transition: background 1.5s ease, border-color 1.5s ease;
 }
 
 /* Container interno para limitar a largura do conteúdo (não colar nas bordas de telas gigantes) */
@@ -187,7 +190,13 @@
 
   padding: 0.5rem 1rem;
   white-space: nowrap;
-  transition: all 0.3s ease;
+  /* Split Transition */
+  transition: 
+    transform 0.3s ease, 
+    background 1.5s ease, 
+    border-color 1.5s ease, 
+    color 1.5s ease, 
+    text-shadow 0.3s ease;
   text-transform: uppercase;
   letter-spacing: 0.1em;
 }
@@ -324,7 +333,12 @@
   align-items: center;
   justify-content: center;
   padding: 2rem;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Split Transition */
+  transition: 
+    transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    background 1.5s ease,
+    border-color 1.5s ease;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   text-align: center;
   overflow: hidden;

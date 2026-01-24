@@ -109,15 +109,15 @@ export default function Iridescence({ color = [1, 1, 1], speed = 1.0, amplitude 
 
     function update(t) {
       animateId = requestAnimationFrame(update);
-      if (isAnimated) {
-        program.uniforms.uTime.value = t * 0.001;
-        lastTime.current = t * 0.001;
-      } else {
-        program.uniforms.uTime.value = lastTime.current;
-      }
+      if (!isAnimated) return; // FIX: Stop rendering completely if paused/hidden to save GPU
+      
+      program.uniforms.uTime.value = t * 0.001;
+      lastTime.current = t * 0.001;
       renderer.render({ scene: mesh });
     }
     animateId = requestAnimationFrame(update);
+    // Force one initial render
+    renderer.render({ scene: mesh });
     ctn.appendChild(gl.canvas);
 
     function handleMouseMove(e) {
