@@ -237,9 +237,10 @@
 .card-inner {
   width: 100%;
   height: 100%;
-  background: rgba(10, 10, 10, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: rgba(10, 10, 10, 0.9); /* Pouco mais opaco para compensar menos blur */
+  /* PERFORMANCE FIX: Blur reduzido de 20px para 10px */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 20px;
   padding: 2.5rem;

@@ -54,7 +54,13 @@ const CrystalScene = () => {
         // PERFORMANCE FIX: Clampa o pixel ratio entre 1 e 1.5. 
         // Evita renderizar 3x ou 4x pixels em telas Retina/Mobile high-end (economia de bateria/GPU).
         dpr={[1, 1.5]}
-        gl={{ alpha: true, antialias: true }}
+        gl={{ 
+          alpha: true, 
+          antialias: true, 
+          powerPreference: 'high-performance',
+          stencil: false, // Desliga stencil buffer pra economizar memória se não usarmos sombras complexas
+          depth: true
+        }}
       >
         <Environment preset="city" />
 

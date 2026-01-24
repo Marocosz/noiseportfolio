@@ -212,17 +212,6 @@ const ConnectionArrow = ({ variant }) => {
 
   return (
     <svg className="connection-svg" viewBox="0 0 160 100" preserveAspectRatio="none" style={{ overflow: 'visible' }}>
-      {/* Efeito Glow (Stroke mais grosso e borrado atrás) */}
-      <path 
-        d={path} 
-        stroke="#a855f7" 
-        strokeWidth="6" 
-        fill="none" 
-        opacity="0.3"
-        style={{ filter: 'blur(3px)' }}
-        vectorEffect="non-scaling-stroke"
-      />
-      
       {/* Linha Principal sem Marker */}
       <path 
         d={path} 

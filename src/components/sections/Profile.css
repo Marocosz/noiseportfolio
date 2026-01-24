@@ -166,8 +166,11 @@
 .infinite-track {
   display: flex;
   width: max-content; /* Largura se adapta ao conteúdo */
-  gap: 4rem; /* Espaço entre os itens */
   animation: scrollLoop 20s linear infinite;
+  /* PERFORMANCE FIX: Força a renderização na GPU */
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
 }
 
 .scroll-item {

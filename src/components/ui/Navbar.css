@@ -9,9 +9,10 @@
   height: 52px; /* Altura padrão Windows 11 */
   
   /* Material Mica / Glass Dark */
-  background: rgba(20, 20, 20, 0.6);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: rgba(20, 20, 20, 0.8);
+  /* PERFORMANCE FIX: Blur moderado */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   
@@ -361,7 +362,7 @@
 .theme-light .time,
 .theme-light .date,
 .theme-light .theme-toggle-btn {
-  color: #333;
+  color: var(--text-primary);
 }
 
 .theme-light .tray-divider {
