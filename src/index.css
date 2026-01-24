@@ -27,16 +27,17 @@
 
 /* --- TEMA CLARO (Quando a classe .theme-light é ativada no main) --- */
 .theme-light {
-  --bg-color: #ffffff; /* Fundo claro caso o canvas falhe */
-  --text-primary: #1a1a1a !important; /* Preto quase puro */
-  --text-secondary: #4a4a4a !important; /* Cinza escuro */
+  /* Tema Claro - Cores Ajustadas (Mais suaves que #000) */
+  --bg-color: #ffffff; 
+  --text-primary: #334155 !important; /* Slate 700 - Um cinza azulado escuro elegante */
+  --text-secondary: #64748b !important; /* Slate 500 - Cinza médio suave */
   
-  --card-bg: rgba(255, 255, 255, 0.4) !important; /* Vidro branco */
-  --card-border: rgba(0, 0, 0, 0.1) !important; /* Borda sutil escura */
+  --card-bg: rgba(255, 255, 255, 0.4) !important; 
+  --card-border: rgba(0, 0, 0, 0.1) !important; 
   
-  --scrollbar-track: #f0f0f0;
-  --scrollbar-thumb: #ccc;
-  --scrollbar-thumb-hover: #aaa;
+  --scrollbar-track: #f1f5f9; /* Slate 100 */
+  --scrollbar-thumb: #cbd5e1; /* Slate 300 */
+  --scrollbar-thumb-hover: #94a3b8; /* Slate 400 */
 }
 
 /* FORÇAR CORES NO MODO CLARO (Hack para garantir legibilidade imediata) */

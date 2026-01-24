@@ -44,27 +44,32 @@
   line-height: 1.6;
 }
 
-/* --- TERMINAL WINDOW --- */
+/* --- TERMINAL WINDOW (UPDATED STYLE) --- */
 .terminal-window {
   width: 100%;
   max-width: 900px;
-  background: rgba(10, 10, 10, 0.95); /* Quase preto sólido para contraste */
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 16px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  /* Fundo ligeiramente mais transparente conforme referência */
+  background: rgba(10, 10, 10, 0.9); 
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  /* Glow Neon Roxo */
+  box-shadow: 0 0 30px rgba(168, 85, 247, 0.15);
   overflow: hidden;
   margin: 0 2rem;
   position: relative;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 /* Barra do Terminal (Bolinhas) */
 .terminal-header-bar {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.03);
   padding: 0.8rem 1.5rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  cursor: default;
 }
 
 .dot {
@@ -77,10 +82,12 @@
 .dot.green { background: #27c93f; }
 
 .terminal-title {
-  margin-left: 1rem;
+  margin-left: auto;
+  margin-right: auto; /* Centraliza o título */
   font-family: 'Courier New', monospace;
-  font-size: 0.8rem;
-  color: #666;
+  font-size: 0.9rem;
+  color: #888;
+  opacity: 0.7;
 }
 
 /* Corpo do Terminal */
@@ -88,6 +95,7 @@
   padding: 2rem;
   font-family: 'Courier New', monospace;
   color: #ddd;
+  min-height: 400px; /* Garante altura mínima estilo CLI */
 }
 
 /* Linha de Comando */
@@ -101,7 +109,6 @@
 }
 
 .prompt-user { color: #a855f7; font-weight: 700; }
-.prompt-symbol { color: #fff; }
 .cmd-text { color: #fff; }
 .cursor {
   display: inline-block;
@@ -119,64 +126,131 @@
 /* Output de Resposta */
 .cmd-response {
   margin-bottom: 2rem;
-  color: #888;
+  color: #a855f7;
   font-size: 0.9rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
 
-/* --- GRID DE CONTATOS (OUTPUT) --- */
-.contact-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem;
+/* --- 1. SYSTEM INTRO (HEADER) --- */
+.terminal-intro {
+  margin-bottom: 1.5rem;
+  color: #666;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+.terminal-intro p { margin: 0; }
+.terminal-intro .dim { opacity: 0.6; font-size: 0.8rem; margin-top: 0.5rem; }
+
+/* --- 2. BOOT LOGS (SYSTEM MESSAGES) --- */
+.system-logs {
+  margin-bottom: 2rem;
+  font-size: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
 }
 
-.contact-card {
+.log-line {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  padding: 1rem 1.5rem;
-  border-radius: 8px;
+}
+
+.log-text { color: #ccc; }
+.log-dots { color: #444; margin: 0 0.5rem; letter-spacing: 2px; }
+.log-status { font-weight: bold; }
+
+/* --- 3. TABULAR CONTACT LIST --- */
+.contact-list {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 0; /* Table style */
+}
+
+/* Header da Tabela */
+.table-header {
+  display: grid;
+  grid-template-columns: 180px 1fr 100px; /* Colunas fixas e flexíveis */
+  padding: 0.5rem 1rem;
+  border-bottom: 1px dashed rgba(255,255,255,0.2);
+  margin-bottom: 0.5rem;
+  color: #a855f7; /* Cor do cabeçalho */
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+}
+
+/* Linhas da Tabela */
+.terminal-row {
+  display: grid;
+  grid-template-columns: 180px 1fr 100px;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid rgba(255,255,255,0.02);
+  transition: background 0.2s;
+}
+
+.terminal-row:hover {
+  background: rgba(255,255,255,0.05);
+}
+
+.col-type {
+  display: flex;
+  align-items: center;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.col-dest {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.col-status {
+  color: #27c93f; /* Verde estilo HTTP 200 */
+  font-size: 0.85rem;
+  text-align: right;
+}
+
+/* Link estilo CLI (Dashed Underline) */
+.cli-link {
+  color: var(--text-secondary);
   text-decoration: none;
+  font-family: 'Courier New', monospace; /* Fonte mono para dados */
   transition: all 0.3s ease;
 }
 
-.contact-card:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(168, 85, 247, 0.3);
-  transform: translateX(5px);
+.cli-link:hover {
+  color: #a855f7;
+  text-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
 }
 
-.icon-box {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 8px;
-  background: rgba(0,0,0,0.3);
+/* --- 4. NEW PROMPT --- */
+.new-prompt {
+  margin-top: 2rem;
+  margin-bottom: 0;
 }
 
-.contact-info {
-  display: flex;
-  flex-direction: column;
-}
+/* Responsividade Mobile para Tabela */
+@media (max-width: 600px) {
+  .table-header { display: none; } /* Esconde header em mobile */
+  
+  .terminal-row {
+    grid-template-columns: 1fr; /* Pilha tudo */
+    gap: 0.2rem;
+    padding: 1rem;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
 
-.contact-label {
-  font-size: 0.75rem;
-  color: #666;
-  font-weight: 700;
-  margin-bottom: 0.2rem;
-}
-
-.contact-value {
-  font-size: 0.95rem;
-  color: #fff;
-  font-weight: 500;
+  .col-status { display: none; } /* Esconde status 200 OK em mobile para limpar */
+  
+  .col-type { margin-bottom: 0.2rem; color: #a855f7; }
+  
+  .terminal-intro { font-size: 0.8rem; }
 }
 
 /* --- HOSTING SERVICE CARD --- */
@@ -441,6 +515,47 @@
 .theme-light .contact-value {
   color: #111;
   font-weight: 600;
+}
+
+/* Light Mode Table Overrides */
+.theme-light .contact-list {
+  border-left-color: rgba(147, 51, 234, 0.3);
+}
+
+.theme-light .table-header {
+  border-bottom-color: rgba(0, 0, 0, 0.2);
+  color: #9333ea;
+}
+
+.theme-light .terminal-row {
+  border-bottom-color: rgba(0, 0, 0, 0.05);
+}
+
+.theme-light .terminal-row:hover {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.theme-light .col-type {
+  color: #333;
+}
+
+.theme-light .cli-link {
+  color: #555;
+  border-bottom-color: rgba(0, 0, 0, 0.2);
+}
+
+.theme-light .cli-link:hover {
+  color: #9333ea;
+  border-bottom-color: #9333ea;
+  text-shadow: 0 0 10px rgba(147, 51, 234, 0.3);
+}
+
+.theme-light .log-text {
+  color: #444;
+}
+
+.theme-light .log-dots {
+  color: #bbb;
 }
 
 /* Hosting Service Card Light Mode */

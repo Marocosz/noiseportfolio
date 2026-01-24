@@ -235,11 +235,11 @@
 }
 
 .theme-light .category-title {
-  color: #111;
+  color: var(--text-primary);
 }
 
 .theme-light .category-desc {
-  color: #555;
+  color: var(--text-secondary);
 }
 
 .theme-light .tech-item {

@@ -416,15 +416,15 @@
 }
 
 .theme-light .project-title-mobile {
-  color: #111;
+  color: var(--text-primary);
 }
 
 .theme-light .project-description-mobile {
-  color: #444;
+  color: var(--text-secondary);
 }
 
 .theme-light .tech-tag-mobile {
-  color: #555;
+  color: var(--text-secondary);
   background: rgba(0, 0, 0, 0.05);
   border-color: rgba(0, 0, 0, 0.1);
 }
@@ -450,8 +450,8 @@
   background: rgba(255, 255, 255, 0.8);
   border-color: rgba(0, 0, 0, 0.1);
 }
-.theme-light .project-title { color: #111; }
-.theme-light .project-year { color: #555; font-weight: 700; }
+.theme-light .project-title { color: var(--text-primary); }
+.theme-light .project-year { color: var(--text-secondary); font-weight: 700; }
 .theme-light .card-body-split { background: #ffffff; }
 .theme-light .project-description { color: #444; }
 .theme-light .body-label { color: #777; }

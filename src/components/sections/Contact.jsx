@@ -92,9 +92,17 @@ const Contact = () => {
         {/* Corpo do Terminal */}
         <div className="terminal-body">
           
-          {/* Linha de Comando (Simula digitação) */}
+          {/* 1. System Intro (Static) */}
+          <div className="terminal-intro">
+            <p>NoisePortfolio OS [Version 3.0.1]</p>
+            <p>(c) 2026 Marcos Rodrigues. All rights reserved.</p>
+            <p className="dim">System check: OK. Loading shell...</p>
+            <br />
+          </div>
+
+          {/* 2. Prompt & Command (Typing Animation) */}
           <div className="cmd-line">
-            <span className="prompt-user">visitante@portfolio:~$</span>
+            <span className="prompt-user">visitor@portfolio:~$</span>
             
             <motion.span
               variants={typingContainer}
@@ -108,59 +116,91 @@ const Contact = () => {
                 <motion.span key={index} variants={letterVar}>{char}</motion.span>
               ))}
             </motion.span>
-            
-            {/* Cursor piscando (some quando termina de digitar) */}
-            {!isTypingDone && <span className="cursor" />}
           </div>
 
-          {/* Resultado (Aparece só depois que digitou) */}
+          {/* 3. Execution Logs & Result (Conditional) */}
           {isTypingDone && (
             <motion.div
+              className="execution-flow"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.5 }}
+              transition={{ duration: 0.3 }}
             >
-              
-              <div className="cmd-response">
-                <Loader2 className="animate-spin" size={16} />
-                <span>Fetching communication channels...</span>
+              {/* Fake System Logs */}
+              <div className="system-logs">
+                <LogLine text="Initializing handshake protocol..." status="OK" color="#27c93f" delay={0.2} />
+                <LogLine text="Verifying ssl certificates..." status="VERIFIED" color="#ffbd2e" delay={0.4} />
+                <LogLine text="Decrypting contact data..." status="DONE" color="#a855f7" delay={0.6} />
+                <br />
               </div>
 
-              {/* Grid de Cards */}
-              <div className="contact-grid">
+              {/* Result Table */}
+              <div className="contact-list">
+                <div className="table-header">
+                  <span>TYPE</span>
+                  <span>DESTINATION</span>
+                  <span>STATUS</span>
+                </div>
+                
                 {contactData.map((item, index) => {
                   const Icon = item.icon;
                   return (
-                    <motion.a 
+                    <motion.div 
                       key={item.id}
-                      href={item.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="contact-card"
-                      initial={{ opacity: 0, x: -20 }}
+                      className="terminal-row"
+                      initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.5 + (index * 0.1) }} // Cascata
+                      transition={{ delay: 0.8 + (index * 0.1) }}
                     >
-                      <div className="icon-box">
-                        <Icon size={20} color={item.color} />
+                      <span className="col-type">
+                        <Icon size={14} style={{ marginRight: 8, verticalAlign: 'middle' }} />
+                        {item.label}
+                      </span>
+                      
+                      <div className="col-dest">
+                        <a 
+                          href={item.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="cli-link"
+                        >
+                          {item.value}
+                        </a>
                       </div>
-                      <div className="contact-info">
-                        <span className="contact-label">{item.label}</span>
-                        <span className="contact-value">{item.value}</span>
-                      </div>
-                    </motion.a>
+
+                      <span className="col-status">200 OK</span>
+                    </motion.div>
                   );
                 })}
               </div>
 
+              {/* 4. New Empty Prompt (Ready State) */}
+              <div className="cmd-line new-prompt">
+                <br />
+                <span className="prompt-user">visitor@portfolio:~$</span>
+                <span className="cursor" />
+              </div>
+
             </motion.div>
           )}
-
         </div>
       </motion.div>
 
     </section>
   );
 };
+
+const LogLine = ({ text, status, color, delay }) => (
+  <motion.div 
+    className="log-line"
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    transition={{ delay }}
+  >
+    <span className="log-text">{text}</span>
+    <span className="log-dots">................</span>
+    <span className="log-status" style={{ color: color }}>[{status}]</span>
+  </motion.div>
+);
 
 export default Contact;

@@ -475,15 +475,15 @@
 }
 
 .theme-light .card-title {
-  color: #000;
+  color: var(--text-primary);
 }
 
 .theme-light .card-company {
-  color: #555;
+  color: var(--text-secondary);
 }
 
 .theme-light .card-description {
-  color: #444;
+  color: var(--text-secondary);
 }
 
 .theme-light .card-tag {
@@ -703,21 +703,21 @@
 }
 
 .theme-light .card-title-mobile {
-  color: #111;
+  color: var(--text-primary);
 }
 
 .theme-light .card-company-mobile {
-  color: #555;
+  color: var(--text-secondary);
 }
 
 .theme-light .card-description-mobile {
-  color: #444;
+  color: var(--text-secondary);
 }
 
 .theme-light .card-tag-mobile {
   background: rgba(0, 0, 0, 0.05);
   border-color: rgba(0, 0, 0, 0.1);
-  color: #555;
+  color: var(--text-secondary);
 }
 
 .theme-light .git-header-mobile {
@@ -734,5 +734,5 @@
 
 .theme-light .card-year,
 .theme-light .card-year-mobile {
-  color: #555;
+  color: var(--text-secondary);
 }
