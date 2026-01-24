@@ -67,11 +67,22 @@
 
 /* --- ESTILOS GLOBAIS DE SCROLL --- */
 /* --- ESTILOS GLOBAIS DE SCROLL (LENIS / NATIVE) --- */
+/* --- ESTILOS GLOBAIS DE SCROLL --- */
+/* --- ESTILOS GLOBAIS DE SCROLL (LENIS / NATIVE) --- */
 html {
   /* Lenis requer scroll-behavior: auto para funcionar corretamente */
   scroll-behavior: auto !important;
-  scrollbar-width: thin;
-  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  scrollbar-width: none; /* Firefox - Hide Scrollbar */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+/* Remove Webkit Scrollbar (Chrome/Safari/Edge) */
+html::-webkit-scrollbar {
+  display: none;
+}
+
+body::-webkit-scrollbar {
+  display: none;
 }
 
 /* LENIS RECOMMENDED STYLES */
@@ -93,24 +104,6 @@ html.lenis, html.lenis body {
 
 .lenis.lenis-scrolling iframe {
   pointer-events: none;
-}
-
-body::-webkit-scrollbar {
-  width: 8px;
-}
-
-body::-webkit-scrollbar-track {
-  background: var(--scrollbar-track);
-}
-
-body::-webkit-scrollbar-thumb {
-  background-color: var(--scrollbar-thumb);
-  border-radius: 4px;
-  border: 1px solid var(--scrollbar-track);
-}
-
-body::-webkit-scrollbar-thumb:hover {
-  background-color: var(--scrollbar-thumb-hover);
 }
 
 /* --- ESTILOS GERAIS --- */
@@ -570,4 +563,10 @@ body {
   .hero-f11-hint {
     display: none;
   }
+}
+
+/* --- UTILITY PARA TRAVAR SCROLL --- */
+html.stop-scrolling,
+body.stop-scrolling {
+  overflow: hidden !important;
 }

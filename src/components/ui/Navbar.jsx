@@ -2,9 +2,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
 import { 
   Home, User, FolderGit2, Map, Cpu, MessageSquare, 
-  Wifi, Volume2, BatteryMedium, Sun, Moon, Play, Pause // Added Play and Pause
+  Wifi, Volume2, BatteryMedium, Sun, Moon, Play, Pause,
+  LayoutGrid // Added LayoutGrid for Windows-like start icon
 } from 'lucide-react';
 import './Navbar.css';
+import StartMenu from './StartMenu';
 
 const navItems = [
   { id: 'hero', icon: Home, label: 'Home' },
@@ -18,7 +20,16 @@ const navItems = [
 // Agora recebe props de tema e animação
 const Navbar = ({ isDarkMode, toggleTheme, isAnimationEnabled, toggleAnimation }) => {
   const [activeId, setActiveId] = useState('hero');
+  const [isStartMenuOpen, setIsStartMenuOpen] = useState(false); // State for Start Menu
   const visibleSections = useRef({});
+
+  const toggleStartMenu = () => {
+    setIsStartMenuOpen(!isStartMenuOpen);
+  };
+
+  const closeStartMenu = () => {
+    setIsStartMenuOpen(false);
+  };
 
   const scrollToSection = (id) => {
     const element = document.getElementById(id);
@@ -67,72 +78,97 @@ const Navbar = ({ isDarkMode, toggleTheme, isAnimationEnabled, toggleAnimation }
   }, [activeId]);
 
   return (
-    <motion.div 
-      className="taskbar-container"
-      initial={{ y: 100 }}
-      animate={{ y: 0 }}
-      transition={{ delay: 0.5, duration: 0.5 }}
-    >
-      
-      {/* 1. Centro: Ícones de Navegação */}
-      <div className="taskbar-center">
-        {navItems.map((item) => {
-          const Icon = item.icon;
-          const isActive = activeId === item.id;
+    <>
+      <StartMenu 
+        isOpen={isStartMenuOpen} 
+        onClose={closeStartMenu} 
+        isDarkMode={isDarkMode} 
+      />
 
-          return (
-            <div key={item.id} className="taskbar-icon-wrapper">
-              <div className="taskbar-tooltip">{item.label}</div>
-
-              <button
-                onClick={() => scrollToSection(item.id)}
-                className={`taskbar-btn ${isActive ? 'active' : ''}`}
-                aria-label={item.label}
-              >
-                <Icon size={22} strokeWidth={isActive ? 2.5 : 2} />
-                
-                {isActive && (
-                  <motion.div 
-                    layoutId="taskbar-indicator"
-                    className="app-indicator"
-                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                  />
-                )}
-              </button>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* 2. Direita: System Tray */}
-      <div className="taskbar-right">
+      <motion.div 
+        className="taskbar-container"
+        initial={{ y: 100 }}
+        animate={{ y: 0 }}
+        transition={{ delay: 0.5, duration: 0.5 }}
+        style={{ zIndex: 1000 }}
+      >
         
-        {/* BOTÃO DE TEMA */}
-        <button onClick={toggleTheme} className="theme-toggle-btn" aria-label="Toggle Theme">
-          {isDarkMode ? <Moon size={18} /> : <Sun size={18} />}
-        </button>
+        {/* 1. Centro: Ícones de Navegação */}
+        <div className="taskbar-center">
+          
+          {/* Start Button */}
+          <div className="taskbar-icon-wrapper">
+             <div className="taskbar-tooltip">Start</div>
+             <button
+                onClick={toggleStartMenu}
+                className={`taskbar-btn ${isStartMenuOpen ? 'active' : ''}`}
+                aria-label="Start"
+             >
+                <LayoutGrid size={22} strokeWidth={isStartMenuOpen ? 2.5 : 2} />
+             </button>
+          </div>
 
-        {/* BOTÃO DE ANIMAÇÃO */}
-        <button onClick={toggleAnimation} className="theme-toggle-btn" aria-label="Toggle Animation">
-          {isAnimationEnabled ? <Pause size={18} /> : <Play size={18} />}
-        </button>
+          {/* Divider */}
+          <div className="tray-divider"></div>
 
-        <div className="tray-divider"></div>
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = activeId === item.id;
 
-        <div className="tray-icons">
-          <div className="tray-icon-hover"><Wifi size={16} /></div>
-          <div className="tray-icon-hover"><Volume2 size={16} /></div>
-          <div className="tray-icon-hover"><BatteryMedium size={16} /></div>
+            return (
+              <div key={item.id} className="taskbar-icon-wrapper">
+                <div className="taskbar-tooltip">{item.label}</div>
+
+                <button
+                  onClick={() => scrollToSection(item.id)}
+                  className={`taskbar-btn ${isActive ? 'active' : ''}`}
+                  aria-label={item.label}
+                >
+                  <Icon size={22} strokeWidth={isActive ? 2.5 : 2} />
+                  
+                  {isActive && (
+                    <motion.div 
+                      layoutId="taskbar-indicator"
+                      className="app-indicator"
+                      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                    />
+                  )}
+                </button>
+              </div>
+            );
+          })}
         </div>
 
-        <div className="tray-clock">
-          <Clock />
+        {/* 2. Direita: System Tray */}
+        <div className="taskbar-right">
+          
+          {/* BOTÃO DE TEMA */}
+          <button onClick={toggleTheme} className="theme-toggle-btn" aria-label="Toggle Theme">
+            {isDarkMode ? <Moon size={18} /> : <Sun size={18} />}
+          </button>
+
+          {/* BOTÃO DE ANIMAÇÃO */}
+          <button onClick={toggleAnimation} className="theme-toggle-btn" aria-label="Toggle Animation">
+            {isAnimationEnabled ? <Pause size={18} /> : <Play size={18} />}
+          </button>
+
+          <div className="tray-divider"></div>
+
+          <div className="tray-icons">
+            <div className="tray-icon-hover"><Wifi size={16} /></div>
+            <div className="tray-icon-hover"><Volume2 size={16} /></div>
+            <div className="tray-icon-hover"><BatteryMedium size={16} /></div>
+          </div>
+
+          <div className="tray-clock">
+            <Clock />
+          </div>
+
+          <div className="show-desktop-line"></div>
         </div>
 
-        <div className="show-desktop-line"></div>
-      </div>
-
-    </motion.div>
+      </motion.div>
+    </>
   );
 };
 

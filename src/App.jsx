@@ -17,6 +17,8 @@ function App() {
       touchMultiplier: 2,
     });
 
+    window.lenis = lenis; // Expose to window for global control (e.g. stop/start)
+
     // Loop de animação sincronizado
     function raf(time) {
       lenis.raf(time);
