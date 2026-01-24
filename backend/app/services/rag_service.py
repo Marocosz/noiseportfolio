@@ -10,19 +10,17 @@ from app.core.config import settings
 
 class RagService:
     def __init__(self):
-        # Inicializa o modelo de Embeddings do Google (Gratuito e Leve)
+        # Inicializa o modelo de Embeddings do Google
         self.embeddings = GoogleGenerativeAIEmbeddings(
             model=settings.EMBEDDING_MODEL,
             google_api_key=settings.GOOGLE_API_KEY
         )
-        self.persist_directory = settings.CHROMA_DB_DIR
+        # Caminho absoluto para evitar erros de pasta
+        self.persist_directory = os.path.join(os.getcwd(), settings.CHROMA_DB_DIR)
         self.collection_name = settings.COLLECTION_NAME
 
     def get_vectorstore(self):
-        """
-        Retorna a instância do banco Chroma conectado.
-        Não realiza processamento, apenas carrega o que já existe no disco.
-        """
+        """Retorna a conexão com o banco (para fazer buscas)"""
         return Chroma(
             persist_directory=self.persist_directory,
             embedding_function=self.embeddings,
@@ -30,60 +28,51 @@ class RagService:
         )
 
     def ingest_data(self, data_path: str):
-        """
-        Lê arquivos Markdown, divide em chunks e salva no ChromaDB.
-        ATENÇÃO: Apaga o banco anterior para garantir dados frescos.
-        """
-        print(f"📂 Iniciando ingestão de: {data_path}")
+        """Processo completo de leitura e indexação"""
+        print(f"📂 Lendo arquivos de: {data_path}")
         
-        # 1. Carregar Arquivos Markdown
         if not os.path.exists(data_path):
-            raise FileNotFoundError(f"Diretório não encontrado: {data_path}")
+            print(f"❌ Erro: A pasta {data_path} não existe!")
+            return
 
+        # 1. Carregar Arquivos .md
         loader = DirectoryLoader(data_path, glob="**/*.md", loader_cls=TextLoader)
         docs = loader.load()
         
         if not docs:
-            print("⚠️ Nenhum documento encontrado para ingestão.")
+            print("⚠️ Nenhum arquivo encontrado. Verifique se criou o profile.md!")
             return
 
-        print(f"📄 {len(docs)} documentos carregados.")
+        print(f"📄 Encontrados {len(docs)} documentos.")
 
-        # 2. Dividir em Chunks (Text Splitter)
-        # Otimizado para Markdown: tenta quebrar nos cabeçalhos (#) primeiro
+        # 2. Dividir em Chunks (Pedaços inteligentes)
         text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=1000,
             chunk_overlap=200,
-            separators=["\\n# ", "\\n## ", "\\n### ", "\\n", " ", ""]
+            separators=["\n# ", "\n## ", "\n### ", "\n", " ", ""]
         )
         chunks = text_splitter.split_documents(docs)
-        print(f"🧩 Documentos divididos em {len(chunks)} chunks vetoriais.")
+        print(f"🧩 Criados {len(chunks)} chunks de informação.")
 
-        # 3. Limpar banco antigo (Reset)
+        # 3. Limpar Banco Antigo (Reset)
         if os.path.exists(self.persist_directory):
             try:
                 shutil.rmtree(self.persist_directory)
-                print("🧹 Banco vetorial antigo limpo.")
+                print("🧹 Banco antigo limpo.")
             except Exception as e:
-                print(f"⚠️ Erro ao limpar banco antigo: {e}")
+                print(f"⚠️ Aviso: Não foi possível apagar pasta antiga: {e}")
 
-        # 4. Criar e Salvar Vetores
-        print("🚀 Gerando embeddings via Google API e salvando no ChromaDB...")
-        try:
-            Chroma.from_documents(
-                documents=chunks,
-                embedding=self.embeddings,
-                persist_directory=self.persist_directory,
-                collection_name=self.collection_name
-            )
-            print("✅ Ingestão concluída com sucesso! Banco salvo em ./chroma_db")
-        except Exception as e:
-            print(f"❌ Erro durante a criação dos vetores: {e}")
+        # 4. Salvar Novos Vetores
+        print("🚀 Gerando embeddings (isso usa a API do Google)...")
+        Chroma.from_documents(
+            documents=chunks,
+            embedding=self.embeddings,
+            persist_directory=self.persist_directory,
+            collection_name=self.collection_name
+        )
+        print("✅ Ingestão concluída! Banco salvo.")
 
-    def query(self, question: str, k: int = 4) -> List[Document]:
-        """
-        Realiza uma busca por similaridade.
-        """
+    def query(self, question: str, k: int = 4):
+        """Faz a busca por similaridade"""
         vectorstore = self.get_vectorstore()
-        results = vectorstore.similarity_search(question, k=k)
-        return results
+        return vectorstore.similarity_search(question, k=k)

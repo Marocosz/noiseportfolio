@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { ChevronLeft, ChevronRight, Github } from 'lucide-react';
-import { projectsData } from '../../data/projects';
+import { useLanguage } from '../../contexts/LanguageContext';
+import { getProjectsData } from '../../data/projects';
 import './Projects.css';
 
 const Projects = () => {
+  const { language } = useLanguage();
+  const content = getProjectsData(language);
   const [activeIndex, setActiveIndex] = useState(1);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -26,9 +29,9 @@ const Projects = () => {
   // Função para navegar
   const handleNav = (direction) => {
     if (direction === 'prev') {
-      setActiveIndex((prev) => (prev > 0 ? prev - 1 : projectsData.length - 1));
+      setActiveIndex((prev) => (prev > 0 ? prev - 1 : content.items.length - 1));
     } else {
-      setActiveIndex((prev) => (prev < projectsData.length - 1 ? prev + 1 : 0));
+      setActiveIndex((prev) => (prev < content.items.length - 1 ? prev + 1 : 0));
     }
   };
 
@@ -37,15 +40,15 @@ const Projects = () => {
     return (
       <section className="projects-section projects-mobile">
         <div className="projects-header">
-          <span className="section-label">03. / PORTFOLIO</span>
-          <h2 className="section-title-large">Selected Work</h2>
+          <span className="section-label">{content.sectionLabel}</span>
+          <h2 className="section-title-large">{content.title}</h2>
           <p className="section-subtitle">
-            A selection of projects showcasing my Full-Stack and AI skills.
+            {content.subtitle}
           </p>
         </div>
 
         <div className="projects-list-mobile">
-          {projectsData.map((project, index) => (
+          {content.items.map((project) => (
             <div key={project.id} className="project-card-mobile">
               
               {/* Header */}
@@ -60,12 +63,12 @@ const Projects = () => {
               {/* Body */}
               <div className="card-body-mobile">
                 <div className="mobile-section">
-                  <span className="body-label">IDEA</span>
+                  <span className="body-label">{content.labels.idea}</span>
                   <p className="project-description-mobile">{project.description}</p>
                 </div>
 
                 <div className="mobile-section">
-                  <span className="body-label">TECHS</span>
+                  <span className="body-label">{content.labels.techs}</span>
                   <div className="tech-tags-mobile">
                     {project.techs && project.techs.map((tech, idx) => (
                       <span key={idx} className="tech-tag-mobile">{tech}</span>
@@ -80,7 +83,7 @@ const Projects = () => {
                   rel="noopener noreferrer"
                 >
                   <Github size={16} />
-                  View on GitHub
+                  {content.labels.github}
                 </a>
               </div>
             </div>
@@ -95,11 +98,11 @@ const Projects = () => {
     <section className="projects-section">
       
       <div className="projects-header">
-        <span className="section-label">03. / PORTFOLIO</span>
-        <h2 className="section-title-large">Selected Work</h2>
+        <span className="section-label">{content.sectionLabel}</span>
+        <h2 className="section-title-large">{content.title}</h2>
         <p className="section-subtitle">
-            A selection of projects showcasing my Full-Stack and AI skills.
-            Click on cards to see details.
+            {content.subtitle}
+            <br/>{content.subtitleDesktopExtra}
         </p>
       </div>
 
@@ -114,7 +117,7 @@ const Projects = () => {
           animate={{ x: `calc(-${activeIndex * (CARD_WIDTH + CARD_GAP)}px - ${CARD_WIDTH / 2}px)` }}
           transition={{ type: "spring", stiffness: 200, damping: 25 }}
         >
-          {projectsData.map((project, index) => {
+          {content.items.map((project, index) => {
             const isActive = index === activeIndex;
             return (
               <div 
@@ -137,20 +140,21 @@ const Projects = () => {
                     
                     {/* Conteúdo Principal: IDEA (Maior) */}
                     <div className="card-col main-col">
-                        <span className="body-label">IDEA</span>
+                        <span className="body-label">{content.labels.idea}</span>
                         <p className="project-description">{project.description}</p>
                         
                         {isActive && (
                             <a href={project.links.github} className="github-btn" target="_blank" rel="noopener noreferrer">
                                 <Github size={18} />
-                                View on GitHub
+                                {content.labels.github}
                             </a>
                         )}
                     </div>
 
                     {/* Coluna Techs (Menor - ~30%) */}
                     <div className="card-col tech-col">
-                        <span className="body-label">TECHS</span>
+                        <span className="body-label">{content.labels.techs}</span>
+
                         <ul className="tech-list">
                             {project.techs && project.techs.map((tech, idx) => (
                                 <li key={idx} className="tech-item-project">{tech}</li>

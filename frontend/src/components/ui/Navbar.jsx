@@ -18,7 +18,10 @@ const navItems = [
 ];
 
 // Agora recebe props de tema e animação
+import { useLanguage } from '../../contexts/LanguageContext';
+
 const Navbar = ({ isDarkMode, toggleTheme, isAnimationEnabled, toggleAnimation }) => {
+  const { language, toggleLanguage } = useLanguage();
   const [activeId, setActiveId] = useState('hero');
   const [isStartMenuOpen, setIsStartMenuOpen] = useState(false); // State for Start Menu
   const visibleSections = useRef({});
@@ -150,6 +153,11 @@ const Navbar = ({ isDarkMode, toggleTheme, isAnimationEnabled, toggleAnimation }
           {/* BOTÃO DE ANIMAÇÃO */}
           <button onClick={toggleAnimation} className="theme-toggle-btn" aria-label="Toggle Animation">
             {isAnimationEnabled ? <Pause size={18} /> : <Play size={18} />}
+          </button>
+
+          {/* BOTÃO DE IDIOMA */}
+          <button onClick={toggleLanguage} className="theme-toggle-btn" aria-label="Toggle Language">
+            <span style={{ fontSize: '0.8rem', fontWeight: 'bold' }}>{language === 'en' ? 'BR' : 'EN'}</span>
           </button>
 
           <div className="tray-divider"></div>

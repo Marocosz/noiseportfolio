@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { techData } from '../../data/tech';
+import { useLanguage } from '../../contexts/LanguageContext';
+import { getTechData } from '../../data/tech';
 import './TechStack.css';
 
 const TechStack = () => {
+  const { language } = useLanguage();
+  const content = getTechData(language);
   const [hoveredTech, setHoveredTech] = useState(null);
 
   const containerVars = {
@@ -32,10 +35,10 @@ const TechStack = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <span className="section-label">05. / ARSENAL</span>
-          <h2 className="section-title-large">Tech Stack</h2>
+          <span className="section-label">{content.sectionLabel}</span>
+          <h2 className="section-title-large">{content.title}</h2>
           <p className="section-subtitle">
-            Languages, frameworks and tools I use to build robust solutions.
+            {content.subtitle}
           </p>
         </motion.div>
       </div>
@@ -48,7 +51,7 @@ const TechStack = () => {
         whileInView="show"
         viewport={{ once: true, margin: "-50px" }}
       >
-        {techData.map((category) => {
+        {content.items.map((category) => {
           const Icon = category.icon;
           
           return (

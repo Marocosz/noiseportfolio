@@ -1,8 +1,12 @@
 import React, { useRef, useEffect } from 'react';
 import { Search, Power, Settings, Bot } from 'lucide-react';
+import { useLanguage } from '../../contexts/LanguageContext';
+import { getStartMenuData } from '../../data/startMenu';
 import './StartMenu.css';
 
 const StartMenu = ({ isOpen, onClose, isDarkMode }) => {
+  const { language } = useLanguage();
+  const content = getStartMenuData(language);
   const menuRef = useRef(null);
 
   // Disable scroll when open (Robust Strategy: Fixed Body + Lenis Stop)
@@ -73,7 +77,7 @@ const StartMenu = ({ isOpen, onClose, isDarkMode }) => {
             <Search size={18} className="search-icon" />
             <input 
               type="text" 
-              placeholder="Type here to search" 
+              placeholder={content.searchCheck}
               className="search-input"
             />
           </div>
@@ -82,9 +86,9 @@ const StartMenu = ({ isOpen, onClose, isDarkMode }) => {
         {/* Meio: Em construção */}
         <div className="start-menu-content">
           <Bot size={48} className="construct-icon" />
-          <div className="construct-text">Under Construction</div>
+          <div className="construct-text">{content.title}</div>
           <div className="construct-subtext">
-            Soon I will be an AI Agent capable of chatting with you about my entire portfolio.
+            {content.description}
           </div>
         </div>
 
@@ -92,7 +96,7 @@ const StartMenu = ({ isOpen, onClose, isDarkMode }) => {
         <div className="start-menu-footer">
           <div className="user-profile">
             <div className="user-avatar">V</div>
-            <span className="user-name">Visitor</span>
+            <span className="user-name">{content.visitor}</span>
           </div>
 
           <div className="footer-actions">

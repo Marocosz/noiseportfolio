@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
-import { Loader2, Server } from 'lucide-react';
-import { contactData } from '../../data/contact';
+import { Server } from 'lucide-react';
+import { useLanguage } from '../../contexts/LanguageContext';
+import { getContactData } from '../../data/contact';
 import './Contact.css';
 
 const Contact = () => {
+  const { language } = useLanguage();
+  const content = getContactData(language);
   const [isTypingDone, setIsTypingDone] = useState(false);
 
   // Variantes para animação de digitação
@@ -37,11 +40,10 @@ const Contact = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <span className="section-label">06. / CONNECT</span>
-          <h2 className="section-title-large">Let's Talk</h2>
+          <span className="section-label">{content.sectionLabel}</span>
+          <h2 className="section-title-large">{content.title}</h2>
           <p className="contact-desc">
-            Below are the best channels to find me. 
-            Run the command or click the links.
+            {content.description}
           </p>
         </motion.div>
       </div>
@@ -56,19 +58,16 @@ const Contact = () => {
       >
         <div className="hosting-card-header">
           <Server size={20} className="hosting-icon" />
-          <span className="hosting-badge">HOSTING SERVICE</span>
+          <span className="hosting-badge">{content.hosting.badge}</span>
         </div>
-        <h3 className="hosting-title">Professional VPS Hosting Available</h3>
+        <h3 className="hosting-title">{content.hosting.title}</h3>
         <p className="hosting-description">
-          I offer complete end-to-end web hosting solutions through my own VPS infrastructure. 
-          From deployment to monitoring, database management to SSL certificates, I handle everything. 
-          Perfect for small to medium projects that need reliable, custom hosting with direct support from the developer.
+          {content.hosting.description}
         </p>
         <div className="hosting-features">
-          <span className="feature-tag">✓ Custom Configuration</span>
-          <span className="feature-tag">✓ 24/7 Monitoring</span>
-          <span className="feature-tag">✓ Direct Support</span>
-          <span className="feature-tag">✓ SSL & Security</span>
+          {content.hosting.features.map((feature, idx) => (
+             <span key={idx} className="feature-tag">{feature}</span>
+          ))}
         </div>
       </motion.div>
 
@@ -86,7 +85,7 @@ const Contact = () => {
           <div className="dot red" />
           <div className="dot yellow" />
           <div className="dot green" />
-          <span className="terminal-title">visitante@portfolio: ~</span>
+          <span className="terminal-title">{content.terminal.title}</span>
         </div>
 
         {/* Corpo do Terminal */}
@@ -94,15 +93,15 @@ const Contact = () => {
           
           {/* 1. System Intro (Static) */}
           <div className="terminal-intro">
-            <p>NoisePortfolio OS [Version 3.0.1]</p>
-            <p>(c) 2026 Marcos Rodrigues. All rights reserved.</p>
-            <p className="dim">System check: OK. Loading shell...</p>
+            <p>{content.terminal.version}</p>
+            <p>{content.terminal.copyright}</p>
+            <p className="dim">{content.terminal.systemCheck}</p>
             <br />
           </div>
 
           {/* 2. Prompt & Command (Typing Animation) */}
           <div className="cmd-line">
-            <span className="prompt-user">visitor@portfolio:~$</span>
+            <span className="prompt-user">{content.terminal.prompt}</span>
             
             <motion.span
               variants={typingContainer}
@@ -128,21 +127,27 @@ const Contact = () => {
             >
               {/* Fake System Logs */}
               <div className="system-logs">
-                <LogLine text="Initializing handshake protocol..." status="OK" color="#27c93f" delay={0.2} />
-                <LogLine text="Verifying ssl certificates..." status="VERIFIED" color="#ffbd2e" delay={0.4} />
-                <LogLine text="Decrypting contact data..." status="DONE" color="#a855f7" delay={0.6} />
+                {content.terminal.logs.map((log, i) => (
+                  <LogLine 
+                      key={i} 
+                      text={log.text} 
+                      status={log.status} 
+                      color={log.color} 
+                      delay={0.2 * (i + 1)} 
+                  />
+                ))}
                 <br />
               </div>
 
               {/* Result Table */}
               <div className="contact-list">
                 <div className="table-header">
-                  <span>TYPE</span>
-                  <span>DESTINATION</span>
-                  <span>STATUS</span>
+                  {content.terminal.tableHeaders.map((h, i) => (
+                    <span key={i}>{h}</span>
+                  ))}
                 </div>
                 
-                {contactData.map((item, index) => {
+                {content.items.map((item, index) => {
                   const Icon = item.icon;
                   return (
                     <motion.div 
@@ -177,7 +182,7 @@ const Contact = () => {
               {/* 4. New Empty Prompt (Ready State) */}
               <div className="cmd-line new-prompt">
                 <br />
-                <span className="prompt-user">visitor@portfolio:~$</span>
+                <span className="prompt-user">{content.terminal.prompt}</span>
                 <span className="cursor" />
               </div>
 

@@ -1,9 +1,12 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { motion, useMotionValue, useTransform } from 'motion/react';
-import { journeyData } from '../../data/journey';
+import { useLanguage } from '../../contexts/LanguageContext';
+import { getJourneyData } from '../../data/journey';
 import './Journey.css';
 
 const Journey = () => {
+  const { language } = useLanguage();
+  const content = getJourneyData(language);
   const carouselRef = useRef(null);
   const [width, setWidth] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
@@ -26,22 +29,22 @@ const Journey = () => {
     if (carouselRef.current && !isMobile) {
       setWidth(carouselRef.current.scrollWidth - carouselRef.current.offsetWidth);
     }
-  }, [isMobile]);
+  }, [isMobile, content.items]); // Recalculate on content change
 
   // VERSÃO MOBILE: Lista vertical simples
   if (isMobile) {
     return (
       <section className="journey-section journey-mobile">
         <div className="journey-header">
-          <span className="section-label">04. / PROFESSIONAL JOURNEY</span>
-          <h2 className="section-title-large">Experience Timeline</h2>
+          <span className="section-label">{content.sectionLabel}</span>
+          <h2 className="section-title-large">{content.title}</h2>
           <p className="section-subtitle">
-            A chronological journey through my professional growth and important milestones.
+            {content.subtitle}
           </p>
         </div>
 
         <div className="journey-list-mobile">
-          {journeyData.map((item) => (
+          {content.items.map((item) => (
             <div key={item.id} className="journey-card-mobile">
               
               <div className="git-header-mobile">
@@ -51,9 +54,9 @@ const Journey = () => {
                 <span className="commit-type-mobile">[{item.type}]</span>
               </div>
 
-              <div className="card-year-mobile">Date: {item.date}</div>
+              <div className="card-year-mobile">{content.dateLabel} {item.date}</div>
               <h3 className="card-title-mobile">{item.title}</h3>
-              <p className="card-company-mobile">Author: {item.org}</p>
+              <p className="card-company-mobile">{content.authorLabel} {item.org}</p>
               
               <div className="card-divider-mobile" />
               
@@ -84,15 +87,15 @@ const Journey = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
           >
-            <span className="section-label">04. / PROFESSIONAL JOURNEY</span>
-            <h2 className="section-title-large">Experience Timeline</h2>
+            <span className="section-label">{content.sectionLabel}</span>
+            <h2 className="section-title-large">{content.title}</h2>
             <p className="section-subtitle">
-              A chronological journey through my professional growth and important milestones.
+              {content.subtitle}
             </p>
             
             {/* Drag Intruction Hint */}
             <div className="drag-instruction">
-              <span className="drag-icon">↔</span> Drag to Explore
+              <span className="drag-icon">↔</span> {content.dragStart}
             </div>
           </motion.div>
         </div>
@@ -140,7 +143,7 @@ const Journey = () => {
             </svg>
 
             {/* Renderiza Cards com Conexões */}
-            {journeyData.map((item, index) => (
+            {content.items.map((item, index) => (
               <div key={item.id} className="journey-card">
                 
                 <div className="card-inner">
@@ -155,10 +158,10 @@ const Journey = () => {
                     </span>
                   </div>
 
-                  <div className="card-year">Date: {item.date}</div>
+                  <div className="card-year">{content.dateLabel} {item.date}</div>
                   
                   <h3 className="card-title">{item.title}</h3>
-                  <p className="card-company">Author: {item.org}</p>
+                  <p className="card-company">{content.authorLabel} {item.org}</p>
                   
                   <div className="card-divider" />
                   
@@ -171,7 +174,7 @@ const Journey = () => {
                 </div>
 
                 {/* Renderiza Conexão para o PRÓXIMO card (se não for o último) */}
-                {index < journeyData.length - 1 && (
+                {index < content.items.length - 1 && (
                   <div 
                     className="connection-container" 
                     style={{ 

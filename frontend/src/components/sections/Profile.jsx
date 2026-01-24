@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import DecryptedText from "../effects/DecryptedText";
-import { profileData } from "../../data/content";
+import { useLanguage } from "../../contexts/LanguageContext";
+import { getProfileData } from "../../data/content";
 import "./Profile.css";
 import CrystalScene from './CrystalScene';
 
 const Profile = () => {
+  const { language } = useLanguage();
+  const profileData = getProfileData(language);
+
   // PERFORMANCE FIX: Delay 3D Scene load to prevent "startup freeze"
   const [shouldLoad3D, setShouldLoad3D] = useState(false);
 
@@ -37,7 +41,7 @@ const Profile = () => {
             transition={{ duration: 0.8 }}
           >
             <div className="terminal-header">
-              <span className="section-label">02. / WHOAMI</span>
+              <span className="section-label">02. / {profileData.title.replace('>_ ', '')}</span>
             </div>
 
             <div className="bio-highlight">
@@ -79,21 +83,14 @@ const Profile = () => {
 
       {/* Stats Section moved from Journey */}
       <div className="profile-stats-container">
-          <StatsCard 
-              number="4+" 
-              label="Freelance Services" 
-              sublabel="Delivered with Excellence"
-          />
-          <StatsCard 
-              number="4+" 
-              label="Years Experience" 
-              sublabel="Continuous Learning"
-          />
-          <StatsCard 
-              number="20+" 
-              label="Total Projects" 
-              sublabel="Innovative Solutions"
-          />
+          {profileData.stats.map((stat, index) => (
+            <StatsCard 
+                key={index}
+                number={stat.number} 
+                label={stat.label} 
+                sublabel={stat.sublabel}
+            />
+          ))}
       </div>
 
     </section>

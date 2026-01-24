@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import Lenis from 'lenis';
 import HomePage from './pages/HomePage';
+import { LanguageProvider } from './contexts/LanguageContext';
 
 function App() {
 
@@ -33,7 +34,9 @@ function App() {
   }, []);
 
   return (
-    <HomePage />
+    <LanguageProvider>
+      <HomePage />
+    </LanguageProvider>
   );
 }
 
