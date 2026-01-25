@@ -106,7 +106,7 @@ class RagService:
 
         print("✅ Ingestão concluída! Banco salvo.")
 
-    def query(self, question: str, k: int = 4):
+    def query(self, question: str, k: int =8):
         """Faz a busca por similaridade"""
-        vectorstore = self.get_vectorstore()
+        vectorstore = self.get_vectorstore() 
         return vectorstore.similarity_search(question, k=k)

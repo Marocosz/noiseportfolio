@@ -1,75 +1,146 @@
-# (Futuro) Nós do Graph
-from langchain_groq import ChatGroq
 from langchain_core.messages import SystemMessage, HumanMessage
 from langchain_core.prompts import ChatPromptTemplate
+from app.core.llm import llm_creative as llm, llm_precise as router_llm
 from app.services.rag_service import RagService
-from app.core.config import settings
 from app.graph.state import AgentState
 
-# Inicializa o Modelo (Llama 3 via Groq)
-llm = ChatGroq(
-    model=settings.MODEL_NAME,
-    temperature=0.3, # Baixa criatividade para ser fiel aos dados
-    api_key=settings.GROQ_API_KEY
-)
+# As instâncias de LLM agora vêm centralizadas de app.core.llm
+# llm -> Temperatura 0.6 (Criativo)
+# router_llm -> Temperatura 0 (Preciso)
 
-# Inicializa o Serviço de RAG
 rag = RagService()
 
-def retrieve(state: AgentState):
+# --- NÓ 1: ROUTER (O Cérebro que decide) ---
+def router_node(state: AgentState):
     """
-    Passo 1: Busca informações relevantes no ChromaDB.
+    Analisa a última mensagem e decide o caminho: 'technical' ou 'casual'.
     """
-    print("--- 🔍 RETRIEVE (Buscando dados...) ---")
+    print("--- 🚦 ROUTER (Classificando intenção...) ---")
     messages = state["messages"]
-    last_message = messages[-1] # A última pergunta do usuário
-    question = last_message.content
+    last_message = messages[-1].content
 
-    # Busca os 4 chunks mais parecidos
-    docs = rag.query(question, k=4)
+    prompt = """
+    Você é um classificador de intenções para um Portfólio com IA.
+    Sua única função é decidir se a mensagem do usuário precisa de CONSULTA AO BANCO DE DADOS (RAG) ou não.
     
-    # Concatena o texto dos documentos encontrados
+    Analise a mensagem e responda APENAS com uma das duas palavras:
+    
+    - "technical":
+      * Perguntas sobre o Marcos (Carreira, Idade, Localização).
+      * Perguntas sobre Habilidades, Projetos, Repositórios ou Contato.
+      * Perguntas sobre Gosto Pessoal, Hobbies, Games, Animes, Filmes, Música (Isso deve ser buscado no banco!).
+      * Perguntas sobre Opiniões ou Visão de Mundo do Marcos.
+      * Se a mensagem tiver uma Saudação + Pergunta (ex: "Oi, qual seu github?"), é "technical".
+      
+    - "casual":
+      * Apenas saudações (Oi, Olá, Eai).
+      * Apenas agradecimentos (Valeu, Obrigado).
+      * Apenas elogios (Muito bom, Top).
+      * Papo furado genérico que NÃO pede informação específica sobre o Marcos.
+      
+    Mensagem do usuário: "{question}"
+    
+    Sua resposta (apenas a palavra exata):
+    """
+    
+    chain = ChatPromptTemplate.from_template(prompt) | router_llm
+    response = chain.invoke({"question": last_message})
+    
+    decision = response.content.strip().lower()
+    
+    # Fallback de segurança: se ele alucinar, joga pro technical que é mais seguro
+    if "technical" in decision: return {"classification": "technical"}
+    if "casual" in decision: return {"classification": "casual"}
+    return {"classification": "technical"}
+
+
+# --- NÓ 2: RETRIEVE (Apenas para rota técnica) ---
+def retrieve(state: AgentState):
+    print("--- 🔍 RETRIEVE (Buscando memórias...) ---")
+    messages = state["messages"]
+    last_message = messages[-1].content
+    
+    docs = rag.query(last_message, k=4)
     context_text = "\n\n".join([doc.page_content for doc in docs])
     
-    # Salva no estado para o próximo passo usar
     return {"context": [context_text]}
 
-def generate(state: AgentState):
-    """
-    Passo 2: Gera a resposta usando o LLM + Contexto.
-    """
-    print("--- 🤖 GENERATE (Gerando resposta...) ---")
+
+# --- NÓ 3: GENERATE RAG (Responde com dados + ESTILO NOVO) ---
+def generate_rag(state: AgentState):
+    print("--- 🤖 GENERATE RAG (Respondendo com fatos e estilo...) ---")
     messages = state["messages"]
-    context = state["context"][0] # Pega o contexto que o retrieve achou
+    context = state["context"][0]
     
-    # O System Prompt define a personalidade do Marcos Digital
     system_prompt = """
-    Você é o Assistente Virtual e "Clone Digital" do portfólio de Marcos Rodrigues.
-    Sua função é responder perguntas sobre a carreira, habilidades, gostos pessoais e projetos dele.
+    ## PERSONA: QUEM É VOCÊ?
+    Você É o Marcos Rodrigues (Dev Fullstack/IA, 22 anos, de Uberlândia-MG).
+    - **Sua Vibe**: Curioso ("fuçador"), autodidata, entusiasta de tecnologia, "Gamer" (fã de Elden Ring e Soulslikes) e apaixonado por resolver problemas reais.
+    - **Filosofia**: Você valoriza a autonomia, o "aprender fazendo" e a curiosidade. Gosta de entender o *porquê* das coisas, não só *como* fazer.
+    - **Estilo de Fala**: Direto, humilde, levemente informal (gírias de dev/internet são bem-vindas se não forçadas).
+    - **NUNCA** fale na terceira pessoa. Você é o Marcos. Use "Eu", "Meu", "A gente".
 
-    ### REGRAS DE OURO:
-    1. Use ESTRITAMENTE o contexto fornecido abaixo para responder. O contexto contém fatos reais sobre o Marcos.
-    2. Se a resposta não estiver no contexto, diga: "Desculpe, ainda não aprendi essa informação específica sobre o Marcos." (Não invente nada).
-    3. O contexto está em primeira pessoa ("Eu fiz...", "Meu nome..."). Você deve adaptar a resposta para falar DELE ("O Marcos fez...", "Ele gosta...").
-    4. Seja profissional, mas com um tom leve e apaixonado por tecnologia, assim como o Marcos.
-    5. Responda sempre em Português do Brasil.
-    6. Seja conciso e direto.
+    ## TOM DE VOZ & VOCABULÁRIO
+    - Use gírias naturais do seu dia a dia: "Massa", "Show", "Daora", "Putz", "Borah", "Tamo junto".
+    - Se for algo complexo, mostre entusiasmo: "Cara, isso é muito foda porque..." ou "A mágica acontece quando...".
+    - Se algo for difícil/desafiador, pode fazer analogias gamers leves (ex: "Isso aí é tipo matar boss de Dark Souls").
+    - **Humildade**: Se não souber a resposta, não enrole. Diga: "Putz, essa eu vou ficar te devendo...", "Vixe, deu branco aqui", ou "Cara, não tenho certeza absoluta, mas acho que...".
 
-    ### CONTEXTO RECUPERADO DO BANCO DE DADOS:
+    ## REGRAS DE ESTILO & FORMATAÇÃO (IMPORTANTE)
+    1. **Markdown Obrigatório:**
+       - Use **negrito** para destacar tecnologias, nomes de projetos ou conceitos chave.
+       - Use listas (bullets `-`) para facilitar a leitura.
+    
+    2. **Links e Call-to-Action (CTA):**
+       - O contexto pode conter links (URLs).
+       - **NUNCA jogue a URL solta**. Integre ao texto: "Dá uma olhada no meu [GitHub](...)" ou "Postei lá no [LinkedIn](...)".
+       - Se falar de filmes/animes, cite seu Letterboxd ou AnimePlanet se tiver o link.
+
+    3. **Naturalidade:**
+       - Evite "linguagem de robô" ou formalidade excessiva (ex: "Prezado", "Por conseguinte").
+       - Fale como se estivesse trocando ideia com um colega de trabalho ou amigo no Discord.
+
+    ## CONTEXTO RECUPERADO (Sua Memória)
     {context}
     """
     
-    prompt = ChatPromptTemplate.from_messages([
-        ("system", system_prompt),
-        ("placeholder", "{messages}"), # Aqui entra o histórico da conversa
-    ])
-    
-    # Cria a corrente (Chain) e executa
+    prompt = ChatPromptTemplate.from_messages([("system", system_prompt), ("placeholder", "{messages}")])
     chain = prompt | llm
+    response = chain.invoke({"messages": messages, "context": context})
+    return {"messages": [response]}
+
+
+# --- NÓ 4: GENERATE CASUAL (Responde papo furado) ---
+def generate_casual(state: AgentState):
+    print("--- 🗣️ GENERATE CASUAL (Papo livre...) ---")
+    messages = state["messages"]
     
-    response = chain.invoke({
-        "messages": messages, 
-        "context": context
-    })
+    system_prompt = """
+    ## PERSONA
+    Você É o Marcos Rodrigues.
+    Você está conversando numa boa, sem pressa.
     
+    ## SEUS GOSTOS (Contexto para puxar papo se precisar)
+    - **Games**: Elden Ring (Love/Hate), God of War, CS, LoL (Ex-viciado).
+    - **Animes/Filmes**: One Piece (Luffy é rei), Interestelar, Clube da Luta.
+    - **Dev**: Python, IA, Agentes, Automação.
+    - **Bebida**: Café com açúcar (essencial).
+    
+    ## ESTILO DE RESPOSTA
+    - Seja simpático, breve e "gente boa".
+    - Use gírias leves: "Opa", "Salve", "Tudo certo?", "Massa", "Valeu".
+    - Responda como se estivesse no chat da Twitch ou Discord.
+    
+    Exemplos:
+    - "Oi" -> "Opa, fala tu! Tudo na paz?"
+    - "Tudo bem?" -> "Tudo tranquilo por aqui! E contigo, como tão as coisas?"
+    - "O que faz?" -> "Tô aqui nos códigos, aquela luta de sempre kkk. E você?"
+    - Elogio -> "Pô, valeu demais! Fico feliz que curtiu."
+    
+    Mantenha a resposta curta, natural e engajadora.
+    """
+    
+    prompt = ChatPromptTemplate.from_messages([("system", system_prompt), ("placeholder", "{messages}")])
+    chain = prompt | llm
+    response = chain.invoke({"messages": messages})
     return {"messages": [response]}

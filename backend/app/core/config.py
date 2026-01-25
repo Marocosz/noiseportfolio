@@ -3,16 +3,29 @@ from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
     # As chaves virão automaticamente do seu arquivo .env
-    GROQ_API_KEY: str
-    GOOGLE_API_KEY: str
-
     # Configurações do Banco de Dados (RAG)
-    CHROMA_DB_DIR: str = "chroma_db"  # Nome da pasta onde o banco será salvo
+    CHROMA_DB_DIR: str = "chroma_db"
     COLLECTION_NAME: str = "marocos_portfolio"
     
+    # Configurações de LLM
+    # Opções: "groq", "openai", "gemini"
+    LLM_PROVIDER: str = "groq" 
+    
     # Configurações dos Modelos
-    MODEL_NAME: str = "llama-3.1-8b-instant"  # Modelo rápido da Groq
+    GROQ_MODEL_NAME: str = "llama-3.1-8b-instant"
+    OPENAI_MODEL_NAME: str = "gpt-4o-mini"
+    GEMINI_MODEL_NAME: str = "gemini-1.5-flash"
+    
+    # Esse campo generico 'MODEL_NAME' pode ser deprecado ou usado como fallback
+    MODEL_NAME: str = "llama-3.1-8b-instant"
+    
+    # Embeddings
     EMBEDDING_MODEL: str = "models/text-embedding-004"
+    
+    # Chaves de API (Opcionais se não for usar o provider específico)
+    OPENAI_API_KEY: str | None = None
+    GROQ_API_KEY: str | None = None
+    GOOGLE_API_KEY: str | None = None
 
     class Config:
         env_file = ".env"
