@@ -371,13 +371,13 @@ Se quiser ver mais dos meus projetos, acesse meu GitHub: [https://github.com/mar
   - Comunicação transparente, ausência de ego e vontade de resolver problemas. Valorizo pessoas que compartilham o que sabem e não guardam conhecimento.
 
 - **Ele prefere ambientes competitivos ou colaborativos?**
-  - Colaborativos. A competição deve ser contra o problema a ser resolvido, não entre os membros do time.
+  - Colaborativos. Acredito que o conhecimento é a única coisa que cresce quando se divide. Em ambientes competitivos, as pessoas escondem o jogo; em ambientes colaborativos, 1+1 vira 3. Prefiro estar cercado de gente que me ensina e que quer aprender comigo, onde o 'inimigo' é o bug ou o prazo, não o colega do lado.
 
 - **Marcos valoriza mais reconhecimento ou impacto real?**
-  - Impacto real. O reconhecimento é consequência, mas saber que meu software está rodando e sendo útil é a verdadeira recompensa.
+  - Impacto real, sem dúvida. O reconhecimento é bom pro ego, mas o que me preenche profissionalmente é ver a métrica subindo, o tempo de processo caindo, ou o usuário elogiando que a tarefa ficou mais fácil. Código parado no GitHub não serve de nada; código rodando e gerando valor é o que importa.
 
 - **O que mais o incomoda em um projeto mal conduzido?**
-  - Inconsistência de comunicação e falta de clareza nos objetivos. Fazer por fazer, sem saber o porquê, é desmotivador.
+  - A falta de 'Norte'. Trabalhar muito para ir a lugar nenhum. Me incomoda profundamente quando a equipe está correndo em círculos por falta de alinhamento ou quando decisões técnicas são tomadas baseadas em 'achismo' e não em requisitos reais. A ambiguidade constante drena a energia do time.
 
 - **Qual tipo de problema mais engaja Marcos?**
   - Problemas "impossíveis" ou complexos, que exigem criatividade. Aqueles que envolvem otimizar processos ineficientes ou extrair valor de dados bagunçados.
@@ -391,13 +391,13 @@ Se quiser ver mais dos meus projetos, acesse meu GitHub: [https://github.com/mar
   - Jogos difíceis (Soulslike) me ensinaram persistência e a não frustrar com o erro (o "Game Over" é só uma chance de tentar de novo melhor). O desenho me ensinou a ter paciência e atenção aos detalhes visuais.
 
 - **Marcos se considera uma pessoa mais racional ou criativa?**
-  - Uma fusão híbrida. Uso a criatividade para ter as ideias e a racionalidade lógica para viabilizá-las técnica e financeiramente.
+  - Uma fusão necessária. A Criatividade é quem desenha a solução no quadro branco, quem pensa 'e se a gente fizesse assim?'. A Racionalidade é o engenheiro que olha pra isso e diz 'ok, mas como a gente escala isso no Docker?'. Eu transito entre os dois chapéus o tempo todo: sonho como artista, construo como engenheiro.
 
 - **Ele prefere rotina ou variedade?**
   - Variedade dentro de uma rotina estruturada. Gosto de ter meus horários, mas odeio fazer a mesma tarefa mecânica todo dia (por isso automatizo).
 
 - **Marcos se motiva mais por curiosidade ou propósito?**
-  - Curiosidade acende a chama, propósito mantém ela acessa.
+  - Curiosidade é o _start_, é o que me faz abrir a doc de uma lib nova às 2 da manhã. Mas o Propósito é o que me faz terminar o projeto. Eu começo porque quero saber como funciona, mas continuo porque quero ver aquilo resolvendo o problema de alguém. Sem curiosidade, eu não começo; sem propósito, eu não termino.
 
 - **O que faz Marcos perder a noção do tempo?**
   - Entrar no "flow" programando um script complexo, uma sessão intensa de Elden Ring, desenhar detalhadamente ou mergulhar em um tópico novo aleatório (rabbit hole) na internet.
@@ -417,4 +417,4 @@ Se quiser ver mais dos meus projetos, acesse meu GitHub: [https://github.com/mar
   - Ter a liberdade de escolher em quais problemas trabalhar, manter minha saúde mental e física em dia, e sentir que estou um pouco melhor tecnicamente do que estava ontem. E claro, sempre tendo tempo para meus Hobbies e boas relaçòes pessoais
 
 - **O que ele ainda quer aprender?**
-  - Aprofundar em Machine Learning "bare metal" (entender a matemática por trás dos modelos), melhorar skills de liderança técnica e talvez explorar tecnologias de baixo nível como Rust ou C++ para alta performance, isso a meio de curiosidade, para a parte profisisonal com certeza quero desenvolver melhor minhas arquiteturas, meu conhecimento e aplicação em RAG/Agentificação. 
+  - Aprofundar em Machine Learning "bare metal" (entender a matemática por trás dos modelos), melhorar skills de liderança técnica e talvez explorar tecnologias de baixo nível como Rust ou C++ para alta performance, isso a meio de curiosidade, para a parte profisisonal com certeza quero desenvolver melhor minhas arquiteturas, meu conhecimento e aplicação em RAG/Agentificação.

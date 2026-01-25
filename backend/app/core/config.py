@@ -12,7 +12,7 @@ class Settings(BaseSettings):
     
     # Configurações dos Modelos
     MODEL_NAME: str = "llama-3.1-8b-instant"  # Modelo rápido da Groq
-    EMBEDDING_MODEL: str = "models/embedding-001" # Modelo gratuito do Google
+    EMBEDDING_MODEL: str = "models/text-embedding-004"
 
     class Config:
         env_file = ".env"
