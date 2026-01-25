@@ -4,77 +4,115 @@ import json
 
 BASE_URL = "http://localhost:8000/api/chat"
 
-# Cenários de Teste (Perguntas Reais de Recrutadores/Devs)
-scenarios = [
-    # 1. Introdução Básica
-    "Quem é você e o que você faz?",
-    
-    # 2. Stack Tecnológica
-    "Quais são suas principais habilidades técnicas?",
-    
-    # 3. Pergunta Específica (RAG)
-    "Você tem experiência com desenvolvimento de Agentes de IA?",
-    
-    # 4. Sobre Projetos
-    "Me conte um pouco sobre esse portfólio, como ele foi feito?",
-    
-    # 5. Pessoal / Culture Fit
-    "Quais são seus hobbies? O que você joga?",
-    
-    # 6. Contato
-    "Gostei do seu perfil, como posso entrar em contato?",
-    
-    # 7. Teste de 'Papo Furado' (Casual)
-    "Eai cara, tudo tranquilo?",
-    
-    # 8. Teste de Limite (Opcional - vai contar pro rate limit)
-    # "Isso é um teste de spam.",
-]
+# Cenários de Teste Abrangentes (Baseado no profile.md)
+scenarios = {
+    "🔹 Introdução & Identidade": [
+        "Quem é o Marcos Rodrigues?", 
+        "De onde você é e qual sua idade?",
+        "Qual sua história com tecnologia? Como começou?",
+    ],
+    "🔹 Experiência Profissional": [
+        "Onde o Marcos trabalha atualmente?",
+        "O que ele faz na Supporte Logística?",
+        "Você tem experiência como freelancer?",
+        "Como foi sua época no suporte técnico (primeiro emprego)?"
+    ],
+    "🔹 Stack & Habilidades": [
+        "Quais as principais linguagens que o Marcos domina?",
+        "Você conhece de DevOps e Infraestrutura?",
+        "Qual sua opinião sobre IA Aplicada vs Pesquisa Pura?",
+        "O que você usa no Frontend?",
+        "Você prefere Backend ou Frontend?"
+    ],
+    "🔹 Projetos (Específicos)": [
+        "Me fale sobre o projeto Bússola V2.",
+        "O que é o DataChat BI?",
+        "Como funciona o Marcos Bot 2.0?",
+        "Para que serve o Contract Analyzer?",
+        "Me explique o Code Doc Generator."
+    ],
+    "🔹 Cultura & Pessoal": [
+        "Quais seus jogos favoritos? Joga Elden Ring?",
+        "Qual seu anime preferido?",
+        "Você gosta de desenhar?",
+        "Quais filmes você recomenda?",
+        "O que você ouve de música?"
+    ],
+    "🔹 Soft Skills & Comportamental": [
+        "O Marcos prefere trabalhar sozinho ou em equipe?",
+        "Como você lida com prazos curtos e pressão?",
+        "Você se considera mais generalista ou especialista?",
+        "O que você valoriza em um time?"
+    ],
+    "🔹 Contato & Outros": [
+        "Como posso entrar em contato com você?",
+        "Qual seu setup de desenvolvimento?",
+        "Você toma café?",
+        "O que é sucesso para você?"
+    ],
+    "🔸 Casual (Teste de Router)": [
+        "Eai mano, suave?",
+        "Tudo beleza por ai?"
+    ]
+}
 
 def run_simulation():
-    print("--- 🚀 Iniciando Simulação de Chat ---")
+    print("--- 🚀 Iniciando Bateria de Testes Completa ---")
     print(f"Alvo: {BASE_URL}\n")
     
-    history = []
-
-    for i, question in enumerate(scenarios, 1):
-        print(f"[{i}/{len(scenarios)}] 👤 Usuário: {question}")
+    total_questions = sum(len(msgs) for msgs in scenarios.values())
+    current_q = 0
+    
+    # Histórico compartilhado para simular "memória" curta do usuário, 
+    # mas limpando entre categorias para não enviesar demais.
+    
+    for category, questions in scenarios.items():
+        print(f"\n=============================================")
+        print(f"📂 CATEGORIA: {category}")
+        print(f"=============================================")
         
-        payload = {
-            "message": question,
-            "history": history[-2:] # Manda as ultimas 2 interações para contexto
-        }
-
-        try:
-            start_time = time.time()
-            response = requests.post(BASE_URL, json=payload)
-            elapsed = time.time() - start_time
+        history = [] # Limpa histórico por categoria para focar no tema
+        
+        for q in questions:
+            current_q += 1
+            print(f"[{current_q}/{total_questions}] 👤 Pergunta: {q}")
             
-            if response.status_code == 200:
-                data = response.json()
-                answer = data["response"]
-                usage = data.get("usage", {})
-                
-                print(f"🤖 Agent ({elapsed:.2f}s): {answer}")
-                print(f"📊 Limite: {usage.get('current')}/{usage.get('limit')}")
-                
-                # Adiciona ao histórico para a próxima (simulando conversa continuada ou nova, aqui farei historico acumulado)
-                history.append({"role": "user", "content": question})
-                history.append({"role": "assistant", "content": answer})
-                
-            elif response.status_code == 429:
-                print("⛔ Rate Limit Atingido!")
-                break
-            else:
-                print(f"⚠️ Erro {response.status_code}: {response.text}")
+            payload = {
+                "message": q,
+                "history": history[-2:] # Leva contexto recente
+            }
 
-        except Exception as e:
-            print(f"❌ Erro na requisição: {e}")
+            try:
+                start_time = time.time()
+                response = requests.post(BASE_URL, json=payload)
+                elapsed = time.time() - start_time
+                
+                if response.status_code == 200:
+                    data = response.json()
+                    answer = data["response"]
+                    usage = data.get("usage", {})
+                    
+                    # Limita tamanho da resposta no log visual
+                    display_answer = (answer[:200] + '...') if len(answer) > 200 else answer
+                    print(f"🤖 Agent ({elapsed:.2f}s): {display_answer}")
+                    print(f"📊 Uso: {usage.get('current')}/{usage.get('limit')}")
+                    
+                    history.append({"role": "user", "content": q})
+                    history.append({"role": "assistant", "content": answer})
+                    
+                elif response.status_code == 429:
+                    print("⛔ Rate Limit Atingido! Abortando testes.")
+                    return
+                else:
+                    print(f"⚠️ Erro {response.status_code}: {response.text}")
 
-        print("-" * 50)
-        time.sleep(1) # Intervalo para não floodar instantaneamente
+            except Exception as e:
+                print(f"❌ Erro na requisição: {e}")
+            
+            print("-" * 30)
+            time.sleep(0.5) 
 
-    print("\n✅ Simulação Concluída. Verifique os logs em 'backend/logs/app.log' para detalhes internos.")
+    print("\n✅ Bateria de Testes Concluída. Verifique 'backend/logs/app.log' para respostas completas.")
 
 if __name__ == "__main__":
     run_simulation()

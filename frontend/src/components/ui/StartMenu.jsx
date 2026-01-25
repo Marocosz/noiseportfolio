@@ -12,6 +12,12 @@ const StartMenu = ({ isOpen, onClose, isDarkMode }) => {
   const menuRef = useRef(null);
   const chatEndRef = useRef(null);
 
+  // Determine API URL based on environment
+  // Dev: http://localhost:8000/api
+  // Prod: /api (Assumes Nginx/Reverse Proxy handles the route)
+  const API_BASE = import.meta.env.DEV ? 'http://localhost:8000/api' : '/api';
+
+
   // States
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
@@ -29,7 +35,7 @@ const StartMenu = ({ isOpen, onClose, isDarkMode }) => {
   useEffect(() => {
     if (isOpen) {
       // Fetch Usage Status
-      fetch('http://localhost:8000/api/chat/status')
+      fetch(`${API_BASE}/chat/status`)
         .then(res => res.json())
         .then(data => setUsage(data))
         .catch(console.error);
@@ -67,8 +73,8 @@ const StartMenu = ({ isOpen, onClose, isDarkMode }) => {
     setIsLoading(true);
 
     try {
-      // Backend URL - Check if running in dev or prod logic later, hardcoded strictly for now as per user context
-      const response = await fetch('http://localhost:8000/api/chat', {
+      // Send message to Backend
+      const response = await fetch(`${API_BASE}/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

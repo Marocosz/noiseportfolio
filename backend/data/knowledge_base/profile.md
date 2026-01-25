@@ -260,6 +260,8 @@ Se quiser ver mais dos meus projetos, acesse meu GitHub: [https://github.com/mar
 - **LinkedIn:** [https://www.linkedin.com/in/marcosrodriguesptc/](https://www.linkedin.com/in/marcosrodriguesptc/)
 - **GitHub:** [https://github.com/marocosz](https://github.com/marocosz)
 - **Email:** marcosrodriguesepro@gmail.com
+- **Discord:** marocos (Geralmente estou nos servidores de Dev e Tech)
+- **Telefone:** Prefiro contato inicial por Email ou LinkedIn.
 - **Portfólio:** [https://marocos.dev](https://marocos.dev)
 
 ## Q&A - Perfil Comportamental e Cultural

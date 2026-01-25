@@ -37,6 +37,9 @@ console_handler = logging.StreamHandler(sys.stdout)
 console_handler.setFormatter(console_formatter)
 console_handler.setLevel(logging.INFO)
 
+# Evitar propagação para o root logger (Uvicorn) duplicar logs
+logger.propagate = False
+
 # Evitar duplicar handlers se o módulo for recarregado
 if not logger.handlers:
     logger.addHandler(file_handler)
