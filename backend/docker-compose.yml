@@ -5,6 +5,11 @@ services:
     build: .
     container_name: portfolio-backend
     restart: always
+    
+    networks:
+      - coolify  # Permite que o Traefik fale com ele
+      - default  # Permite falar com outros containers locais (se houver)
+
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.api.rule=Host(`api.marocos.dev`)"
@@ -13,19 +18,18 @@ services:
       - "traefik.http.services.api.loadbalancer.server.port=8000"
 
     volumes:
-      # Persistência do Banco Vetorial via Volume Nomeado (Gerenciado pelo Docker/Coolify)
-      # Garante que os dados sobrevivam entre deploys e rebuilds.
       - chroma_data:/app/chroma_db
-
       # Nota: Removemos o volume de './data'.
       # Para atualizar o texto do portfólio, edite localmente, dê Git Push e deixe o Coolify redeployar.
       # Isso garante versionamento do conteúdo (GitOps).
-
     environment:
       - LLM_PROVIDER=${LLM_PROVIDER:-groq}
       - CHROMA_DB_DIR=${CHROMA_DB_DIR:-chroma_db}
       - FORCE_REINGEST=${FORCE_REINGEST:-false}
 
-# Declaração do Volume Nomeado
 volumes:
   chroma_data:
+
+networks:
+  coolify:
+    external: true  # Diz pro Docker que essa rede já existe (criada pelo Coolify)
