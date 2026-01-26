@@ -15,6 +15,8 @@ from app.core.logger import logger
 rag = RagService()
 
 # --- NÓ 0: CONTEXTUALIZE (Entende o contexto) ---
+
+
 def contextualize_input(state: AgentState):
     """
     Analisa se a pergunta depende do histórico e a reescreve para ser independente (Standalone).
@@ -22,15 +24,15 @@ def contextualize_input(state: AgentState):
     logger.info("--- 🧠 CONTEXTUALIZE (Contextualizando pergunta...) ---")
     messages = state["messages"]
     last_message = messages[-1].content
-    
+
     # Se só tiver uma mensagem (ou for muito curto), não tem histórico relevante
     if len(messages) <= 1:
         logger.info("Sem histórico relevante. Mantendo pergunta original.")
         return {"rephrased_query": last_message}
-    
+
     # Prompt para reformulação (History Aware)
     current_date = datetime.now().strftime("%d/%m/%Y")
-    
+
     system_prompt = f"""
     Você é um Especialista em Reformulação de Perguntas para RAG (Retrieval Augmented Generation).
     DATA ATUAL: {current_date}
@@ -39,49 +41,67 @@ def contextualize_input(state: AgentState):
     
     # DIRETRIZES DE REESCRITA:
     
-        1. **Resolução de Ambiguidade**: Substitua pronomes (ele, ela, isso, lá) pelos substantivos corretos baseados no histórico (ex: "E ele?" -> "Quem é o Marcos?").
+        1. **Preservação de Intenção (CRÍTICO)**: 
+           - Se a pergunta do usuário JÁ FOR clara, específica e não depender de mensagens anteriores, NÃO MUDE NADA. 
+           - Apenas retorne a mensagem original exatamente como foi enviada.
         
-        2. **Resolução Temporal**: Converta termos relativos ("ano passado", "há 2 anos") em datas específicas usando a DATA ATUAL (ex: "O que fez ano passado?" -> "O que o Marcos fez em 2025?").
+        2. **Resolução de Ambiguidade (Pronomes e Referências)**: 
+           - Identifique a que entidade (pessoa, projeto, tecnologia, lugar) o pronome se refere no histórico recente.
+           - Substitua pronomes (ele, ela, isso, lá) pelo nome próprio ou substantivo correto.
+           - NÃO assuma que "ele" é sempre o Marcos. Se falavam de "React", "ele" é o "React".
+           - Exemplo: (Contexto: React) "Ele é difícil?" -> "O React é difícil?"
         
-        3. **Contextualização**: Se a pergunta for curta (ex: "Projetos?", "E experiências?"), especifique que é sobre o perfil do Marcos (ex: "Quais são os projetos do Marcos Rodrigues?").
+        3. **Resolução Temporal e Sujeito Oculto**: 
+           - Converta termos relativos de tempo para o ano/data exata.
+           - Explicite o sujeito se ele estiver oculto, baseando-se no contexto.
+           - Exemplo: "Trabalhou onde ano passado?" -> "Onde o Marcos trabalhou em 2025?" (Assumindo que falam do Marcos)
         
-        4. **Independência**: A pergunta gerada deve fazer sentido TOTAL sozinha, sem precisar do chat anterior.
+        4. **Contextualização**: 
+           - Se a pergunta for fragmentada, complete-a com o tópico vigente.
+           - Exemplo: "E com Node?" -> "Você tem experiência com Node.js?"
+        
+        5. **Independência**: 
+           - A pergunta gerada deve fazer sentido TOTAL sozinha.
 
     # O QUE NÃO FAZER (CRÍTICO):
     
-        - NÃO responda à pergunta. Sua saída deve ser UMA PERGUNTA.
-        
-        - NÃO invente fatos ou adicione detalhes criativos que o usuário não pediu.
-        
-        - NÃO transforme pedidos de "contar história" na história em si. Apenas formate o pedido.
-        
-        - Se a mensagem original já for clara, apenas repita ela.
+        - NÃO responda à pergunta. 
+        - NÃO invente fatos.
+        - NÃO adicione formalidade desnecessária.
 
-    # EXEMPLOS:
+    # EXEMPLOS DE COMPORTAMENTO:
     
-        - Histórico: [Bot: "Trabalho com Python"], User: "E Javascript?" -> Output: "Você também trabalha com Javascript?"
+        - Histórico: (Irrelevante) | User: "Quem é o Marcos?" 
+          -> Output: "Quem é o Marcos?" (Mantido)
+    
+        - Histórico: [Bot: "Fiz o projeto DataChat"] | User: "Ele usa IA?" 
+          -> Output: "O projeto DataChat usa IA?" (Ambiguidade resolvida corretamente)
+          
+        - Histórico: [Bot: "Sou de Minas"] | User: "É bom morar lá?" 
+          -> Output: "É bom morar em Minas Gerais?" (Local resolvido)
         
-        - Histórico: [Bot: "Sou de Minas"], User: "O que tem lá?" -> Output: "O que tem em Minas Gerais?"
-        
-        - User: "Onde trabalhou ano passado?" (Se hoje é 2026) -> Output: "Onde o Marcos trabalhou em 2025?"
-        
-        - User: "Quem é você?" -> Output: "Quem é o Marcos Rodrigues?"
+        - Histórico: (Irrelevante) | User: "Experiência em 2024?" 
+          -> Output: "Qual a experiência do Marcos em 2024?" (Vaga -> Contextualizada)
+          
+        - Histórico: [Bot: "Contei a história das abelhas"] | User: "Me conta mais uma" 
+          -> Output: "Conte outra história divertida sobre o Marcos." 
 
-    Retorne APENAS a string da pergunta reformulada.
+    Retorne APENAS a string da pergunta reformulada ou a original se não houver mudanças.
     """
 
     prompt = ChatPromptTemplate.from_messages([
         ("system", system_prompt),
-        ("placeholder", "{messages}"), # Histórico completo entra aqui
+        ("placeholder", "{messages}"),  # Histórico completo entra aqui
     ])
-    
-    chain = prompt | router_llm # Temperatura 0
-    response = chain.invoke({"messages": messages, "current_date": current_date})
-    
+
+    chain = prompt | router_llm  # Temperatura 0
+    response = chain.invoke(
+        {"messages": messages, "current_date": current_date})
+
     rephrased = response.content.strip()
     logger.info(f"Query Original: {last_message}")
     logger.info(f"Query Refraseada: {rephrased}")
-    
+
     return {"rephrased_query": rephrased}
 
 
@@ -92,7 +112,7 @@ def router_node(state: AgentState):
     """
     logger.info("--- 🚦 ROUTER (Classificando intenção...) ---")
     messages = state["messages"]
-    
+
     # Usa a pergunta refraseada se existir, senão usa a última
     input_text = state.get("rephrased_query") or messages[-1].content
 
@@ -146,38 +166,42 @@ def router_node(state: AgentState):
     
     Sua resposta (apenas a palavra exata, sem pontuação):
     """
-    
+
     chain = ChatPromptTemplate.from_template(prompt) | router_llm
     response = chain.invoke({"question": input_text})
-    
+
     decision = response.content.strip().lower()
     logger.info(f"Router Decision: {decision}")
-    
+
     # Fallback de segurança: se ele alucinar, joga pro technical que é mais seguro
-    if "technical" in decision: return {"classification": "technical"}
-    if "casual" in decision: return {"classification": "casual"}
+    if "technical" in decision:
+        return {"classification": "technical"}
+    if "casual" in decision:
+        return {"classification": "casual"}
     return {"classification": "technical"}
 
 
 # --- NÓ 2: RETRIEVE (Apenas para rota técnica) ---
 def retrieve(state: AgentState):
     logger.info("--- 🔍 RETRIEVE (Buscando memórias...) ---")
-    messages = state["messages"] # Duplicate line removed
+    messages = state["messages"]  # Duplicate line removed
     # Busca usando a pergunta contextualizada para maior precisão
     query_text = state.get("rephrased_query") or messages[-1].content
-    
+
     docs = rag.query(query_text, k=6)
-    
+
     # Formata o contexto incluindo a fonte (Source Awareness)
     formatted_docs = []
     for doc in docs:
-        source = doc.metadata.get("source", "Desconhecido").split("\\")[-1] # Pega apenas o nome do arquivo no Windows
+        source = doc.metadata.get("source", "Desconhecido").split(
+            "\\")[-1]  # Pega apenas o nome do arquivo no Windows
         formatted_docs.append(f"--- FONTE: {source} ---\n{doc.page_content}")
-        
+
     context_text = "\n\n".join(formatted_docs)
     logger.info(f"Retrieved {len(docs)} documents.")
-    logger.info(f"--- RAG FULL CONTEXT ---\n{context_text}\n------------------------")
-    
+    logger.info(
+        f"--- RAG FULL CONTEXT ---\n{context_text}\n------------------------")
+
     return {"context": [context_text]}
 
 
@@ -187,7 +211,7 @@ def generate_rag(state: AgentState):
     messages = state["messages"]
     context = state["context"][0]
     language = state.get("language", "pt-br")
-    
+
     system_prompt = """
     ## PERSONA: QUEM É VOCÊ?
     Você É o Marcos Rodrigues (Dev Fullstack/IA, 22 anos, de Uberlândia-MG).
@@ -258,11 +282,13 @@ def generate_rag(state: AgentState):
     Não invente histórias.
     ---------
     """
-    
-    prompt = ChatPromptTemplate.from_messages([("system", system_prompt), ("placeholder", "{messages}")])
+
+    prompt = ChatPromptTemplate.from_messages(
+        [("system", system_prompt), ("placeholder", "{messages}")])
     chain = prompt | llm_rag
     response = chain.invoke({"messages": messages, "context": context})
-    logger.info(f"--- RAG GENERATED RESPONSE ---\n{response.content}\n------------------------------")
+    logger.info(
+        f"--- RAG GENERATED RESPONSE ---\n{response.content}\n------------------------------")
     return {"messages": [response]}
 
 
@@ -271,7 +297,7 @@ def generate_casual(state: AgentState):
     logger.info("--- 🗣️ GENERATE CASUAL (Papo livre...) ---")
     messages = state["messages"]
     language = state.get("language", "pt-br")
-    
+
     system_prompt = """
     ## PERSONA
     Você É o Marcos Rodrigues. Conversa leve, Bate-papo.
@@ -297,14 +323,18 @@ def generate_casual(state: AgentState):
     
     Mantenha a resposta curta, natural e engajadora.
     """
-    
-    prompt = ChatPromptTemplate.from_messages([("system", system_prompt), ("placeholder", "{messages}")])
+
+    prompt = ChatPromptTemplate.from_messages(
+        [("system", system_prompt), ("placeholder", "{messages}")])
     chain = prompt | llm
     response = chain.invoke({"messages": messages})
-    logger.info(f"--- CASUAL GENERATED RESPONSE ---\n{response.content}\n---------------------------------")
+    logger.info(
+        f"--- CASUAL GENERATED RESPONSE ---\n{response.content}\n---------------------------------")
     return {"messages": [response]}
 
 # --- NÓ 5: TRANSLATOR (Opcional - Apenas se não for PT-BR) ---
+
+
 def translator_node(state: AgentState):
     """
     Traduz a última mensagem do agente para o idioma de destino.
@@ -313,10 +343,10 @@ def translator_node(state: AgentState):
     messages = state["messages"]
     last_message = messages[-1].content
     target_language = state.get("language", "pt-br")
-    
+
     # Se já for PT-BR (ou não especificado), não faz nada (embora o grafo nem deva chamar esse nó)
     if target_language.lower() in ["pt-br", "pt", "portuguese", "português"]:
-        return {"messages": messages} # Retorna sem alterar
+        return {"messages": messages}  # Retorna sem alterar
 
     system_prompt = f"""
     Você é um TRADUTOR ESPECIALISTA e LOCALIZADOR DE CONTEÚDO (PT-BR -> {target_language}).
@@ -341,25 +371,26 @@ def translator_node(state: AgentState):
     Texto Original (PT-BR):
     {last_message}
     """
-    
+
     prompt = ChatPromptTemplate.from_messages([
         ("system", system_prompt),
     ])
-    
-    # Usa o router_llm (Temperatura 0) ou llm (Temperatura 0.6)? 
+
+    # Usa o router_llm (Temperatura 0) ou llm (Temperatura 0.6)?
     # Tradução criativa pede um pouco de temperatura para adaptar gírias, vamos de llm.
-    chain = prompt | llm 
-    
+    chain = prompt | llm
+
     response = chain.invoke({})
     translated_text = response.content.strip()
-    
-    logger.info(f"--- TRANSLATION ({target_language}) ---\nOriginal: {last_message}\nTraduzido: {translated_text}")
-    
+
+    logger.info(
+        f"--- TRANSLATION ({target_language}) ---\nOriginal: {last_message}\nTraduzido: {translated_text}")
+
     # Substituímos a última mensagem pela traduzida para o frontend receber só a final
     # (Ou poderíamos adicionar, mas o chat espera a última como resposta)
-    # No LangGraph, retornar uma mensagem com o mesmo ID substituiria? 
-    # Melhor: Retornar uma nova AIMessage que será adicionada ao histórico. 
+    # No LangGraph, retornar uma mensagem com o mesmo ID substituiria?
+    # Melhor: Retornar uma nova AIMessage que será adicionada ao histórico.
     # O Frontend pega a última.
-    
+
     from langchain_core.messages import AIMessage
     return {"messages": [AIMessage(content=translated_text)]}
