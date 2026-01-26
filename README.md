@@ -1,11 +1,7 @@
 <div align="center">
 
-  <h1>🌌 Noise Portfolio</h1>
+  <img src="banner.png" alt="Banner Marcos Dev" width="100%">
   
-  <p>
-    <strong>Onde o Caos Visual encontra a Clareza da Inteligência Artificial.</strong>
-  </p>
-
   <br>
 
   <img src="https://img.shields.io/github/repo-size/Marocosz/noiseportfolio?style=for-the-badge&color=818cf8" alt="Repo Size">
@@ -19,16 +15,11 @@
 
 ---
 
-O **Noise Portfolio** não é apenas um site estático; é uma **experiência digital viva**. Projetado para quebrar a barreira entre o visitante e o desenvolvedor, ele utiliza **Inteligência Artificial Generativa (RAG)** para permitir que recrutadores e visitantes conversem diretamente com uma versão virtual do Marcos Rodrigues.
+O **Portfolio** não é apenas um site estático; é uma **experiência digital viva**. Projetado para quebrar a barreira entre o visitante e o desenvolvedor, ele utiliza **Inteligência Artificial Generativa (RAG)** para permitir que recrutadores e visitantes conversem diretamente com uma versão virtual do Marcos Rodrigues.
 
-> [!TIP]
-> **Conceito:** "Noise" (Ruído) representa a complexidade e a textura da realidade. O sistema atua como o filtro que transforma esse ruído em sinais claros: respostas precisas sobre carreira, stack técnica e personalidade, tudo envolto em uma estética **Cyberpunk/Retro-Futurista**.
+# Indice
 
----
-
-# Índice
-
-- [Índice](#índice)
+- [Indice](#indice)
 - [🧠 O Cérebro (Arquitetura de IA)](#-o-cérebro-arquitetura-de-ia)
   - [Fluxo de Pensamento (LangGraph)](#fluxo-de-pensamento-langgraph)
   - [RAG (Retrieval Augmented Generation)](#rag-retrieval-augmented-generation)
@@ -43,8 +34,6 @@ O **Noise Portfolio** não é apenas um site estático; é uma **experiência di
   - [Arquitetura de Microserviços](#arquitetura-de-microserviços)
   - [Deploy no Coolify (Recomendado)](#deploy-no-coolify-recomendado)
 - [🤝 Contato](#-contato)
-
----
 
 # 🧠 O Cérebro (Arquitetura de IA)
 
@@ -62,8 +51,8 @@ graph TD
     C -->|Technical/Fatos| D[Contextualize Input]
     C -->|Casual/Oi| E[Generate Casual]
 
-    D --> F[Retrieve Documents (RAG)]
-    F --> G[Generate RAG Response]
+    D --> F["Retrieve Documents (RAG)"]
+    F --> G["Generate RAG Response"]
 
     E --> H{Translator Node}
     G --> H
