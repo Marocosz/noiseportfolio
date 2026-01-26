@@ -20,7 +20,13 @@ Módulos com quem se comunica:
 
 from langchain_core.messages import SystemMessage, HumanMessage, AIMessage, RemoveMessage
 from langchain_core.prompts import ChatPromptTemplate
-from app.core.llm import llm_creative as llm, llm_precise as router_llm, llm_rag
+from app.core.config import LLMProvider, ModelTier
+from app.core.llm import (
+    get_llm, 
+    llm_fast, 
+    llm_medium, 
+    llm_strong
+)
 from app.services.rag_service import RagService
 from app.graph.state import AgentState
 from datetime import datetime
@@ -62,7 +68,8 @@ def detect_language_node(state: AgentState):
     """
     
     prompt = ChatPromptTemplate.from_template(system_prompt)
-    chain = prompt | router_llm # Modelo preciso
+    prompt = ChatPromptTemplate.from_template(system_prompt)
+    chain = prompt | llm_fast # Modelo rápido e preciso
     
     response = chain.invoke({"text": last_message})
     detected_lang = response.content.strip().lower()
@@ -115,7 +122,7 @@ def summarize_conversation(state: AgentState):
     history_text = "\n".join([f"{msg.type}: {msg.content}" for msg in older_messages])
     
     prompt = ChatPromptTemplate.from_template(summary_prompt)
-    chain = prompt | router_llm
+    chain = prompt | llm_fast
     response = chain.invoke({"history": history_text})
     summary = response.content
     
@@ -221,8 +228,8 @@ def contextualize_input(state: AgentState):
         ("placeholder", "{messages}"), # Histórico completo injetado aqui
     ])
     
-    # Usa modelo preciso (temperatura 0) para seguir instruções estritamente.
-    chain = prompt | router_llm 
+    # Usa modelo fast (temperatura 0) para seguir instruções estritamente.
+    chain = prompt | llm_fast 
     response = chain.invoke({"messages": messages, "current_date": current_date})
     
     rephrased = response.content.strip()
@@ -302,7 +309,7 @@ def router_node(state: AgentState):
     Sua resposta (apenas a palavra exata, sem pontuação):
     """
     
-    chain = ChatPromptTemplate.from_template(prompt) | router_llm
+    chain = ChatPromptTemplate.from_template(prompt) | llm_fast
     response = chain.invoke({"question": input_text})
     
     decision = response.content.strip().lower()
@@ -466,7 +473,7 @@ def generate_rag(state: AgentState):
     
     # Cria o template e injeta as variáveis (incluindo o histórico formatado manualmente).
     prompt = ChatPromptTemplate.from_messages([("system", system_prompt_template), ("placeholder", "{messages}")])
-    chain = prompt | llm_rag
+    chain = prompt | llm_medium
     
     response = chain.invoke({
         "messages": messages, 
@@ -520,7 +527,7 @@ def generate_casual(state: AgentState):
     """
     
     prompt = ChatPromptTemplate.from_messages([("system", system_prompt), ("placeholder", "{messages}")])
-    chain = prompt | llm
+    chain = prompt | llm_fast
     response = chain.invoke({"messages": messages})
     logger.info(f"--- CASUAL GENERATED RESPONSE ---\n{response.content}\n---------------------------------")
     return {"messages": [response]}
@@ -574,8 +581,8 @@ def translator_node(state: AgentState):
         ("system", system_prompt),
     ])
     
-    # Usa o modelo criativo (llm) para adaptar gírias melhor do que o router_llm.
-    chain = prompt | llm 
+    # Usa o modelo fast para garantir a melhor nuance na tradução.
+    chain = prompt | llm_fast
     
     response = chain.invoke({})
     translated_text = response.content.strip()
