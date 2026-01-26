@@ -1,155 +1,231 @@
-# Planejamento Completo: Marcos Persona API
+<div align="center">
 
-Este documento consolida todo o planejamento, arquitetura e código inicial para o projeto **Marocos Persona API**. O objetivo é criar um agente de IA integrado ao seu portfólio que responde perguntas sobre sua carreira utilizando dados reais (RAG), otimizado para rodar em uma VPS com poucos recursos.
+  <h1>🌌 Noise Portfolio</h1>
+  
+  <p>
+    <strong>Onde o Caos Visual encontra a Clareza da Inteligência Artificial.</strong>
+  </p>
 
----
+  <br>
 
-## 1. Arquitetura "Serverless RAG"
+  <img src="https://img.shields.io/github/repo-size/Marocosz/noiseportfolio?style=for-the-badge&color=818cf8" alt="Repo Size">
+  <img src="https://img.shields.io/github/languages/count/Marocosz/noiseportfolio?style=for-the-badge&color=818cf8" alt="Language Count">
+  <img src="https://img.shields.io/badge/LangGraph-Orchestration-orange?style=for-the-badge&logoColor=white" alt="LangGraph">
+  <img src="https://img.shields.io/badge/RAG-Enabled-blueviolet?style=for-the-badge" alt="RAG">
 
-Para garantir que a aplicação rode leve na sua VPS (sem estourar RAM/CPU), utilizaremos serviços de API para o processamento pesado:
-
-- **Cérebro (LLM):** `Groq` (Modelo: `llama-3.1-8b-instant`).
-  - _Custo:_ Gratuito.
-  - _Função:_ Geração de respostas rápidas.
-- **Memória (Vector Store):** `ChromaDB` (Modo Persistente Local).
-  - _Custo:_ Gratuito (Uso de disco local, pouca RAM).
-  - _Função:_ Armazenar o conhecimento do portfólio.
-- **Vetores (Embeddings):** `Google Generative AI` (`models/embedding-001`).
-  - _Custo:_ Gratuito.
-  - _Função:_ Converter texto em vetores sem usar CPU local.
-- **Orquestração:** `LangGraph` + `LangChain`.
-  - _Função:_ Controle de fluxo e estado do agente.
-- **API:** `FastAPI`.
-  - _Função:_ Interface backend.
+  <br>
+  <br>
+</div>
 
 ---
 
-## 2. Estrutura de Diretórios
+O **Noise Portfolio** não é apenas um site estático; é uma **experiência digital viva**. Projetado para quebrar a barreira entre o visitante e o desenvolvedor, ele utiliza **Inteligência Artificial Generativa (RAG)** para permitir que recrutadores e visitantes conversem diretamente com uma versão virtual do Marcos Rodrigues.
 
-Seguindo princípios de Clean Architecture e Modularidade:
+> [!TIP]
+> **Conceito:** "Noise" (Ruído) representa a complexidade e a textura da realidade. O sistema atua como o filtro que transforma esse ruído em sinais claros: respostas precisas sobre carreira, stack técnica e personalidade, tudo envolto em uma estética **Cyberpunk/Retro-Futurista**.
+
+---
+
+# Índice
+
+- [Índice](#índice)
+- [🧠 O Cérebro (Arquitetura de IA)](#-o-cérebro-arquitetura-de-ia)
+  - [Fluxo de Pensamento (LangGraph)](#fluxo-de-pensamento-langgraph)
+  - [RAG (Retrieval Augmented Generation)](#rag-retrieval-augmented-generation)
+- [🎨 UX \& Design System](#-ux--design-system)
+- [🛠️ Tecnologias Usadas](#️-tecnologias-usadas)
+- [📂 Estrutura do Projeto](#-estrutura-do-projeto)
+- [🚀 Como Rodar Localmente](#-como-rodar-localmente)
+  - [Pré-requisitos](#pré-requisitos)
+  - [Backend](#backend)
+  - [Frontend](#frontend)
+- [🐳 Deploy Profissional (Docker \& VPS)](#-deploy-profissional-docker--vps)
+  - [Arquitetura de Microserviços](#arquitetura-de-microserviços)
+  - [Deploy no Coolify (Recomendado)](#deploy-no-coolify-recomendado)
+- [🤝 Contato](#-contato)
+
+---
+
+# 🧠 O Cérebro (Arquitetura de IA)
+
+O diferencial deste projeto é o uso de **Agentes de IA Stateful** (com memória e estado) gerenciados pelo `LangGraph`. Não é apenas um wrapper de API da OpenAI; é um fluxo de decisão complexo.
+
+## Fluxo de Pensamento (LangGraph)
+
+Cada mensagem do usuário passa por uma "cadeia de pensamento" antes de ser respondida. O sistema decide dinamicamente se precisa consultar a memória (Currículo) ou se pode apenas socializar.
+
+```mermaid
+graph TD
+    A[Start] --> B(Detect Language)
+    B --> C{Router Node}
+
+    C -->|Technical/Fatos| D[Contextualize Input]
+    C -->|Casual/Oi| E[Generate Casual]
+
+    D --> F[Retrieve Documents (RAG)]
+    F --> G[Generate RAG Response]
+
+    E --> H{Translator Node}
+    G --> H
+
+    H --> I[Stream Resposta]
+```
+
+1.  **Router Inteligente:** Classifica a intenção. Perguntas sobre "Banda favorita" ou "Stacks" vão para a rota técnica. Um simples "Oi" vai para a rota casual (economizando tokens e tempo).
+2.  **Memória Contextual:** O sistema lembra do que foi dito anteriormente na conversa, permitindo diálogos fluidos ("E sobre o React?" -> entende que "E" se refere ao contexto anterior).
+3.  **Tradução Automática:** Se o usuário falar Inglês, o bot processa em Português (para manter a persona) e um nó final traduz a resposta perfeitamente antes de entregar.
+
+## RAG (Retrieval Augmented Generation)
+
+O conhecimento do bot não é alucinado. Ele é fundamentado em dados reais ingeridos a partir de arquivos Markdown (`profile.md`, `projects.md`).
+
+- **Database:** ChromaDB (Vetorial).
+- **Embeddings:** Google Gemini Embeddings (Alta performance semântica).
+- **Ingestão Inteligente:** Script `boot.py` que verifica e atualiza a memória automaticamente no deploy.
+
+---
+
+# 🎨 UX & Design System
+
+A interface segue uma estética **"Clean Noise"**, misturando minimalismo funcional com texturas granuladas e tipografia experimental.
+
+- **Start Menu Interativo:** A chatbox não é um modal flutuante genérico; ela simula um Menu Iniciar de um sistema operacional, criando familiaridade.
+- **Streaming Real-Time (SSE):** As respostas da IA chegam via _Server-Sent Events_, com efeito de digitação ("Typewriter effect"), dando a sensação de que o bot está "pensando" e escrevendo ao vivo.
+- **Feedback Visual:** Indicadores de estado ("Pesquisando nas memórias...", "Traduzindo...") mantêm o usuário informado sobre o processo mental da IA.
+
+---
+
+# 🛠️ Tecnologias Usadas
+
+<div style="display: inline_block"><br>
+  <img align="center" alt="React" src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" />
+  <img align="center" alt="FastAPI" src="https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi" />
+  <img align="center" alt="LangChain" src="https://img.shields.io/badge/LangChain-1C3C3C?style=for-the-badge&logo=langchain&logoColor=white" />
+  <img align="center" alt="Docker" src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" />
+  <img align="center" alt="ChromaDB" src="https://img.shields.io/badge/ChromaDB-FF6B6B?style=for-the-badge&logoColor=white" />
+</div>
+
+<br>
+
+- **Frontend:** React, Vite, Framer Motion (Animações), Lucide Icons.
+- **Backend:** Python 3.12, FastAPI, Uvicorn.
+- **IA:** LangGraph, LangChain, Google Gemini Pro / Groq (Llama 3).
+- **Infra:** Docker Compose, Nginx (Reverse Proxy).
+
+---
+
+# 📂 Estrutura do Projeto
 
 ```text
-marocos_persona/
-├── app/
-│   ├── api/
-│   │   └── routes.py          # (Futuro) Endpoints da API
-│   ├── core/
-│   │   ├── config.py          # Gerenciamento de Variáveis de Ambiente
-│   │   └── llm.py             # (Futuro) Fábrica de LLM
-│   ├── graph/                 # (Futuro) Lógica do Agente LangGraph
-│   │   ├── nodes.py
-│   │   ├── state.py
-│   │   └── workflow.py
-│   └── services/
-│       └── rag_service.py     # Lógica de Ingestão e Busca no ChromaDB
-├── data/
-│   └── knowledge_base/        # Arquivos de conhecimento
-│       └── profile.md
-├── .env                       # Chaves de API (Local - não subir pro git)
-├── .gitignore                 # Arquivos para ignorar no git
-├── main.py                    # (Futuro) Entrypoint do FastAPI
-├── ingest.py                  # Script para rodar a ingestão manualmente
-└── requirements.txt           # Dependências do projeto
+NoisePortfolio/
+├── 📁 backend/                # O Cérebro (API & IA)
+│   ├── 📂 app/
+│   │   ├── 📂 api/            # Rotas (SSE, Chat)
+│   │   ├── 📂 core/           # Configs, Logger, RateLimit
+│   │   ├── 📂 graph/          # 🧠 Lógica do LangGraph (Nodes, State)
+│   │   └── 📂 services/       # RAG Service (ChromaDB)
+│   ├── 📂 data/               # Arquivos de conhecimento (.md)
+│   ├── boot.py                # Script de Inicialização Inteligente
+│   ├── ingest.py              # Script de Ingestão de Dados
+│   └── docker-compose.yml     # Orquestração
+│
+├── 📁 frontend/               # A Face (React)
+│   ├── 📂 src/
+│   │   ├── 📂 components/     # UI (StartMenu, ChatBox)
+│   │   ├── 📂 contexts/       # i18n, Theme
+│   │   └── 📂 hooks/          # Logica customizada
+│   └── index.html
 ```
 
 ---
 
-## 3. Arquivos de Configuração
+# 🚀 Como Rodar Localmente
 
-### `requirements.txt`
+### Pré-requisitos
 
-Dependências essenciais para o projeto.
+- Node.js 18+
+- Python 3.11+
+- Chave de API (`GOOGLE_API_KEY` ou `GROQ_API_KEY`).
 
-```text
-fastapi
-uvicorn
-python-dotenv
-pydantic-settings
-langchain
-langchain-community
-langchain-core
-langchain-groq
-langchain-google-genai
-langgraph
-chromadb
-tiktoken
-```
+### Backend
 
-### `.env` (Template)
+1.  Entre na pasta:
+    ```bash
+    cd backend
+    ```
+2.  Crie o ambiente virtual e instale dependências:
+    ```bash
+    python -m venv venv
+    source venv/bin/activate  # Linux/Mac
+    .\venv\Scripts\activate   # Windows
+    pip install -r requirements.txt
+    ```
+3.  Crie um arquivo `.env` com suas chaves:
+    ```env
+    LLM_PROVIDER=groq
+    GROQ_API_KEY=sua_chave_aqui
+    GOOGLE_API_KEY=sua_chave_aqui  # Necessário para Embeddings
+    ```
+4.  Rode a ingestão (cria a memória) e o servidor:
+    ```bash
+    python ingest.py  # Cria o banco ChromaDB local
+    python main.py    # Roda a API na porta 8000
+    ```
 
-Crie este arquivo na raiz e adicione suas chaves.
+### Frontend
 
-```text
-GROQ_API_KEY=gsk_...
-GOOGLE_API_KEY=AIza...
-# Na VPS, essas variáveis serão configuradas no painel do Coolify
-```
+1.  Em outro terminal, entre na pasta:
+    ```bash
+    cd frontend
+    ```
+2.  Instale e rode:
+    ```bash
+    npm install
+    npm run dev
+    ```
+3.  Acesse: `http://localhost:5173`
 
-### `.gitignore`
+---
 
-Importante para não subir lixo ou segredos para o repositório.
+# 🐳 Deploy Profissional (Docker & VPS)
 
-```text
-__pycache__/
-*.pyc
-.env
-.venv/
-venv/
-chroma_db/
+Este projeto foi otimizado para deploy em serviços como **Coolify**, Railway ou AWS, utilizando containers Docker auto-gerenciáveis.
+
+## Arquitetura de Microserviços
+
+O Backend roda isolado em um container Python. Ele possui um script inteligente (`boot.py`) que detecta se é a primeira execução:
+
+- **Primeiro Deploy:** Detecta banco vazio -> Roda Ingestão -> Inicia API.
+- **Reinícios:** Detecta banco existente -> Pula Ingestão (Economia de API) -> Inicia API.
+- **Update de Conteúdo:** É gerenciado via **GitOps**. Commite as alterações em `data/profile.md` e o Coolify atualiza a imagem.
+
+## Deploy no Coolify (Recomendado)
+
+1.  **Crie um Serviço:** Selecione "Docker Compose" ou aponte seu repositório Git.
+2.  **Variáveis de Ambiente:** No painel do Coolify, adicione:
+    - `GOOGLE_API_KEY`
+    - `GROQ_API_KEY`
+    - `LLM_PROVIDER=groq`
+    - `FORCE_REINGEST=false` (Mude para `true` **apenas** quando quiser forçar a recriação do banco de dados após editar o `profile.md`).
+3.  **Deploy:** O `docker-compose.yml` já está configurado para usar **Volumes Nomeados** (`chroma_data`), garantindo que a memória da IA não seja perdida entre deploys.
+
+```yaml
+# Exemplo de persistência no docker-compose.yml
+volumes:
+  chroma_data: # O Docker gerencia isso no disco da VPS
 ```
 
 ---
 
-## 4. Base de Conhecimento
+# 🤝 Contato
 
-### `data/knowledge_base/profile.md`
+Projeto desenvolvido com foco em **UX de Alta Fidelidade** e **Engenharia de Prompt**.
 
-Este arquivo contém os dados que o agente usará para responder. Baseado no seu currículo e histórico.
+- 🐙 **GitHub:** [Marocosz](https://github.com/Marocosz)
+- 💼 **LinkedIn:** [Marcos Rodrigues](https://linkedin.com/in/marcosrodriguesptc)
 
-```markdown
-# Sobre Marcos Rodrigues
+---
 
-Eu sou Marcos Rodrigues, um Desenvolvedor Fullstack e Engenheiro de IA em formação.
-Moro em Uberlândia, MG.
-Atualmente sou estagiário de TI na Supporte Logística (desde Agosto de 2025), focado em inovação e automação.
-Também atuo como Freelancer Fullstack na Intecmídia Soluções.
-Sou apaixonado por tecnologia, especialmente como a IA pode transformar processos complexos em soluções simples.
-
-# Formação Acadêmica
-
-- **Graduação:** Gestão da Informação na UFU (Universidade Federal de Uberlândia). Previsão de conclusão: 03/2026.
-- **Técnico:** Eletrônica pelo IFTM (Concluído em 2021). Onde aprendi a base de hardware e lógica com C++ e Arduino.
-
-# Habilidades Técnicas (Hard Skills)
-
-- **Linguagens de Programação:** Python (Nível Expert - minha linguagem principal), JavaScript (Avançado).
-- **Frameworks Backend:** FastAPI (Expert), Flask, LangChain (Avançado), Discord.py.
-- **Data Science & IA:** Pandas, Scipy, Scikit-learn, RAG (Retrieval-Augmented Generation), Engenharia de Prompt, Integração com LLMs (Gemini, OpenAI, Llama/Groq).
-- **Banco de Dados:** SQL (PostgreSQL, MySQL), NoSQL (MongoDB), ChromaDB (Vetorial).
-- **Infraestrutura & DevOps:** Docker (Expert), Linux (Avançado - uso Zorin OS), Git/GitHub, Coolify (para deploy em VPS).
-- **Frontend:** React, Nuxt, Streamlit (para demos rápidas), HTML/CSS/Tailwind.
-
-# Projetos de Destaque
-
-1. **DataChat BI:**
-   - Descrição: Uma solução de Business Intelligence conversacional para logística. O sistema permite que gestores façam perguntas em linguagem natural e o sistema converte em SQL para consultar o banco de dados.
-   - Tecnologias: Python, FastAPI, LangChain, React, SQL.
-2. **Bússola Hub (V2):**
-   - Descrição: Um "Sistema Operacional Pessoal" web. Une gestão financeira, cofre de senhas criptografado e controle de saúde.
-   - Tecnologias: Flask, SQLAlchemy, Docker.
-
-3. **Analisador de Contratos com IA:**
-   - Descrição: API RESTful para upload de contratos (PDF/DOCX) que utiliza o Google Gemini para extrair cláusulas importantes e riscos automaticamente.
-   - Tecnologias: FastAPI, Docker, Google Gemini API.
-
-4. **Marocos Bot 2.0:**
-   - Descrição: Sistema de automação para Discord focado em League of Legends. Gerencia lobbies, valida elo via Riot API e balanceia times matematicamente.
-   - Tecnologias: Python, Discord.py, Riot API, Algoritmos de Matchmaking.
-
-# Contato e Links
-
-- **LinkedIn:** [https://www.linkedin.com/in/marcosrodriguesptc/](https://www.linkedin.com/in/marcosrodriguesptc/)
-- **GitHub:** [https://github.com/marocosz](https://github.com/marocosz)
-- **Email:** marcosrodriguesepro@gmail.com
-- **Portfólio:** [https://marocos.dev](https://marocos.dev)
-```
+<div align="center">
+  <sub>Built with 💜 and lots of ☕ by Marcos.</sub>
+</div>

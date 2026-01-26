@@ -22,8 +22,10 @@ Comunicação:
 """
 
 from fastapi import APIRouter, HTTPException, Request
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 from typing import List, Optional
+import json
 from langchain_core.messages import HumanMessage, AIMessage
 
 from app.graph.workflow import agent_app
@@ -106,8 +108,6 @@ async def chat_endpoint(request: ChatRequest, fast_api_request: Request):
     # Permite enviar dados parciais sem fechar a conexão HTTP.
     async def event_generator():
         try:
-            from fastapi.responses import StreamingResponse
-            import json
             
             # Helper para definir idioma das mensagens de status
             is_pt = request.language != 'en' 

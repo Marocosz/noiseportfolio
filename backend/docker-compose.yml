@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  api:
+    build: .
+    container_name: noiseportfolio-backend
+    restart: always
+    # Ports removidas: O Coolify gerencia o roteamento interno (Reverse Proxy)
+    # Apenas garanta que na config do Coolify a "Internal Port" seja 8000.
+    
+    volumes:
+      # Persistência do Banco Vetorial via Volume Nomeado (Gerenciado pelo Docker/Coolify)
+      # Garante que os dados sobrevivam entre deploys e rebuilds.
+      - chroma_data:/app/chroma_db
+      
+      # Nota: Removemos o volume de './data'. 
+      # Para atualizar o texto do portfólio, edite localmente, dê Git Push e deixe o Coolify redeployar.
+      # Isso garante versionamento do conteúdo (GitOps).
+
+    environment:
+      # No Coolify, você define essas variáveis na UI (Secção Environment Variables).
+      - LLM_PROVIDER=groq
+      - CHROMA_DB_DIR=chroma_db
+      # Defina como "true" no Coolify para forçar a recriação do banco no próximo deploy.
+      - FORCE_REINGEST=false
+
+# Declaração do Volume Nomeado
+volumes:
+  chroma_data:
