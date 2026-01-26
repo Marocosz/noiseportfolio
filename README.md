@@ -11,37 +11,79 @@
 
   <br>
   <br>
-</div>
 
----
+> 🔴 **LIVE DEMO:** [marocos.dev](https://marocos.dev/)
 
-O **Portfolio** não é apenas um site estático; é uma **experiência digital viva**. Projetado para quebrar a barreira entre o visitante e o desenvolvedor, ele utiliza **Inteligência Artificial Generativa (RAG)** para permitir que recrutadores e visitantes conversem diretamente com uma versão virtual do Marcos Rodrigues.
+Este repositório contém o código-fonte do meu **Portfólio Pessoal**, o mesmo que você acessa no link acima.
+
+Este projeto é **Metalinguístico**: ele é, simultaneamente, o produto final (meu site de apresentação) e um dos principais projetos do portfólio em si. O objetivo aqui não foi apenas "mostrar meus links", mas demonstrar minhas competências em **Engenharia de Software Avançada**, **IA Generativa** e **Design de Alta Fidelidade** na prática.
+
+Ao invés de ler um currículo estático, aqui você conversa com uma **Versão Virtual do Marcos**, alimentada por um sistema RAG (Retrieval Augmented Generation) capaz de responder perguntas sobre minha carreira, stack tecnológica e hobbies.
 
 # Indice
 
 - [Indice](#indice)
-- [🧠 O Cérebro (Arquitetura de IA)](#-o-cérebro-arquitetura-de-ia)
-  - [Fluxo de Pensamento (LangGraph)](#fluxo-de-pensamento-langgraph)
-  - [RAG (Retrieval Augmented Generation)](#rag-retrieval-augmented-generation)
-- [🎨 UX \& Design System](#-ux--design-system)
+- [🧠 O Cérebro: Arquitetura Cognitiva](#-o-cérebro-arquitetura-cognitiva)
+  - [🏛️ Por que RAG (Retrieval Augmented Generation)?](#️-por-que-rag-retrieval-augmented-generation)
+  - [🧩 Engenharia de Prompt \& Nodes](#-engenharia-de-prompt--nodes)
+    - [1. Router Node (O Porteiro)](#1-router-node-o-porteiro)
+    - [2. Contextualize Node (A Memória de Curto Prazo)](#2-contextualize-node-a-memória-de-curto-prazo)
+    - [3. Generator Node (A Persona)](#3-generator-node-a-persona)
+    - [4. Translator Node (Localização)](#4-translator-node-localização)
+- [🎨 UX \& Interface Imersiva](#-ux--interface-imersiva)
+  - [🖥️ Desktop Metaphor](#️-desktop-metaphor)
+  - [⚙️ Controle Total do Usuário](#️-controle-total-do-usuário)
+  - [📱 Responsividade \& Performance](#-responsividade--performance)
 - [🛠️ Tecnologias Usadas](#️-tecnologias-usadas)
 - [📂 Estrutura do Projeto](#-estrutura-do-projeto)
-- [🚀 Como Rodar Localmente](#-como-rodar-localmente)
-  - [Pré-requisitos](#pré-requisitos)
-  - [Backend](#backend)
-  - [Frontend](#frontend)
 - [🐳 Deploy Profissional (Docker \& VPS)](#-deploy-profissional-docker--vps)
   - [Arquitetura de Microserviços](#arquitetura-de-microserviços)
   - [Deploy no Coolify (Recomendado)](#deploy-no-coolify-recomendado)
-- [🤝 Contato](#-contato)
+  - [Dúvidas, Bugs ou Sugestões?](#dúvidas-bugs-ou-sugestões)
+  - [Vamos nos Conectar!](#vamos-nos-conectar)
 
-# 🧠 O Cérebro (Arquitetura de IA)
+# 🧠 O Cérebro: Arquitetura Cognitiva
 
-O diferencial deste projeto é o uso de **Agentes de IA Stateful** (com memória e estado) gerenciados pelo `LangGraph`. Não é apenas um wrapper de API da OpenAI; é um fluxo de decisão complexo.
+Este projeto não é um simples chatbot. É um **Sistema Agêntico** baseado em grafos (`LangGraph`), projetado para pensar, recuperar memórias e adaptar sua comunicação em tempo real.
 
-## Fluxo de Pensamento (LangGraph)
+### 🏛️ Por que RAG (Retrieval Augmented Generation)?
 
-Cada mensagem do usuário passa por uma "cadeia de pensamento" antes de ser respondida. O sistema decide dinamicamente se precisa consultar a memória (Currículo) ou se pode apenas socializar.
+LLMs (como GPT-4 ou Llama 3) são treinados em dados públicos gerais. Eles **não conhecem** o Marcos Rodrigues, seus projetos privados ou sua trajetória recente. Se perguntados diretamente, eles **alucinariam** (inventariam respostas factualmente incorretas).
+
+**A Solução:**
+O RAG atua como um mecanismo de "memória de longo prazo".
+
+1.  **Ingestão:** Lemos arquivos `.md` com a biografia e projetos do Marcos.
+2.  **Embedding:** Convertemos esses textos em vetores matemáticos usando `Google Gemini Embeddings` (modelos de alta dimensionalidade).
+3.  **Recuperação:** Quando você faz uma pergunta, o sistema busca no banco vetorial (`ChromaDB`) os trechos que possuem maior **similaridade semântica** (menor distância euclidiana) com sua dúvida.
+4.  **Geração:** Esses trechos são injetados no prompt do LLM como "Contexto Verdadeiro", forçando-o a responder apenas com base nos fatos fornecidos.
+
+### 🧩 Engenharia de Prompt & Nodes
+
+O fluxo de decisão é governado por nós (Nodes) especializados, cada um com _System Prompts_ meticulosamente calibrados:
+
+#### 1. Router Node (O Porteiro)
+
+- **Função:** Classificar a intenção do usuário para economizar recursos.
+- **Prompt Strategy:** Utiliza _Few-Shot Prompting_ (exemplos práticos no prompt) para distinguir entre:
+  - `technical`: Perguntas que exigem acesso à memória RAG ("Quais projetos ele fez?", "Sabe React?").
+  - `casual`: Conversa fiada ("Oi", "Tudo bem?", "Quem é você?"). Evita queries desnecessárias ao banco de dados.
+
+#### 2. Contextualize Node (A Memória de Curto Prazo)
+
+- **Problema:** Usuários falam de forma elíptica: "Quais projetos ele tem?" -> (Resposta) -> "E quais tecnologias **ele** usa no **último**?"
+- **Processamento:** Este nó reescreve a pergunta isolada transformando-a em uma _Query Standalone_ completa ("Quais tecnologias o Marcos usa no projeto NoisePortfolio"), garantindo que a busca no RAG seja precisa mesmo em perguntas vagas.
+
+#### 3. Generator Node (A Persona)
+
+- **Prompt:** Define a personalidade do Chatbot. Não é um robô genérico.
+  - **Persona:** Profissional, mas com um toque _cyberpunk/tech_. Direto, humilde, mas confiante.
+  - **Regra de Ouro:** "Se a resposta não estiver no contexto fornecido, diga que não sabe. Não invente."
+
+#### 4. Translator Node (Localização)
+
+- **Estratégia:** Todo o raciocínio interno do bot (busca no banco, processamento) ocorre predominantemente na lingua dos dados (geralmente misto ou inglês técnico).
+- **Finalização:** Este nó final garante que a resposta entregue ao usuário esteja **sempre** no idioma detectado inicialmente no chat, mantendo a imersão.
 
 ```mermaid
 graph TD
@@ -59,18 +101,6 @@ graph TD
 
     H --> I[Stream Resposta]
 ```
-
-1.  **Router Inteligente:** Classifica a intenção. Perguntas sobre "Banda favorita" ou "Stacks" vão para a rota técnica. Um simples "Oi" vai para a rota casual (economizando tokens e tempo).
-2.  **Memória Contextual:** O sistema lembra do que foi dito anteriormente na conversa, permitindo diálogos fluidos ("E sobre o React?" -> entende que "E" se refere ao contexto anterior).
-3.  **Tradução Automática:** Se o usuário falar Inglês, o bot processa em Português (para manter a persona) e um nó final traduz a resposta perfeitamente antes de entregar.
-
-## RAG (Retrieval Augmented Generation)
-
-O conhecimento do bot não é alucinado. Ele é fundamentado em dados reais ingeridos a partir de arquivos Markdown (`profile.md`).
-
-- **Database:** ChromaDB (Vetorial).
-- **Embeddings:** Google Gemini Embeddings (Alta performance semântica).
-- **Ingestão Inteligente:** Script `boot.py` que verifica e atualiza a memória automaticamente no deploy.
 
 ---
 
@@ -142,66 +172,6 @@ NoisePortfolio/
 
 ---
 
-# 🚀 Como Rodar Localmente
-
-### Pré-requisitos
-
-- Node.js 18+
-- Python 3.11+
-- Chave de API (`GOOGLE_API_KEY` ou `GROQ_API_KEY`).
-
-### Backend
-
-1.  Entre na pasta:
-    ```bash
-    cd backend
-    ```
-2.  Crie o ambiente virtual e instale dependências:
-    ```bash
-    python -m venv venv
-    source venv/bin/activate  # Linux/Mac
-    .\venv\Scripts\activate   # Windows
-    pip install -r requirements.txt
-    ```
-3.  Configure as variáveis de ambiente:
-
-    Crie um arquivo `.env` na raiz da pasta `backend` baseando-se no exemplo fornecido:
-
-    ```bash
-    cp .env.example .env  # Ou copie e renomeie manualmente
-    ```
-
-    **Explicação das Variáveis (`.env`):**
-
-    | Variável         | Descrição                                                                                                        |
-    | :--------------- | :--------------------------------------------------------------------------------------------------------------- |
-    | `LLM_PROVIDER`   | Define quem gera as respostas (`groq`, `openai`, `gemini`). O padrão é `groq`(mais rápido e free).               |
-    | `GOOGLE_API_KEY` | **Obrigatória.** Usada para gerar os _Embeddings_ (vetores de memória) do RAG, independente do provider de chat. |
-    | `GROQ_API_KEY`   | Necessária se o provider for `groq`.                                                                             |
-    | `OPENAI_API_KEY` | Necessária se o provider for `openai`.                                                                           |
-    | `FORCE_REINGEST` | Se `true`, apaga e recria o banco de memória ao iniciar. Útil após editar arquivos em `backend/data/`.           |
-
-4.  Rode a ingestão (cria a memória) e o servidor:
-    ```bash
-    python ingest.py  # Cria o banco ChromaDB local
-    python main.py    # Roda a API na porta 8000
-    ```
-
-### Frontend
-
-1.  Em outro terminal, entre na pasta:
-    ```bash
-    cd frontend
-    ```
-2.  Instale e rode:
-    ```bash
-    npm install
-    npm run dev
-    ```
-3.  Acesse: `http://localhost:5173`
-
----
-
 # 🐳 Deploy Profissional (Docker & VPS)
 
 Este projeto foi otimizado para deploy em serviços como **Coolify**, Railway ou AWS, utilizando containers Docker auto-gerenciáveis.
@@ -232,15 +202,23 @@ volumes:
 
 ---
 
-# 🤝 Contato
+## Dúvidas, Bugs ou Sugestões?
 
-Projeto desenvolvido com foco em **UX de Alta Fidelidade** e **Engenharia de Prompt**.
+Se você encontrar algum _bug_, notar a falta de alguma feature essencial (como um campo específico no financeiro, uma métrica de saúde, etc.) ou tiver sugestões de melhoria, **eu quero saber!** Como não sou especialista em contabilidade ou administração, o feedback da comunidade é vital para tornar o Bússola mais robusto para todos.
 
-- 🐙 **GitHub:** [Marocosz](https://github.com/Marocosz)
-- 💼 **LinkedIn:** [Marcos Rodrigues](https://linkedin.com/in/marcosrodriguesptc)
+A melhor forma de contribuir é **abrindo uma Issue** diretamente no repositório do **GitHub**. Isso ajuda a manter tudo organizado e visível.
+
+- **[➡️ Abrir uma Issue no GitHub](https://github.com/Marocosz/Marocos-AI/issues)**
 
 ---
 
-<div align="center">
-  <sub>Built with 💜 and lots of ☕ by Marcos.</sub>
-</div>
+## Vamos nos Conectar!
+
+Adoraria ouvir seu _feedback_ e me conectar com outros desenvolvedores e entusiastas de tecnologia. Você pode me encontrar nas seguintes plataformas:
+
+- **Desenvolvido por:** `Marcos Rodrigues`
+- 💼 **LinkedIn:** [https://www.linkedin.com/in/marcosrodriguesptc](https://www.linkedin.com/in/marcosrodriguesptc/)
+- 🐙 **GitHub:** [https://github.com/Marocosz](https://github.com/Marocosz)
+- 📧 **Email:** `marcosrodriguesepro@gmail.com`
+
+Sinta-se à vontade para se conectar!
