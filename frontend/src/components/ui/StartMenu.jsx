@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { Search, Power, Settings, Bot, Send, Loader2 } from 'lucide-react';
+import { Search, Power, Settings, Bot, Send, Loader2, X } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { useLanguage } from '../../contexts/LanguageContext';
@@ -38,6 +38,7 @@ const StartMenu = ({ isOpen, onClose, isDarkMode }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [loadingStatus, setLoadingStatus] = useState(''); // New State for Status Text
   const [usage, setUsage] = useState(null);
+  const [showBetaBanner, setShowBetaBanner] = useState(true);
 
   // Scroll to bottom effect
   useEffect(() => {
@@ -214,6 +215,26 @@ const StartMenu = ({ isOpen, onClose, isDarkMode }) => {
 
         {/* Meio: Conteúdo do Chat */}
         <div className="start-menu-content">
+          
+          {/* Aviso Beta Discreto */}
+          {showBetaBanner && (
+            <div className="beta-notice-banner">
+              <Bot size={14} className="beta-icon-alert" />
+              <span style={{ lineHeight: '1.4', flex: 1 }}>
+                {language === 'pt' 
+                  ? "Este assistente utiliza IA Generativa para criar respostas dinâmicas. Embora otimizado, o modelo pode apresentar imprecisões inerentes à tecnologia. Base de conhecimento atualizada até Jan/2026." 
+                  : "This assistant uses Generative AI to create dynamic responses. While optimized, the model may present inaccuracies inherent to the technology. Knowledge base updated as of Jan/2026."}
+              </span>
+              <button 
+                onClick={() => setShowBetaBanner(false)}
+                className="beta-close-btn"
+                aria-label="Close notice"
+              >
+                <X size={14} />
+              </button>
+            </div>
+          )}
+
           <div className="chat-scroll-area" data-lenis-prevent>
           {messages.length === 0 ? (
             // Placeholder State

@@ -559,6 +559,66 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
+
+/* Beta Notice Banner (AI Warning) */
+.beta-notice-banner {
+  margin: 12px 24px 4px 24px;
+  padding: 8px 12px;
+  background: rgba(99, 102, 241, 0.1); /* Indigo translúcido */
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.78rem;
+  color: #c7d2fe;
+  flex-shrink: 0; /* Não esmaga */
+  animation: fadeIn 0.5s ease;
+}
+
+.beta-icon-alert {
+  color: #818cf8;
+  flex-shrink: 0;
+}
+
+.beta-close-btn {
+  background: transparent;
+  border: none;
+  color: #818cf8;
+  opacity: 0.6;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  margin-left: auto; /* Empurra para direita */
+}
+
+.beta-close-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  opacity: 1;
+}
+
+.theme-light .beta-close-btn {
+  color: #4f46e5;
+}
+
+.theme-light .beta-close-btn:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.theme-light .beta-notice-banner {
+  background: rgba(79, 70, 229, 0.06);
+  border-color: rgba(79, 70, 229, 0.15);
+  color: #4338ca;
+}
+
+.theme-light .beta-icon-alert {
+  color: #4f46e5;
+}
+
 /* --- RESPONSIVE --- */
 @media (max-width: 700px) {
   .start-menu-container {
