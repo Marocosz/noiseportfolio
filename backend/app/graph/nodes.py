@@ -425,7 +425,7 @@ def translator_node(state: AgentState):
     Por que existe: Para internacionalização do portfólio.
     
     Entrada: Estado atual (com a última resposta do bot).
-    Saída: Substitui a última mensagem pela versão traduzida.
+    Saída: Adiciona uma nova mensagem com a versão traduzida.
     """
     logger.info("--- 🌐 TRANSLATOR (Traduzindo resposta...) ---")
     messages = state["messages"]
@@ -474,6 +474,6 @@ def translator_node(state: AgentState):
     logger.info(f"--- TRANSLATION ({target_language}) ---\nOriginal: {last_message}\nTraduzido: {translated_text}")
     
     # Retorna uma nova mensagem AIMessage com o conteúdo traduzido.
-    # O LangGraph irá adicionar ao histórico (ou substituir dependendo da configuração do reducer).
+    # O LangGraph irá adicionar a mensagem traduzida ao histórico.
     from langchain_core.messages import AIMessage
     return {"messages": [AIMessage(content=translated_text)]}
