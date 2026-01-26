@@ -8,24 +8,28 @@ import {
 import './Navbar.css';
 import StartMenu from './StartMenu';
 
-const navItems = [
-  { id: 'hero', icon: Home, label: 'Home' },
-  { id: 'profile', icon: User, label: 'Profile' },
-  { id: 'projects', icon: FolderGit2, label: 'Projects' },
-  { id: 'journey', icon: Map, label: 'Journey' },
-  { id: 'tech', icon: Cpu, label: 'Stack' },
-  { id: 'contact', icon: MessageSquare, label: 'Contact' },
+const getNavItems = (lang) => [
+  { id: 'hero', icon: Home, label: lang === 'pt' ? 'Início' : 'Home' },
+  { id: 'profile', icon: User, label: lang === 'pt' ? 'Perfil' : 'Profile' },
+  { id: 'projects', icon: FolderGit2, label: lang === 'pt' ? 'Projetos' : 'Projects' },
+  { id: 'journey', icon: Map, label: lang === 'pt' ? 'Jornada' : 'Journey' },
+  { id: 'tech', icon: Cpu, label: lang === 'pt' ? 'Tecnologias' : 'Stack' },
+  { id: 'contact', icon: MessageSquare, label: lang === 'pt' ? 'Contato' : 'Contact' },
 ];
 
 import { useLanguage } from '../../contexts/LanguageContext';
 
 const Navbar = ({ isDarkMode, toggleTheme, isAnimationEnabled, toggleAnimation }) => {
   const { language, toggleLanguage } = useLanguage();
+  const navItems = getNavItems(language); // Get translated items
   const [activeId, setActiveId] = useState('hero');
   const [isStartMenuOpen, setIsStartMenuOpen] = useState(false);
   const [isTrayMenuOpen, setIsTrayMenuOpen] = useState(false); // Mobile Tray Menu
   const [isCompact, setIsCompact] = useState(false);
   const visibleSections = useRef({});
+
+  // Interaction State (Bubble)
+  const [hasInteractedWithStart, setHasInteractedWithStart] = useState(false); // Default false for debugging
 
   // Detect Compact Mode (Mobile/Tablet)
   useEffect(() => {
@@ -40,7 +44,23 @@ const Navbar = ({ isDarkMode, toggleTheme, isAnimationEnabled, toggleAnimation }
   const toggleStartMenu = () => {
     setIsStartMenuOpen(!isStartMenuOpen);
     if(isTrayMenuOpen) setIsTrayMenuOpen(false);
+    
+    // Dismiss Bubble forever
+    if (!hasInteractedWithStart) {
+      setHasInteractedWithStart(true);
+    }
   };
+
+  // Auto-dismiss Bubble after 10s
+  useEffect(() => {
+    if (!hasInteractedWithStart) {
+      const timer = setTimeout(() => {
+        setHasInteractedWithStart(true);
+      }, 10000); // 10 seconds
+      
+      return () => clearTimeout(timer);
+    }
+  }, [hasInteractedWithStart]);
 
   const closeStartMenu = () => {
     setIsStartMenuOpen(false);
@@ -147,7 +167,7 @@ const Navbar = ({ isDarkMode, toggleTheme, isAnimationEnabled, toggleAnimation }
           
           {/* Start Button */}
           <div className="taskbar-icon-wrapper">
-             <div className="taskbar-tooltip">Start</div>
+             <div className="taskbar-tooltip">{language === 'pt' ? 'Iniciar' : 'Start'}</div>
              <button
                 onClick={toggleStartMenu}
                 className={`taskbar-btn ${isStartMenuOpen ? 'active' : ''}`}
@@ -155,6 +175,21 @@ const Navbar = ({ isDarkMode, toggleTheme, isAnimationEnabled, toggleAnimation }
              >
                 <LayoutGrid size={22} strokeWidth={isStartMenuOpen ? 2.5 : 2} />
              </button>
+              
+              {/* Interaction Bubble */}
+              <AnimatePresence>
+                {!hasInteractedWithStart && !isStartMenuOpen && (
+                  <motion.div 
+                    className="start-bubble"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    transition={{ delay: 2, duration: 0.5 }}
+                  >
+                    {language === 'pt' ? 'Converse Comigo!' : 'Chat with me!'}
+                  </motion.div>
+                )}
+              </AnimatePresence>
           </div>
 
           {/* Divider */}

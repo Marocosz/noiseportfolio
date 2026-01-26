@@ -53,6 +53,23 @@ scenarios = {
     "🔸 Casual (Teste de Router)": [
         "Eai mano, suave?",
         "Tudo beleza por ai?"
+    ],
+    "🧠 TESTE DE CONTEXTO (Histórico)": [
+        "Quem é o criador desse portfólio?", # Pergunta 1
+        "Quantos anos ele tem?",           # Pergunta 2 (Depende da 1 -> 'ele' = 'criador')
+        "E onde ele mora?",                # Pergunta 3 (Depende da 1/2 -> 'ele' = 'criador')
+        "O que ele gosta de jogar?"        # Pergunta 4 (Depende da 1 -> 'ele' = 'criador')
+    ],
+    "❓ TENTATIVA DE ALUCINAÇÃO (Coisas que não existem)": [
+        "O que é o Projeto 'Foguete Quantico' que você fez?", # Projeto inventado
+        "Qual o nome do seu cachorro?",                       # Info pessoal não cadastrada
+        "Você torce para qual time de futebol?",              # Info provavelmente não cadastrada
+        "O Marcos já viajou para Marte?"                      # Fato absurdo
+    ],
+    "🇺🇸 English Mode (Force EN Response)": [
+        "Quem é você?",            # Should answer in English
+        "Quais filmes recomenda?", # Should translate movie titles if applicable
+        "Do you like coffee?"      # English input, English output
     ]
 }
 
@@ -79,7 +96,8 @@ def run_simulation():
             
             payload = {
                 "message": q,
-                "history": history[-2:] # Leva contexto recente
+                "history": history[-2:], # Leva contexto recente
+                "language": "en" if "🇺🇸" in category else "pt-br"
             }
 
             try:

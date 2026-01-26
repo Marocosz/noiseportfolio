@@ -115,6 +115,36 @@
   transition-delay: 0.4s; /* Windows tem um delayzinho */
 }
 
+/* --- INTERACTION BUBBLE (NEW) --- */
+.start-bubble {
+  position: absolute;
+  bottom: 60px; /* Above the start button */
+  left: 0; /* Align left edge with the button */
+  transform: none; /* Remove centering transform to avoid overlapping right neighbors */
+  background: var(--accent-color, #a855f7);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  white-space: nowrap;
+  pointer-events: none;
+  box-shadow: 0 4px 12px rgba(168, 85, 247, 0.4);
+  z-index: 1005;
+}
+
+.start-bubble::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 20px; /* Center of the 40px icon wrapper */
+  transform: translateX(-50%);
+  border-width: 6px;
+  border-style: solid;
+  border-color: var(--accent-color, #a855f7) transparent transparent transparent;
+}
+
+
 /* --- DIREITA: SYSTEM TRAY --- */
 .taskbar-right {
   position: absolute;

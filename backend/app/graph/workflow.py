@@ -1,7 +1,7 @@
 from typing import Literal
 from langgraph.graph import StateGraph, END
 from app.graph.state import AgentState  # <--- IMPORTANDO DO ARQUIVO CERTO
-from app.graph.nodes import router_node, retrieve, generate_rag, generate_casual
+from app.graph.nodes import router_node, retrieve, generate_rag, generate_casual, contextualize_input, translator_node
 
 # Função de Decisão (A ponte levadiça)
 def decide_next_node(state: AgentState) -> Literal["retrieve", "generate_casual"]:
@@ -20,13 +20,18 @@ def create_graph():
     workflow = StateGraph(AgentState)
 
     # Adiciona os Nós
+    workflow.add_node("contextualize_input", contextualize_input) # <--- Novo Nó
     workflow.add_node("router_node", router_node)
     workflow.add_node("retrieve", retrieve)
     workflow.add_node("generate_rag", generate_rag)
     workflow.add_node("generate_casual", generate_casual)
+    workflow.add_node("translator_node", translator_node)
 
     # Define o Ponto de Partida
-    workflow.set_entry_point("router_node")
+    workflow.set_entry_point("contextualize_input") # <--- Começa contextualizando
+
+    # Aresta simples: Contextualize -> Router
+    workflow.add_edge("contextualize_input", "router_node")
 
     # Define as Arestas Condicionais (O "IF" do grafo)
     workflow.add_conditional_edges(
@@ -38,12 +43,37 @@ def create_graph():
         }
     )
 
-    # Caminho Técnico: Retrieve -> Generate RAG -> Fim
-    workflow.add_edge("retrieve", "generate_rag")
-    workflow.add_edge("generate_rag", END)
+    # Função de Check para Tradução
+    def should_translate(state: AgentState):
+        lang = state.get("language", "pt-br").lower()
+        if lang in ["pt-br", "pt", "portuguese", "português"]:
+            return "end" # Se for PT, acaba
+        return "translator_node" # Se não, traduz
 
-    # Caminho Casual: Generate Casual -> Fim
-    workflow.add_edge("generate_casual", END)
+    # Conecta Retrieve -> Generate RAG
+    workflow.add_edge("retrieve", "generate_rag")
+
+    # Depois de Gerar (RAG ou Casual), verifica se precisa traduzir
+    workflow.add_conditional_edges(
+        "generate_rag",
+        should_translate,
+        {
+            "end": END,
+            "translator_node": "translator_node"
+        }
+    )
+
+    workflow.add_conditional_edges(
+        "generate_casual",
+        should_translate,
+        {
+            "end": END,
+            "translator_node": "translator_node"
+        }
+    )
+
+    # Depois de traduzir, acaba
+    workflow.add_edge("translator_node", END)
 
     return workflow.compile()
 

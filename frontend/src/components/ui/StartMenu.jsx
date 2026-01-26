@@ -12,6 +12,21 @@ const StartMenu = ({ isOpen, onClose, isDarkMode }) => {
   const menuRef = useRef(null);
   const chatEndRef = useRef(null);
 
+  const SUGGESTIONS = {
+    pt: [
+      "Quais são seus principais projetos?",
+      "Tem experiência profissional?",
+      "Qual sua stack de tecnologia?",
+      "Me fale sobre você"
+    ],
+    en: [
+      "What are your main projects?",
+      "Do you have professional experience?",
+      "What is your tech stack?",
+      "Tell me about yourself"
+    ]
+  };
+
   // Determine API URL based on environment
   // Dev: http://localhost:8000/api
   // Prod: /api (Assumes Nginx/Reverse Proxy handles the route)
@@ -64,10 +79,10 @@ const StartMenu = ({ isOpen, onClose, isDarkMode }) => {
     }
   }, [isOpen]);
 
-  const handleSendMessage = async () => {
-    if (!input.trim() || isLoading) return;
+  const sendMessage = async (text) => {
+    if (!text.trim() || isLoading) return;
 
-    const userMsg = { role: 'user', content: input };
+    const userMsg = { role: 'user', content: text };
     setMessages(prev => [...prev, userMsg]);
     setInput('');
     setIsLoading(true);
@@ -78,8 +93,9 @@ const StartMenu = ({ isOpen, onClose, isDarkMode }) => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          message: userMsg.content,
-          history: messages // Send previous context
+          message: text,
+          history: messages, // Send previous context
+          language: language
         })
       });
 
@@ -110,6 +126,8 @@ const StartMenu = ({ isOpen, onClose, isDarkMode }) => {
       setIsLoading(false);
     }
   };
+
+  const handleSendMessage = () => sendMessage(input);
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') handleSendMessage();
@@ -165,6 +183,19 @@ const StartMenu = ({ isOpen, onClose, isDarkMode }) => {
                 {language === 'pt' 
                  ? 'Pergunte sobre projetos, experiências, hobbies ou tecnologias. Estou aqui para responder!' 
                  : 'Ask about projects, experience, hobbies, or tech stack. I am here to answer!'}
+              </div>
+              
+              <div className="suggestion-chips">
+                {SUGGESTIONS[language] && SUGGESTIONS[language].map((suggestion, index) => (
+                  <button 
+                    key={index} 
+                    className="suggestion-chip"
+                    onClick={() => sendMessage(suggestion)}
+                    disabled={isLoading}
+                  >
+                    {suggestion}
+                  </button>
+                ))}
               </div>
             </div>
           ) : (

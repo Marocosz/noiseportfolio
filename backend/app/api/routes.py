@@ -12,6 +12,7 @@ router = APIRouter()
 class ChatRequest(BaseModel):
     message: str
     history: Optional[List[dict]] = [] # Ex: [{"role": "user", "content": "..."}]
+    language: Optional[str] = "pt-br" # Default to PT-BR
 
 class ChatResponse(BaseModel):
     response: str
@@ -50,8 +51,11 @@ async def chat_endpoint(request: ChatRequest, fast_api_request: Request):
         langchain_messages.append(HumanMessage(content=request.message))
         
         # 3. Invocar o Agente
-        # O estado inicial recebe a lista de mensagens montada
-        initial_state = {"messages": langchain_messages}
+        # O estado inicial recebe a lista de mensagens montada e o idioma escolhido
+        initial_state = {
+            "messages": langchain_messages,
+            "language": request.language or "pt-br"
+        }
         result = await agent_app.ainvoke(initial_state)
         
         # 4. Extrair a resposta final

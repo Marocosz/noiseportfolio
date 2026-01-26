@@ -9,11 +9,11 @@ class Settings(BaseSettings):
     
     # Configurações de LLM
     # Opções: "groq", "openai", "gemini"
-    LLM_PROVIDER: str = "groq" 
+    LLM_PROVIDER: str = "openai" 
     
     # Configurações dos Modelos
     GROQ_MODEL_NAME: str = "llama-3.1-8b-instant"
-    OPENAI_MODEL_NAME: str = "gpt-4o-mini"
+    OPENAI_MODEL_NAME: str = "gpt-4.1-nano"
     GEMINI_MODEL_NAME: str = "gemini-1.5-flash"
     
     # Esse campo generico 'MODEL_NAME' pode ser deprecado ou usado como fallback

@@ -187,7 +187,8 @@
   justify-content: center;
   text-align: center;
   color: var(--text-secondary);
-  opacity: 0.7;
+  opacity: 1;
+  padding: 0 20px;
 }
 
 /* ... (mantendo construct icons e text) ... */
@@ -208,6 +209,50 @@
   font-size: 0.9rem;
   max-width: 300px;
   opacity: 0.7;
+  margin-bottom: 24px;
+}
+
+/* SUGGESTION CHIPS */
+.suggestion-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  max-width: 400px;
+}
+
+.suggestion-chip {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--text-primary);
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.suggestion-chip:hover {
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.theme-light .suggestion-chip {
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  color: #444;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.theme-light .suggestion-chip:hover {
+  background: white;
+  color: #000;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.08);
 }
 
 

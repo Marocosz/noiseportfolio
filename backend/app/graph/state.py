@@ -13,3 +13,5 @@ class AgentState(TypedDict):
     messages: Annotated[List[BaseMessage], add_messages]
     context: List[str]
     classification: str
+    rephrased_query: str
+    language: str
