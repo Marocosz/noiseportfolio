@@ -66,7 +66,7 @@ graph TD
 
 ## RAG (Retrieval Augmented Generation)
 
-O conhecimento do bot não é alucinado. Ele é fundamentado em dados reais ingeridos a partir de arquivos Markdown (`profile.md`, `projects.md`).
+O conhecimento do bot não é alucinado. Ele é fundamentado em dados reais ingeridos a partir de arquivos Markdown (`profile.md`).
 
 - **Database:** ChromaDB (Vetorial).
 - **Embeddings:** Google Gemini Embeddings (Alta performance semântica).
@@ -74,13 +74,27 @@ O conhecimento do bot não é alucinado. Ele é fundamentado em dados reais inge
 
 ---
 
-# 🎨 UX & Design System
+# 🎨 UX & Interface Imersiva
 
-A interface segue uma estética **"Clean Noise"**, misturando minimalismo funcional com texturas granuladas e tipografia experimental.
+A interface transcende o conceito tradicional de portfólio, entregando uma **Simulação de Sistema Operacional** no navegador. O objetivo é criar um ambiente digital tátil, familiar e altamente responsivo.
 
-- **Start Menu Interativo:** A chatbox não é um modal flutuante genérico; ela simula um Menu Iniciar de um sistema operacional, criando familiaridade.
-- **Streaming Real-Time (SSE):** As respostas da IA chegam via _Server-Sent Events_, com efeito de digitação ("Typewriter effect"), dando a sensação de que o bot está "pensando" e escrevendo ao vivo.
-- **Feedback Visual:** Indicadores de estado ("Pesquisando nas memórias...", "Traduzindo...") mantêm o usuário informado sobre o processo mental da IA.
+### 🖥️ Desktop Metaphor
+
+- **OS-Like Navigation:** A navegação é ancorada em uma barra de tarefas (Dock) persistente, que centraliza o acesso às seções (Apps), configurações e o "Menu Iniciar".
+- **Start Menu (AI Hub):** A interação com o Marcos Virtual não acontece em um chat flutuante genérico, mas sim em um "Live Start Menu". É o núcleo do sistema, onde o usuário busca informações via conversa natural.
+
+### ⚙️ Controle Total do Usuário
+
+O sistema respeita as preferências do visitante com controles acessíveis na barra principal:
+
+- **🌗 Light & Dark Mode:** Temas meticulosamente calibrados. O modo escuro é profundo e elegante, enquanto o modo claro é vibrante e limpo.
+- **⏯️ Motion Toggle:** Um controle dedicado para **Pausar Animações**. Ideal para acessibilidade (redução de movimento) ou economia de bateria em dispositivos móveis.
+- **🌐 Internacionalização (i18n):** Alternância instantânea entre **Português (BR)** e **Inglês (EN)**, adaptando não apenas a UI, mas também o idioma das respostas da IA.
+
+### 📱 Responsividade & Performance
+
+- **Mobile First:** A metáfora de desktop se adapta fluidamente para mobile, transformando a barra de tarefas em um menu acessível e reorganizando janelas para toque.
+- **Feedback Visual:** Respostas da IA via **Server-Sent Events (SSE)** com efeito de digitação ("Typewriter"), e indicadores de status ("Pensando...", "Traduzindo...") para total transparência do processo.
 
 ---
 
@@ -149,12 +163,24 @@ NoisePortfolio/
     .\venv\Scripts\activate   # Windows
     pip install -r requirements.txt
     ```
-3.  Crie um arquivo `.env` com suas chaves:
-    ```env
-    LLM_PROVIDER=groq
-    GROQ_API_KEY=sua_chave_aqui
-    GOOGLE_API_KEY=sua_chave_aqui  # Necessário para Embeddings
+3.  Configure as variáveis de ambiente:
+
+    Crie um arquivo `.env` na raiz da pasta `backend` baseando-se no exemplo fornecido:
+
+    ```bash
+    cp .env.example .env  # Ou copie e renomeie manualmente
     ```
+
+    **Explicação das Variáveis (`.env`):**
+
+    | Variável         | Descrição                                                                                                        |
+    | :--------------- | :--------------------------------------------------------------------------------------------------------------- |
+    | `LLM_PROVIDER`   | Define quem gera as respostas (`groq`, `openai`, `gemini`). O padrão é `groq`(mais rápido e free).               |
+    | `GOOGLE_API_KEY` | **Obrigatória.** Usada para gerar os _Embeddings_ (vetores de memória) do RAG, independente do provider de chat. |
+    | `GROQ_API_KEY`   | Necessária se o provider for `groq`.                                                                             |
+    | `OPENAI_API_KEY` | Necessária se o provider for `openai`.                                                                           |
+    | `FORCE_REINGEST` | Se `true`, apaga e recria o banco de memória ao iniciar. Útil após editar arquivos em `backend/data/`.           |
+
 4.  Rode a ingestão (cria a memória) e o servidor:
     ```bash
     python ingest.py  # Cria o banco ChromaDB local
