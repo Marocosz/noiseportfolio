@@ -144,99 +144,152 @@ def summarize_conversation(state: AgentState):
 def contextualize_input(state: AgentState):
     """
     Objetivo: Transformar perguntas dependentes do histórico em perguntas independentes.
-    
-    Por que existe: O RAG precisa de perguntas completas para buscar no banco. 
-    Se o usuário diz "E ele?", o RAG não sabe quem é "ele". Este nó resolve isso.
+
+    Por que existe: O RAG precisa de perguntas completas para buscar no banco.
+    Se o usuário diz "E ele?", o RAG não sabe quem é "ele".
+    Este nó resolve isso APENAS quando houver evidência clara no histórico.
     
     Entrada: Estado atual com histórico de mensagens.
     Saída: Dicionário com a chave 'rephrased_query' contendo a pergunta reescrita.
     """
     logger.info("--- 🧠 CONTEXTUALIZE (Contextualizando pergunta...) ---")
+
     messages = state["messages"]
     last_message = messages[-1].content
-    
-    # Se o histórico for curto, assume que não há contexto anterior para resolver.
+
+    # Se o histórico for curto, não há contexto suficiente para resolver referências
     if len(messages) <= 1:
         logger.info("Sem histórico relevante. Mantendo pergunta original.")
         return {"rephrased_query": last_message}
-    
-    # Data atual para resolver referências temporais como "ano passado".
+
     current_date = datetime.now().strftime("%d/%m/%Y")
-    
-    # Prompt de engenharia para reescrita de query.
-    # Foca em desambiguação e proíbe o modelo de responder a pergunta nesta etapa.
+
     system_prompt = f"""
-    Você é um Especialista em Reformulação de Perguntas para RAG (Retrieval Augmented Generation).
-    DATA ATUAL: {current_date}
-    
-    Sua missão é transformar a última mensagem do usuário em uma pergunta COMPLETA, INDEPENDENTE e INEQUÍVOCA para ser usada em uma busca semântica.
-    
-    # DIRETRIZES DE REESCRITA:
-    
-        1. **Preservação de Intenção (CRÍTICO)**: 
-           - Se a pergunta do usuário JÁ FOR clara, específica e não depender de mensagens anteriores, NÃO MUDE NADA. 
-           - Apenas retorne a mensagem original exatamente como foi enviada.
-        
-        2. **Resolução de Ambiguidade (Pronomes e Referências)**: 
-           - Identifique a que entidade (pessoa, projeto, tecnologia, lugar) o pronome se refere no histórico recente.
-           - Substitua pronomes (ele, ela, isso, lá) pelo nome próprio ou substantivo correto.
-           - **CRÍTICO:** Mantenha pronomes de primeira pessoa do USUÁRIO ("meu", "minha", "eu") explicitamente referenciados ao USUÁRIO, não ao Marcos. 
-             * Ex: "Qual meu nome?" -> "Qual é o nome do usuário?" (NUNCA mude para "seu nome").
-           - NÃO assuma que "ele" é sempre o Marcos. Se falavam de "React", "ele" é o "React".
-           - Exemplo: (Contexto: React) "Ele é difícil?" -> "O React é difícil?"
-        
-        3. **Resolução Temporal e Sujeito Oculto**: 
-           - Converta termos relativos de tempo para o ano/data exata.
-           - Explicite o sujeito se ele estiver oculto, baseando-se no contexto.
-           - Exemplo: "Trabalhou onde ano passado?" -> "Onde o Marcos trabalhou em 2025?" (Assumindo que falam do Marcos)
-        
-        4. **Contextualização**: 
-           - Se a pergunta for fragmentada, complete-a com o tópico vigente.
-           - Exemplo: "E com Node?" -> "Você tem experiência com Node.js?"
-        
-        5. **Independência**: 
-           - A pergunta gerada deve fazer sentido TOTAL sozinha.
+Você é um Especialista em Reformulação de Perguntas para RAG (Retrieval Augmented Generation).
+DATA ATUAL: {current_date}
 
-    # O QUE NÃO FAZER (CRÍTICO):
-    
-        - NÃO responda à pergunta. 
-        - NÃO invente fatos.
-        - NÃO adicione formalidade desnecessária.
+Sua missão é transformar a última mensagem do usuário em uma pergunta
+COMPLETA, INDEPENDENTE e INEQUÍVOCA para busca semântica.
 
-    # EXEMPLOS DE COMPORTAMENTO:
-    
-        - Histórico: (Irrelevante) | User: "Quem é o Marcos?" 
-          -> Output: "Quem é o Marcos?" (Mantido)
-    
-        - Histórico: [Bot: "Fiz o projeto DataChat"] | User: "Ele usa IA?" 
-          -> Output: "O projeto DataChat usa IA?" (Ambiguidade resolvida corretamente)
-          
-        - Histórico: [Bot: "Sou de Minas"] | User: "É bom morar lá?" 
-          -> Output: "É bom morar em Minas Gerais?" (Local resolvido)
-        
-        - Histórico: (Irrelevante) | User: "Experiência em 2024?" 
-          -> Output: "Qual a experiência do Marcos em 2024?" (Vaga -> Contextualizada)
-          
-        - Histórico: [Bot: "Contei a história das abelhas"] | User: "Me conta mais uma" 
-          -> Output: "Conte outra história divertida sobre o Marcos." 
+⚠️ IMPORTANTE:
+Você NÃO é um agente de resposta.
+Você NÃO pode inferir, deduzir ou inventar informações que não estejam
+explicitamente presentes no histórico.
 
-    Retorne APENAS a string da pergunta reformulada ou a original se não houver mudanças.
-    """
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DIRETRIZES DE REESCRITA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. PRESERVAÇÃO DE INTENÇÃO (CRÍTICO)
+- Se a pergunta já for clara, específica e independente,
+  retorne a pergunta ORIGINAL sem qualquer modificação.
+- Nunca reescreva “só para melhorar o texto”.
+
+2. RESOLUÇÃO DE AMBIGUIDADE (PRONOMES E REFERÊNCIAS)
+- Resolva pronomes apenas se houver UMA referência clara no histórico.
+- Substitua pronomes por substantivos explícitos:
+  (ele, ela, isso, esse projeto, lá, etc).
+- NÃO assuma identidades.
+- NÃO presuma pessoas, projetos ou tecnologias.
+- Se houver dúvida, NÃO reescreva.
+
+Exemplo válido:
+Contexto: "Estamos falando do projeto DataChat"
+User: "Ele usa IA?"
+→ "O projeto DataChat usa IA?"
+
+Exemplo inválido:
+User: "Ele fez isso?"
+(se não houver referência clara)
+→ MANTER A PERGUNTA ORIGINAL
+
+3. REFERÊNCIAS TEMPORAIS
+- Converta apenas quando o sujeito estiver explícito no histórico.
+- Se o tempo existir mas o sujeito NÃO, não complete.
+
+Exemplo válido:
+Contexto: "Falamos do projeto X"
+User: "E no ano passado?"
+→ "O projeto X teve atualizações em 2025?"
+
+Exemplo inválido:
+User: "E ano passado?"
+→ MANTER ORIGINAL
+
+4. CONTEXTUALIZAÇÃO FRAGMENTADA
+- Complete perguntas fragmentadas apenas quando o tópico atual for inequívoco.
+- Caso contrário, preserve a ambiguidade.
+
+Exemplo válido:
+Contexto: "Falando sobre Node.js"
+User: "E com banco?"
+→ "O Node.js funciona bem com bancos de dados?"
+
+5. INDEPENDÊNCIA
+- A pergunta final deve fazer sentido sozinha
+  SEM introduzir novas informações.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+O QUE NÃO FAZER (CRÍTICO)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+- NÃO responda à pergunta.
+- NÃO invente sujeitos, projetos ou pessoas.
+- NÃO deduza intenções ocultas.
+- NÃO “melhore” perguntas vagas.
+- NÃO transforme perguntas ambíguas em específicas sem evidência.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+EXEMPLOS DE COMPORTAMENTO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Histórico irrelevante | User: "Quem é o Marcos?"
+→ "Quem é o Marcos?"
+
+Histórico: [Bot: "O sistema usa PostgreSQL"]
+User: "Ele escala bem?"
+→ "O PostgreSQL escala bem?"
+
+Histórico: [Bot: "Moro em Minas Gerais"]
+User: "É bom morar lá?"
+→ "É bom morar em Minas Gerais?"
+
+Histórico irrelevante | User: "Experiência em 2024?"
+→ "Experiência em 2024?"
+
+Histórico: [Bot: "Contei uma história sobre abelhas"]
+User: "Me conta mais uma"
+→ "Me conta mais uma"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+RETORNO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Retorne APENAS:
+- a pergunta reformulada (se e somente se houver evidência clara), OU
+- a pergunta original, sem alterações.
+
+Nenhum texto adicional.
+"""
 
     prompt = ChatPromptTemplate.from_messages([
         ("system", system_prompt),
-        ("placeholder", "{messages}"), # Histórico completo injetado aqui
+        ("placeholder", "{messages}")
     ])
-    
-    # Usa modelo fast (temperatura 0) para seguir instruções estritamente.
-    chain = prompt | llm_fast 
-    response = chain.invoke({"messages": messages, "current_date": current_date})
-    
+
+    chain = prompt | llm_fast
+    response = chain.invoke({
+        "messages": messages,
+        "current_date": current_date
+    })
+
     rephrased = response.content.strip()
+
     logger.info(f"Query Original: {last_message}")
     logger.info(f"Query Refraseada: {rephrased}")
-    
+
     return {"rephrased_query": rephrased}
+
 
 
 # --- NÓ 1: ROUTER (O Cérebro que decide) ---

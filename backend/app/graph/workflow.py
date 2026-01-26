@@ -29,6 +29,7 @@ from app.graph.nodes import (
     contextualize_input, translator_node, 
     detect_language_node, summarize_conversation
 )
+from app.graph.nodes_guard import answerability_guard, fallback_responder
 
 # --------------------------------------------------
 # Lógica de Decisão Condicional (Roteamento)
@@ -51,6 +52,20 @@ def decide_next_node(state: AgentState) -> Literal["retrieve", "generate_casual"
     else:
         # Padrão de segurança: Se technical ou qualquer erro, tenta buscar no RAG.
         return "retrieve" 
+
+# --------------------------------------------------
+# Lógica de Decisão: Guard (Respondibilidade)
+# --------------------------------------------------
+def decide_after_guard(state: AgentState) -> Literal["generate_rag", "fallback_responder"]:
+    """
+    Decide se segue para geração de resposta (RAG) ou fallback.
+    Baseado na decisão do AnswerabilityGuard.
+    """
+    result = state.get("answerability_result", {})
+    # Default True para não quebrar em caso de erro
+    if result.get("is_answerable", True):
+        return "generate_rag"
+    return "fallback_responder" 
 
 # --------------------------------------------------
 # Lógica de Decisão: Tradução
@@ -89,6 +104,10 @@ def create_graph():
     workflow.add_node("generate_rag", generate_rag)
     workflow.add_node("generate_casual", generate_casual)
     workflow.add_node("translator_node", translator_node)
+    
+    # NOVOS NÓS (Guard & Fallback)
+    workflow.add_node("answerability_guard", answerability_guard)
+    workflow.add_node("fallback_responder", fallback_responder)
 
     # 2. Definição do Fluxo Linear (Sequência Obrigatória)
     # Entry Point -> Detect -> Summarize -> Contextualize -> Router
@@ -109,12 +128,25 @@ def create_graph():
     )
 
     # 4. Reconvergência e Tradução
-    # O caminho técnico precisa passar pelo gerador RAG.
-    workflow.add_edge("retrieve", "generate_rag")
+    # O caminho técnico passava direto para generate_rag.
+    # AGORA: Passa pelo Guardião primeiro.
+    workflow.add_edge("retrieve", "answerability_guard")
+    
+    # Do Guardião, decide se vai para RAG ou Fallback
+    workflow.add_conditional_edges(
+        "answerability_guard",
+        decide_after_guard,
+        {
+            "generate_rag": "generate_rag",
+            "fallback_responder": "fallback_responder"
+        }
+    )
 
     # Tanto o RAG quanto o Casual convergem para a verificação de tradução.
+    # Tanto o RAG, Casual e Fallback convergem para a verificação de tradução.
     # Isso evita duplicar lógica de tradução em cada braço.
     workflow.add_conditional_edges("generate_rag", should_translate, {"end": END, "translator_node": "translator_node"})
+    workflow.add_conditional_edges("fallback_responder", should_translate, {"end": END, "translator_node": "translator_node"})
     workflow.add_conditional_edges("generate_casual", should_translate, {"end": END, "translator_node": "translator_node"})
 
     # Se passar pelo tradutor, o próximo passo é sempre o fim (END).

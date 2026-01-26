@@ -81,7 +81,23 @@ O fluxo de decisão é governado por nós (Nodes) especializados, cada um com _S
   - **Persona:** Profissional, mas com um toque _cyberpunk/tech_. Direto, humilde, mas confiante.
   - **Regra de Ouro:** "Se a resposta não estiver no contexto fornecido, diga que não sabe. Não invente."
 
-#### 4. Translator Node (Localização)
+#### 4. Answerability Guard (O Auditor)
+
+- **Função:** Proteção crítica contra alucinações. Antes de gerar qualquer resposta, este nó analisa logicamente se os dados recuperados pelo RAG são **suficientes** para responder a pergunta.
+- **Checagens:**
+  - **Factualidade:** A resposta está _no texto_ ou exige invenção?
+  - **Exaustão:** O usuário está pedindo "mais um" mas o banco de dados já acabou?
+- **Resultado:** Se aprovado, libera para o gerador. Se reprovado, desvia para o _Fallback_.
+
+#### 5. Fallback Responder (A "Saída Elegante")
+
+- **Objetivo:** Comunicar negativas de forma carismática e dentro da persona.
+- **Smart Fallback:** Ao invés de um erro genérico ("Não sei"), ele adapta a desculpa:
+  - "Sobre esse projeto específico, não tenho dados aqui..." (Falta de dados)
+  - "Já te contei tudo que eu lembrava sobre isso!" (Exaustão de conteúdo)
+  - "Não entendi se você quer saber X ou Y..." (Ambiguidade)
+
+#### 6. Translator Node (Localização)
 
 - **Estratégia:** Todo o raciocínio interno do bot (busca no banco, processamento) ocorre predominantemente na lingua dos dados (geralmente misto ou inglês técnico).
 - **Finalização:** Este nó final garante que a resposta entregue ao usuário esteja **sempre** no idioma detectado inicialmente no chat, mantendo a imersão.
@@ -95,12 +111,16 @@ graph TD
     C -->|Casual/Oi| E[Generate Casual]
 
     D --> F["Retrieve Documents (RAG)"]
-    F --> G["Generate RAG Response"]
+    F --> G{Answerability Guard}
 
-    E --> H{Translator Node}
-    G --> H
+    G -->|Aprovado| H["Generate RAG Response"]
+    G -->|Reprovado| I["Fallback Responder"]
 
-    H --> I[Stream Resposta]
+    H --> J{Translator Node}
+    I --> J
+    E --> J
+
+    J --> K[Stream Resposta]
 ```
 
 ---

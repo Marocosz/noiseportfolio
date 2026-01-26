@@ -64,3 +64,10 @@ class AgentState(TypedDict):
     # Resumo compactado das mensagens muito antigas (para economia de tokens).
     # Preenchido pelo nó `summarize_conversation`.
     summary: str
+
+    # --------------------------------------------------
+    # Resultado da Análise de Respondibilidade
+    # --------------------------------------------------
+    # Armazena a decisão do nó `answerability_guard` (JSON parsing).
+    # Contém chaves como: 'is_answerable' (bool), 'reason' (str), 'exhausted' (bool).
+    answerability_result: dict
