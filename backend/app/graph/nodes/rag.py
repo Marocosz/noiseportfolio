@@ -46,7 +46,12 @@ def retrieve(state: AgentState):
     query_text = state.get("rephrased_query") or messages[-1].content
     
     # Busca os 4 chunks mais relevantes.
-    docs = rag.query(query_text, k=4)
+    try:
+        docs = rag.query(query_text, k=4)
+    except Exception as e:
+        logger.error(f"❌ Erro crítico no RAG Retrieve: {e}")
+        # Retorna lista vazia para não quebrar o fluxo, mas loga o erro.
+        docs = []
     
     # Formata o contexto incluindo a fonte (nome do arquivo) para melhor rastreabilidade.
     formatted_docs = []

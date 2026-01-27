@@ -92,7 +92,7 @@ class Settings(BaseSettings):
     # Modelo de Embeddings
     # Responsável por converter texto em vetores.
     # Deve ser compatível com os dados já indexados no ChromaDB.
-    EMBEDDING_MODEL: str = "models/text-embedding-004"
+    EMBEDDING_MODEL: str = "models/gemini-embedding-001"
     
     # --- Credenciais e Segurança ---
     # Chaves de API para os serviços externos.

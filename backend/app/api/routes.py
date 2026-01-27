@@ -182,4 +182,12 @@ async def chat_endpoint(request: ChatRequest, fast_api_request: Request):
             logger.error(f"Stream Error: {e}")
             yield format_event("error", {"detail": str(e)})
 
-    return StreamingResponse(event_generator(), media_type="text/event-stream")
+    return StreamingResponse(
+        event_generator(), 
+        media_type="text/event-stream",
+        headers={
+            "X-Accel-Buffering": "no", # Nginx: Desabilita buffering para o stream funcionar
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive"
+        }
+    )
