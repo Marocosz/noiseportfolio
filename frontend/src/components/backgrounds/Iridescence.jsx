@@ -59,6 +59,7 @@ export default function Iridescence({ color = [1, 1, 1], speed = 1.0, amplitude 
     gl.clearColor(1, 1, 1, 1);
 
     let program;
+    let mesh;
 
     // PERFORMANCE FIX: Cache rect dimensions to avoid Reflow on every mousemove
     let rect = ctn.getBoundingClientRect();
@@ -84,6 +85,11 @@ export default function Iridescence({ color = [1, 1, 1], speed = 1.0, amplitude 
       }
       // Update cached rect
       rect = ctn.getBoundingClientRect();
+
+      // FIX: Force render on resize to prevent black screen when paused
+      if (mesh) {
+        renderer.render({ scene: mesh });
+      }
     }
     window.addEventListener('resize', resize, false);
     resize();
@@ -104,7 +110,7 @@ export default function Iridescence({ color = [1, 1, 1], speed = 1.0, amplitude 
       }
     });
 
-    const mesh = new Mesh(gl, { geometry, program });
+    mesh = new Mesh(gl, { geometry, program });
     let animateId;
 
     function update(t) {

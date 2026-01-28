@@ -63,25 +63,22 @@ O RAG atua como um mecanismo de "memória de longo prazo".
 
 O fluxo de decisão é governado por nós (Nodes) especializados, cada um com _System Prompts_ meticulosamente calibrados:
 
-#### 1. Router Node (O Porteiro)
+#### 1. Semantic Gateway Node (O Orquestrador)
 
-- **Função:** Classificar a intenção do usuário para economizar recursos.
-- **Prompt Strategy:** Utiliza _Few-Shot Prompting_ (exemplos práticos no prompt) para distinguir entre:
-  - `technical`: Perguntas que exigem acesso à memória RAG ("Quais projetos ele fez?", "Sabe React?").
-  - `casual`: Conversa fiada ("Oi", "Tudo bem?", "Quem é você?"). Evita queries desnecessárias ao banco de dados.
+- **Função:** Unifica a contextualização da conversa e o roteamento de intenção em uma única etapa, reduzindo latência pela metade.
+- **Camada Rápida (Regex):** Identifica saudações e interações simples ("Oi", "Kkkk") instantaneamente sem gastar LLM.
+- **Camada Inteligente (Deep-Think):**
+  - **Contextualização:** Resolve pronomes ambíguos ("Ele usa o quê?") transformando em perguntas autônomas ("O projeto DataChat usa quais tecnologias?").
+  - **Classificação:** Decide se a query é `TECHNICAL` (exige dados/fatos -> RAG) ou `CASUAL` (conversa livre).
+- **Segurança:** Em caso de dúvida ou baixa confiança, o sistema força o modo `TECHNICAL` para garantir que nenhuma pergunta importante seja ignorada.
 
-#### 2. Contextualize Node (A Memória de Curto Prazo)
-
-- **Problema:** Usuários falam de forma elíptica: "Quais projetos ele tem?" -> (Resposta) -> "E quais tecnologias **ele** usa no **último**?"
-- **Processamento:** Este nó reescreve a pergunta isolada transformando-a em uma _Query Standalone_ completa ("Quais tecnologias o Marcos usa no projeto NoisePortfolio"), garantindo que a busca no RAG seja precisa mesmo em perguntas vagas.
-
-#### 3. Generator Node (A Persona)
+#### 2. Generator Node (A Persona)
 
 - **Prompt:** Define a personalidade do Chatbot. Não é um robô genérico.
   - **Persona:** Profissional, mas com um toque _cyberpunk/tech_. Direto, humilde, mas confiante.
   - **Regra de Ouro:** "Se a resposta não estiver no contexto fornecido, diga que não sabe. Não invente."
 
-#### 4. Answerability Guard (O Auditor)
+#### 3. Answerability Guard (O Auditor)
 
 - **Função:** Proteção crítica contra alucinações. Antes de gerar qualquer resposta, este nó analisa logicamente se os dados recuperados pelo RAG são **suficientes** para responder a pergunta.
 - **Checagens:**
@@ -89,7 +86,7 @@ O fluxo de decisão é governado por nós (Nodes) especializados, cada um com _S
   - **Exaustão:** O usuário está pedindo "mais um" mas o banco de dados já acabou?
 - **Resultado:** Se aprovado, libera para o gerador. Se reprovado, desvia para o _Fallback_.
 
-#### 5. Fallback Responder (A "Saída Elegante")
+#### 4. Fallback Responder (A "Saída Elegante")
 
 - **Objetivo:** Comunicar negativas de forma carismática e dentro da persona.
 - **Smart Fallback:** Ao invés de um erro genérico ("Não sei"), ele adapta a desculpa:
@@ -97,7 +94,7 @@ O fluxo de decisão é governado por nós (Nodes) especializados, cada um com _S
   - "Já te contei tudo que eu lembrava sobre isso!" (Exaustão de conteúdo)
   - "Não entendi se você quer saber X ou Y..." (Ambiguidade)
 
-#### 6. Translator Node (Localização)
+#### 5. Translator Node (Localização)
 
 - **Estratégia:** Todo o raciocínio interno do bot (busca no banco, processamento) ocorre predominantemente na lingua dos dados (geralmente misto ou inglês técnico).
 - **Finalização:** Este nó final garante que a resposta entregue ao usuário esteja **sempre** no idioma detectado inicialmente no chat, mantendo a imersão.
@@ -105,22 +102,21 @@ O fluxo de decisão é governado por nós (Nodes) especializados, cada um com _S
 ```mermaid
 graph TD
     A[Start] --> B(Detect Language)
-    B --> C{Router Node}
+    B --> C[Semantic Gateway Node]
 
-    C -->|Technical/Fatos| D[Contextualize Input]
+    C -->|Technical/Fatos| D["Retrieve Documents (RAG)"]
     C -->|Casual/Oi| E[Generate Casual]
 
-    D --> F["Retrieve Documents (RAG)"]
-    F --> G{Answerability Guard}
+    D --> F{Answerability Guard}
 
-    G -->|Aprovado| H["Generate RAG Response"]
-    G -->|Reprovado| I["Fallback Responder"]
+    F -->|Aprovado| G["Generate RAG Response"]
+    F -->|Reprovado| H["Fallback Responder"]
 
-    H --> J{Translator Node}
-    I --> J
-    E --> J
+    G --> I{Translator Node}
+    H --> I
+    E --> I
 
-    J --> K[Stream Resposta]
+    I --> J[Stream Resposta]
 ```
 
 ---
