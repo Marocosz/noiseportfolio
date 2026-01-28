@@ -70,7 +70,8 @@ def main():
         sys.executable, "-m", "uvicorn", 
         "main:app", 
         "--host", "0.0.0.0", 
-        "--port", "8000"
+        "--port", "8000",
+        "--workers", "4",
     ])
 
 if __name__ == "__main__":

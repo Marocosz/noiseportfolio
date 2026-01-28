@@ -25,9 +25,8 @@ from typing import Literal
 from langgraph.graph import StateGraph, END
 from app.graph.state import AgentState  # <--- IMPORTANDO DO ARQUIVO CERTO
 from app.graph.nodes import (
-    router_node, retrieve, generate_rag, generate_casual, 
-    contextualize_input, translator_node, 
-    contextualize_input, translator_node, 
+    semantic_gateway_node, retrieve, generate_rag, generate_casual, 
+    translator_node, 
     detect_language_node, summarize_conversation,
     answerability_guard, fallback_responder # Novos nós do Guard
 )
@@ -38,13 +37,13 @@ from app.graph.nodes import (
 # --------------------------------------------------
 def decide_next_node(state: AgentState) -> Literal["retrieve", "generate_casual"]:
     """
-    Função Helper para decidir o próximo passo após o nó 'router_node'.
+    Função Helper para decidir o próximo passo após o nó 'semantic_gateway_node'.
     
     Por que existe:
         O LangGraph precisa de uma função explícita para resolver 'Conditional Edges'.
         Esta função lê o estado e retorna o NOME (string) do próximo nó.
         
-    Entrada: State gerado pelo router_node.
+    Entrada: State gerado pelo semantic_gateway_node.
     Saída: String com o nome do próximo nó ("retrieve" ou "generate_casual").
     """
     # Acessa a classificação definida pelo Router (technical/casual)
@@ -110,8 +109,7 @@ def create_graph():
     # Cada string é um ID único para o nó no grafo.
     workflow.add_node("detect_language", detect_language_node) 
     workflow.add_node("summarize_conversation", summarize_conversation) 
-    workflow.add_node("contextualize_input", contextualize_input) 
-    workflow.add_node("router_node", router_node)
+    workflow.add_node("semantic_gateway_node", semantic_gateway_node)
     workflow.add_node("retrieve", retrieve)
     workflow.add_node("generate_rag", generate_rag)
     workflow.add_node("generate_casual", generate_casual)
@@ -125,13 +123,12 @@ def create_graph():
     # Entry Point -> Detect -> Summarize -> Contextualize -> Router
     workflow.set_entry_point("detect_language") 
     workflow.add_edge("detect_language", "summarize_conversation")
-    workflow.add_edge("summarize_conversation", "contextualize_input")
-    workflow.add_edge("contextualize_input", "router_node")
+    workflow.add_edge("summarize_conversation", "semantic_gateway_node")
 
     # 3. Definição do Fluxo Condicional (Bifurcação)
-    # Do 'router_node', o fluxo se divide em dois caminhos possíveis.
+    # Do 'semantic_gateway_node', o fluxo se divide em dois caminhos possíveis.
     workflow.add_conditional_edges(
-        "router_node",      # Nó de origem
+        "semantic_gateway_node",      # Nó de origem
         decide_next_node,   # Função de decisão
         {                   # Mapa: Retorno da Função -> Nome do Nó Destino
             "retrieve": "retrieve",

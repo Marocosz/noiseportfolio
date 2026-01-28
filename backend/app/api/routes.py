@@ -119,6 +119,10 @@ async def chat_endpoint(request: ChatRequest, fast_api_request: Request):
                 return f"event: {event_type}\ndata: {json.dumps(data)}\n\n"
 
             # Envia status inicial
+            # PADDING PARA NGINX/COOLIFY: Envia comentário vazio para forçar flush do buffer
+            # Alguns proxies (Cloudflare, Nginx) seguram os primeiros bytes.
+            yield ": " + (" " * 4096) + "\n\n"
+            
             yield format_event("status", {"message": "Iniciando..." if is_pt else "Starting..."})
 
             final_response_content = ""

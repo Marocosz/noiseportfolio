@@ -8,6 +8,8 @@ Meu nome é Marcos Rodrigues, nasci em 14 de dezembro de 2003, na cidade de Patr
 
 Durante a infância, vivi intensamente aquilo que hoje muitos chamam de “infância raiz”. Brincava na rua, jogava bola no asfalto, participava de pique, esconde-esconde e passava tardes inteiras cercado de amigos do bairro. Época boa, daquelas que ficam marcadas. Estávamos sempre nos encontrando para brincar, conversar e inventar coisas juntos.
 
+### Uma História Curiosa da Infância
+
 Uma história divertida, aconteceu quando eu e meu amigo Samuel estávamos apenas andando e conversando pela rua. Em certo momento, nos deparamos com algo que, para mim, parecia uma cena de filme épico: uma espécie de guerra entre abelhas europeias e formigas. Lembro de ficar completamente abismado e entretido observando aquilo. Na minha imaginação, existia uma “abelha rainha” e uma “formiga rei” que em determinado instante, uma das abelhas pegou uma formiga, voou com ela e a soltou de lá de cima, causando sua morte com o impacto. Na minha mente de criança, aquilo representou o fim da guerra e a vitória das abelhas. Foi algo incrível, marcante, e que até hoje permanece muito claro na minha memória.
 
 Gosto de pensar que foi também por volta dessa época que comecei a desenvolver um gosto forte por filosofia — por refletir sobre o mundo, a verdade, o universo e a existência. Foi quando passei a usar minha criatividade de forma mais intensa, tentando entender e interpretar o que acontecia ao meu redor, me colocando profundamente dentro dessas experiências.
@@ -243,7 +245,7 @@ Todos esses interesses funcionam como fontes constantes de inspiração e reflex
 
 ## Visão Geral
 
-O **Noise Portfolio** é uma aplicação **Agentica** moderna que serve como o portfólio interativo do Marcos Rodrigues. Diferente de sites estáticos tradicionais (SPA), este projeto utiliza uma arquitetura complexa baseada em **Inteligência Artificial Generativa** para conversar com os visitantes, simulando a persona do próprio desenvolvedor.
+O **Meu Portfolio** é uma aplicação **Agentica** moderna que serve como o portfólio interativo do Marcos Rodrigues. Diferente de sites estáticos tradicionais (SPA), este projeto utiliza uma arquitetura complexa baseada em **Inteligência Artificial Generativa** para conversar com os visitantes, simulando a persona do próprio desenvolvedor.
 
 ## Stack Tecnológica
 

@@ -20,61 +20,102 @@ Comunicação:
     - Usado por `app.api.routes` para validar se o usuário pode enviar mensagem.
 """
 
+import json
+import os
+import time
 from datetime import date
-import threading
+from datetime import date
+# from filelock import FileLock # (Opcional) Removido para evitar dependência externa obrigatória
 
-class GlobalRateLimiter:
+# Implementação manual de Lock se não quiser adicionar dependência externa
+class SimpleFileLock:
+    def __init__(self, lock_file):
+        self.lock_file = lock_file
+        
+    def __enter__(self):
+        while True:
+            try:
+                # Tenta criar arquivo de lock (atomic operation no OS)
+                fd = os.open(self.lock_file, os.O_CREAT | os.O_EXCL | os.O_RDWR)
+                os.close(fd)
+                break
+            except FileExistsError:
+                # Lock existe, espera um pouco
+                time.sleep(0.05)
+                
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        try:
+            os.remove(self.lock_file)
+        except OSError:
+            pass
+
+class FileBasedRateLimiter:
     """
-    Controlador de cota diária.
-    Implementa thread-safety com RLock.
+    Controlador de cota diária persistente (File-Based).
+    Permite que múltiplos workers (Gunicorn/Uvicorn) compartilhem o mesmo limite.
     """
-    def __init__(self, daily_limit: int = 100):
+    def __init__(self, daily_limit: int = 100, db_path="rate_limit.json"):
         self.daily_limit = daily_limit
-        # Lock para evitar race conditions em requisições paralelas
-        self._lock = threading.Lock()
-        self.count = 0
-        self.current_date = date.today()
+        self.db_path = db_path
+        self.lock_path = db_path + ".lock"
+        
+        # Garante arquivo inicial
+        if not os.path.exists(self.db_path):
+            self._save_state({"count": 0, "date": str(date.today())})
 
-    def _reset_if_new_day(self):
-        """
-        Verifica se a data mudou. Se sim, zera o contador.
-        Chamada internamente antes de qualquer leitura/escrita.
-        """
-        today = date.today()
-        if self.current_date != today:
-            self.current_date = today
-            self.count = 0
+    def _load_state(self):
+        try:
+            with open(self.db_path, "r") as f:
+                return json.load(f)
+        except (json.JSONDecodeError, FileNotFoundError):
+            return {"count": 0, "date": str(date.today())}
+
+    def _save_state(self, state):
+        with open(self.db_path, "w") as f:
+            json.dump(state, f)
 
     def get_status(self) -> dict:
-        """
-        Consulta o status atual sem consumir cota.
-        Retorna informações para a UI exibir a barra de progresso.
-        """
-        with self._lock:  # Área crítica protegida
-            self._reset_if_new_day()
+        lock = SimpleFileLock(self.lock_path)
+        with lock:
+            state = self._load_state()
+            
+            # Reset se mudou o dia
+            today = str(date.today())
+            if state["date"] != today:
+                state = {"count": 0, "date": today}
+                self._save_state(state)
+                
             return {
-                "current": self.count,
+                "current": state["count"],
                 "limit": self.daily_limit,
-                "remaining": max(0, self.daily_limit - self.count)
+                "remaining": max(0, self.daily_limit - state["count"])
             }
 
     def check_request(self) -> bool:
-        """
-        Tenta consumir 1 crédito da cota.
-        
-        Returns:
-            True se autorizado (incrementa count).
-            False se bloqueado (limite excedido).
-        """
-        with self._lock:
-            self._reset_if_new_day()
+        lock = SimpleFileLock(self.lock_path)
+        with lock:
+            state = self._load_state()
+            today = str(date.today())
             
-            if self.count >= self.daily_limit:
+            # Reset diário
+            if state["date"] != today:
+                state = {"count": 0, "date": today}
+            
+            # Verifica Limite
+            if state["count"] >= self.daily_limit:
+                # Salva mesmo se falhar (para persistir a data atualizada se mudou)
+                self._save_state(state) 
                 return False
             
-            self.count += 1
+            # Consome cota
+            state["count"] += 1
+            self._save_state(state)
             return True
 
-# Singleton: instância global compartilhada por todo o app.
-# Define o teto de gastos (ex: 100 chats por dia).
-limiter = GlobalRateLimiter(daily_limit=100)
+# Singleton: instância global
+limit_db_path = os.path.join("logs", "rate_limit.json")
+# Garante que pasta logs existe (logger já deve ter criado, mas por garantia)
+if not os.path.exists("logs"):
+    os.makedirs("logs")
+    
+limiter = FileBasedRateLimiter(daily_limit=100, db_path=limit_db_path)

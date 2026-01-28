@@ -246,7 +246,7 @@ def fallback_responder(state: AgentState):
     3. **Se missing_fact (Não tem a info):**
        - Diga que não tem essa informação no seu "banco de dados" (RAG).
        - Sugira olhar o LinkedIn ou GitHub se fizer sentido.
-       - "Putz, essa informação específica eu não tenho aqui agora."
+       - "Eita, essa informação específica eu não tenho aqui agora."
        - **PROIBIDO OPINAR**: Se você não sabe se o Marcos gosta de X, NÃO DIGA que ele gosta ou acha "clássico". Diga APENAS que não tem a info.
        
     4. **Se ambiguous_intent (Não entendeu):**

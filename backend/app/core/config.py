@@ -24,8 +24,14 @@ Comunicação:
 """
 
 import os
+from pathlib import Path
 from enum import Enum
+from typing import List
+from pydantic import field_validator, ValidationInfo
 from pydantic_settings import BaseSettings
+
+# Base Directory: Points to the 'backend' folder (parent of 'app')
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 class LLMProvider(str, Enum):
     """
@@ -79,28 +85,57 @@ class Settings(BaseSettings):
     Utiliza Pydantic para ler o arquivo .env, validar tipos e fornecer defaults.
     """
 
+    # --- Credenciais e Segurança ---
+    # Chaves de API para os serviços externos.
+    # Definidas ANTES do provider para estarem disponíveis na validação.
+    OPENAI_API_KEY: str | None = None
+    GROQ_API_KEY: str | None = None
+    GOOGLE_API_KEY: str | None = None
+
     # --- Configurações do Banco Vetorial (RAG) ---
     # Define onde os dados vetoriais serão persistidos e o nome da coleção.
     # Impacto: Alterar estes valores pode desconectar a aplicação da memória existente.
-    CHROMA_DB_DIR: str = "chroma_db"
+    # Usa path absoluto baseado no BASE_DIR
+    CHROMA_DB_DIR: str = os.path.join(str(BASE_DIR), "chroma_db")
     COLLECTION_NAME: str = "marocos_portfolio"
     
     # --- Configurações de Seleção de IA ---
     # Define qual provedor será utilizado como padrão caso não seja especificado outro.
-    LLM_PROVIDER: str = "openai" 
+    LLM_PROVIDER: str = "gemini" 
     
     # Modelo de Embeddings
     # Responsável por converter texto em vetores.
     # Deve ser compatível com os dados já indexados no ChromaDB.
     EMBEDDING_MODEL: str = "models/gemini-embedding-001"
-    
-    # --- Credenciais e Segurança ---
-    # Chaves de API para os serviços externos.
-    # São opcionais (None) para permitir que a aplicação inicie mesmo sem todas as chaves,
-    # falhando apenas se tentar usar um provider não configurado.
-    OPENAI_API_KEY: str | None = None
-    GROQ_API_KEY: str | None = None
-    GOOGLE_API_KEY: str | None = None
+
+    # --- CORS (Cross-Origin Resource Sharing) ---
+    # Lista de origens permitidas (frontend)
+    CORS_ORIGINS: List[str] = [
+        "http://localhost:5173", # Vite Local
+        "http://localhost:3000", # Next.js
+        "https://marocos.dev",
+        "https://api.marocos.dev",
+        "https://www.marocos.dev"
+    ]
+
+    @field_validator("LLM_PROVIDER")
+    @classmethod
+    def validate_provider_key(cls, v: str, info: ValidationInfo):
+        """
+        Valida se a chave de API correspondente ao provider escolhido foi fornecida.
+        Isso evita que o app inicie mas quebre na primeira requisição.
+        """
+        values = info.data
+        provider = v.lower()
+        
+        if provider == "openai" and not values.get("OPENAI_API_KEY"):
+            raise ValueError("Provider 'openai' selected but OPENAI_API_KEY is missing.")
+        if provider == "groq" and not values.get("GROQ_API_KEY"):
+            raise ValueError("Provider 'groq' selected but GROQ_API_KEY is missing.")
+        if provider == "gemini" and not values.get("GOOGLE_API_KEY"):
+            raise ValueError("Provider 'gemini' selected but GOOGLE_API_KEY is missing.")
+            
+        return v
 
     class Config:
         env_file = ".env"
